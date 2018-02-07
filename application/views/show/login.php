@@ -28,7 +28,7 @@
                     <input name="remember" type="checkbox" value="Remember Me">Remember Me
                   </label>
                 </div>
-                <a href="<?php echo site_url('show/index'); ?>" class="btn btn-lg btn-success btn-block">Login</a>
+                <a href="<?php echo site_url('/'); ?>" class="btn btn-lg btn-success btn-block">Login</a>
               </fieldset>
             </form>
           </div>

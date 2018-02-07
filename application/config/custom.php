@@ -2,7 +2,7 @@
 /**
 * @name 自定义全局配置文件
 * @author SmallOysyer <master@xshgzs.com>
-* @since 2018-02-07
+* @since 2018-02-06
 * @update 2018-02-07
 */
 

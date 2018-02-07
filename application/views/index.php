@@ -9,7 +9,7 @@
 <body>
 <div id="wrapper">
 
-<?php $this->load->view('include/navbar',["navData"=>$navData]); ?>
+<?php $this->load->view('include/navbar'); ?>
 
 <!-- Page Main Content -->
 <div id="page-wrapper">

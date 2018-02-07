@@ -10,27 +10,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Show extends CI_Controller {
 
+  public $allMenu; 
+
   function __construct()
   {
     parent::__construct();
     $this->load->model('RBAC_model');
-  }
-
-
-  public function index()
-  {
-    $this->load->view('index',["navData"=>$this->RBAC_model->getAllMenu()]);
+    $this->allMenu=$this->RBAC_model->getAllMenu();
   }
 
 
   public function blank()
   {
-    $this->load->view('blank');
+    $this->load->view('show/blank',["navData"=>$this->allMenu]);
   }
 
 
   public function login()
   {
-    $this->load->view('login');
+    $this->load->view('show/login');
+  }
+  
+
+  public function jumpOut($url){
+    $url=urldecode($url);
+    $this->load->view('show/jumpOut',["url"=>$url,"navData"=>$this->allMenu]);
   }
 }

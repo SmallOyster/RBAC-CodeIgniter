@@ -109,28 +109,8 @@
   <div class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav navbar-collapse">
       <ul class="nav" id="side-menu">
-        <li><a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-        <li>
-          <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-          <ul class="nav nav-second-level">
-            <li><a href="flot.html">Flot Charts</a></li>
-            <li><a href="morris.html">Morris.js Charts</a></li>
-          </ul>
-          <!-- /.nav-second-level -->
-        </li>
-        <li><a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a></li>
-        <li><a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a></li>
-        <li>
-          <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
-          <ul class="nav nav-second-level">
-            <li><a href="panels-wells.html">Panels and Wells</a></li>
-            <li><a href="buttons.html">Buttons</a></li>
-            <li><a href="notifications.html">Notifications</a></li>
-            <li><a href="typography.html">Typography</a></li>
-            <li><a href="icons.html">Icons</a></li>
-            <li><a href="grid.html">Grid</a></li>
-          </ul>
-          <!-- /.nav-second-level --></li>
+        <li><a href="<?php echo site_url(''); ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+
         <li>
           <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">
@@ -153,16 +133,6 @@
           </ul>
         </li>
         <!-- nav-second-level -->
-
-        <li>
-          <a href="#"><i class="fa fa-users fa-fw"></i> 用户管理<span class="fa arrow"></span></a>
-          <ul class="nav nav-second-level">
-            <li><a href="javascript:void(0);">用户列表</a></li>
-          </ul>
-        </li>
-
-        <li><a href="#"><i class="fa fa-commenting" aria-hidden="true"></i> 短信管理</a></li>
-        <li><a href="#" target="_blank"><i class="fa fa-database" aria-hidden="true"></i> 数据库后台</a></li>
         
         <?php
         // 显示父菜单
@@ -170,42 +140,55 @@
           if($info['hasChild']!="1"){
           // 没有二级菜单
         ?>
-            <li><a href="<?php echo site_url($info['url']); ?>" target="_blank"><i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i> <?php echo $info['name']; ?></a></li>
+          <li>
+            <a href="<?php echo site_url($info['url']); ?>"><i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i> <?php echo $info['name']; ?></a>
+          </li>
+          <!-- ./父菜单 -->
         <?php
           }else{
+          // 有二级菜单
         ?>
-        <li>
-          <a href="<?php echo site_url($info['url']); ?>" target="_blank"><i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i> <?php echo $info['name']; ?><span class="fa arrow"></span></a>
-          <ul class="nav nav-second-level">
+          <li>
+            <a href="#"><i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i> <?php echo $info['name']; ?><span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
             <?php
             // 显示二级菜单
             foreach($info['child'] as $child_info){
               if($child_info['hasChild']!="1"){
               // 没有三级菜单
             ?>
-            <li><a href="<?php echo site_url($child_info['url']); ?>" target="_blank"><i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child_info['name']; ?></a></li>
+              <li>
+                <a href="<?php echo site_url($child_info['url']); ?>"><i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child_info['name']; ?></a>
+              </li>
+              <!-- ./二级菜单 -->
             <?php
               }else{
               // 有三级菜单
             ?>
-            <li><a href="<?php echo site_url($child_info['url']); ?>" target="_blank"><i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child_info['name']; ?><span class="fa arrow"></span></a>
-              <ul class="nav nav-third-level">
+              <li>
+                <a href="#"><i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child_info['name']; ?><span class="fa arrow"></span></a>
+                <ul class="nav nav-third-level">
                 <?php
                 // 显示三级菜单
                 foreach($child_info['child'] as $child2_info){
                 ?>
-                <li><a href="<?php echo site_url($child2_info['url']); ?>" target="_blank"><i class="fa fa-<?php echo $child2_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child2_info['name']; ?></a></li>              
+                  <li>
+                    <a href="<?php echo site_url($child2_info['url']); ?>"><i class="fa fa-<?php echo $child2_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child2_info['name']; ?></a>
+                  </li>
+                  <!-- ./三级菜单 -->
                 <?php
                 }
                 ?>
-              </ul>
-            </li>
-          <?php
+                </ul>
+              </li>
+              <!-- ./二级菜单 -->
+            <?php
               }
             }
-          ?>
-          </ul>
-        </li>
+            ?>
+            </ul>
+          </li>
+          <!-- ./父菜单 -->
         <?php
           }
         }
