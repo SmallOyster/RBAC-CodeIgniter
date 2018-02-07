@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost';
+$config['base_url'] = 'http://127.0.0.1/rbac';
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +35,7 @@ $config['base_url'] = 'http://localhost';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +51,11 @@ $config['index_page'] = 'index.php';
 | 'PATH_INFO'      Uses $_SERVER['PATH_INFO']
 |
 | WARNING: If you set this to 'PATH_INFO', URIs will always be URL-decoded!
+*/
+
+/*
+| Test Route by Nginx - 2018.01.05 - in YC
+| $config['uri_protocol']	= 'REQUEST_URI';
 */
 $config['uri_protocol']	= 'REQUEST_URI';
 
