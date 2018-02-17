@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>角色列表 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>设置角色权限 / <?php echo $this->config->item('systemName'); ?></title>
 	<style>
 	.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
 	ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;height:360px;overflow-y:scroll;overflow-x:auto;}
@@ -34,7 +34,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">
-			角色权限设置
+			设置角色权限
 			<font style="font-size: 28px;">（角色名：<font color="blue"><b><?php echo urldecode($roleName); ?></b></font>）</font>
 		</h1>
 	</div>

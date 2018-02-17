@@ -51,6 +51,35 @@ class RBAC_role extends CI_Controller {
 		}
 	}
 
+
+	public function edit($roleID,$roleName)
+	{
+		$this->ajax->makeAjaxToken();
+		$this->load->view('role/edit',["navData"=>$this->allMenu,'roleID'=>$roleID,'roleName'=>$roleName]);
+	}
+
+
+	public function toEdit()
+	{
+		$token=$this->input->post('token');
+		$this->ajax->checkAjaxToken($token);
+
+		$name=$this->input->post('name');
+		$remark=$this->input->post('remark');
+		$roleID=$this->input->post('roleID');
+		
+		$sql="UPDATE role SET name=?,remark=? WHERE id=?";
+		$query=$this->db->query($sql,[$name,$remark,$roleID]);
+
+		if($this->db->affected_rows()==1){
+			$ret=$this->ajax->returnData("200","success");
+			die($ret);
+		}else{
+			$ret=$this->ajax->returnData("1","updateFailed");
+			die($ret);
+		}
+	}
+
 	
 	public function list()
 	{

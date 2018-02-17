@@ -44,7 +44,7 @@
 		<?php foreach($list as $info){ ?>
 		<tr>
 			<td><?php echo $info['name']; ?></td>
-			<td><a href="<?php echo site_url('role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a> <a href="<?php echo site_url('role/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</a></td>
+			<td><a href="<?php echo site_url('role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a> <a href="<?php echo site_url('role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</a></td>
 		</tr>
 	<?php } ?>
 	</tbody>
