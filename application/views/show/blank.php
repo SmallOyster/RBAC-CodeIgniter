@@ -23,10 +23,10 @@
     <!-- /.row -->
   </div>
   <!-- /.container-fluid -->
+  
+<!-- ./Page Main Content -->
 </div>
-<!-- Page Content -->
-
+<!-- ./Page -->
 </div>
-<!-- /#wrapper -->
 </body>
 </html>

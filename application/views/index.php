@@ -47,9 +47,10 @@ var_dump($navData);
     </div>
   </div>
 </div>
-</div>
-<!-- Page Main Content -->
 
+<!-- ./Page Main Content -->
+</div>
+<!-- ./Page -->
 </div>
 </body>
 </html>
