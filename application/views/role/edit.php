@@ -3,7 +3,7 @@
  * @name V-修改角色
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-17
+ * @version V1.0 2018-02-18
  */
 ?>
 
@@ -47,8 +47,22 @@
 			<textarea class="form-control" id="remark"></textarea>
 			<p class="help-block">选填</p>
 		</div>
+
 		<hr>
-		<button class="btn btn-primary" style="width:100%" onclick='edit()'>确 认 编 辑 角 色 &gt;</button>
+
+		<div class="form-group">
+			<label>创建时间</label>
+			<input class="form-control" value="<?php echo $info['create_time']; ?>" disabled>
+		</div>
+		<br>
+		<div class="form-group">
+			<label>最后修改时间</label>
+			<input class="form-control" value="<?php echo $info['update_time']; ?>" disabled>
+		</div>
+
+		<hr>
+		
+		<button class="btn btn-success" style="width:100%" onclick='edit()'>确 认 编 辑 角 色 &gt;</button>
 	</div>
 </div>
 
@@ -100,7 +114,7 @@ function edit(){
 				$("#tips").html("修改失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
-			}else if(ret.code=="0"){
+			}else if(ret.code=="403"){
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;

@@ -3,7 +3,7 @@
 * @name C-RBAC-角色
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-02-17
+* @version V1.0 2018-02-18
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -12,15 +12,27 @@ class RBAC_role extends CI_Controller {
 
 	public $allMenu;
 	public $sessPrefix;
+	public $nowUserName;
 	
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('RBAC_model');
 		$this->load->library(array('Ajax'));
+		$this->load->helper('string');
 
 		$this->allMenu=$this->RBAC_model->getAllMenuByRole("1");
 		$this->sessPrefix=$this->safe->getSessionPrefix();
+		$this->nowUserName="super";
+	}
+
+
+	public function list()
+	{
+		$query=$this->db->query("SELECT * FROM role");
+		$list=$query->result_array();
+
+		$this->ajax->makeAjaxToken();
+		$this->load->view('role/list',['list'=>$list,"navData"=>$this->allMenu]);
 	}
 
 
@@ -67,9 +79,10 @@ class RBAC_role extends CI_Controller {
 		$name=$this->input->post('name');
 		$remark=$this->input->post('remark');
 		$roleID=$this->input->post('roleID');
-		
-		$sql="UPDATE role SET name=?,remark=? WHERE id=?";
-		$query=$this->db->query($sql,[$name,$remark,$roleID]);
+		$nowTime=date("Y-m-d H:i:s");
+
+		$sql="UPDATE role SET name=?,remark=?,update_time=? WHERE id=?";
+		$query=$this->db->query($sql,[$name,$remark,$nowTime,$roleID]);
 
 		if($this->db->affected_rows()==1){
 			$ret=$this->ajax->returnData("200","success");
@@ -81,16 +94,6 @@ class RBAC_role extends CI_Controller {
 	}
 
 	
-	public function list()
-	{
-		$query=$this->db->query("SELECT * FROM role");
-		$list=$query->result_array();
-
-		$this->ajax->makeAjaxToken();
-		$this->load->view('role/list',['list'=>$list,"navData"=>$this->allMenu]);
-	}
-
-
 	public function toDel()
 	{
 		$token=$this->input->post('token');
@@ -102,6 +105,8 @@ class RBAC_role extends CI_Controller {
 		$query=$this->db->query($sql,[$id]);
 
 		if($this->db->affected_rows()==1){
+			$logContent='删除角色|'.$id;
+			$this->Log_model->create('角色',$logContent,$this->nowUserName);
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{

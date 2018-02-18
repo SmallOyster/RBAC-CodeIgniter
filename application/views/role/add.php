@@ -3,7 +3,7 @@
  * @name V-新增角色
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-02-12
+ * @version V1.0 2018-02-18
  */
 ?>
 
@@ -46,7 +46,7 @@
 			<p class="help-block">选填</p>
 		</div>
 		<hr>
-		<button class="btn btn-primary" style="width:100%" onclick='add()'>确 认 新 增 角 色 &gt;</button>
+		<button class="btn btn-success" style="width:100%" onclick='add()'>确 认 新 增 角 色 &gt;</button>
 	</div>
 </div>
 
@@ -97,7 +97,7 @@ function add(){
 				$("#tips").html("新增失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
-			}else if(ret.code=="0"){
+			}else if(ret.code=="403"){
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;

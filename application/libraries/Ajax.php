@@ -3,7 +3,7 @@
 * @name L-Ajax
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-10
-* @version V1.0.1 2018-02-17
+* @version V1.0.1 2018-02-18
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -66,7 +66,7 @@ class Ajax {
 	public function checkAjaxToken($token)
 	{
 		if($token!=$this->_CI->session->userdata($this->sessPrefix.'AJAX_token')){
-			die(self::returnData("0","invaildToken"));
+			die(self::returnData("403","invaildToken"));
 		}
 	}
 }

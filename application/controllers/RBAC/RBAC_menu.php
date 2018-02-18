@@ -3,7 +3,7 @@
 * @name C-RBAC-菜单
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-17
-* @version V1.0 2018-02-17
+* @version V1.0 2018-02-18
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -16,11 +16,19 @@ class RBAC_menu extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('RBAC_model');
 		$this->load->library(array('Ajax'));
 
 		$this->allMenu=$this->RBAC_model->getAllMenuByRole("1");
 		$this->sessPrefix=$this->safe->getSessionPrefix();
+	}
+
+
+	public function list()
+	{
+		$list=$this->RBAC_model->getAllMenu();
+
+		$this->ajax->makeAjaxToken();
+		$this->load->view('sys/menu/list',["navData"=>$this->allMenu,'list'=>$list]);
 	}
 
 
@@ -70,12 +78,57 @@ class RBAC_menu extends CI_Controller {
 	}
 
 	
-	public function list()
+	public function edit($menuID)
 	{
-		$list=$this->RBAC_model->getAllMenu();
-
 		$this->ajax->makeAjaxToken();
-		$this->load->view('sys/menu/list',["navData"=>$this->allMenu,'list'=>$list]);
+
+		// 获取菜单信息
+		$query1=$this->db->query("SELECT * FROM menu WHERE id=?",[$menuID]);
+		$list1=$query1->result_array();
+		$info=$list1[0];
+		$fatherID=$info['father_id'];
+
+		if($query1->num_rows()!=1){
+			header("Location:".site_url());
+		}
+
+		// 获取父菜单名称和Icon
+		if($fatherID==0){
+			$fatherName="主菜单";
+			$fatherIcon="home";
+		}else{
+			$query2=$this->db->query("SELECT * FROM menu WHERE id=?",[$fatherID]);
+			$list2=$query2->result_array();
+			$fatherInfo=$list2[0];
+			$fatherName=$fatherInfo['name'];
+			$fatherIcon=$fatherInfo['icon'];
+		}
+
+		$this->load->view('sys/menu/edit',["navData"=>$this->allMenu,'menuID'=>$menuID,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+	}
+
+
+	public function toEdit()
+	{
+		$token=$this->input->post('token');
+		$this->ajax->checkAjaxToken($token);
+
+		$menuID=$this->input->post('menuID');
+		$name=$this->input->post('name');
+		$icon=$this->input->post('icon');
+		$url=$this->input->post('url');
+		$nowTime=date("Y-m-d H:i:s");
+		
+		$sql="UPDATE menu SET name=?,icon=?,url=?,update_time=? WHERE id=?";
+		$query=$this->db->query($sql,[$name,$icon,$url,$nowTime,$menuID]);
+
+		if($this->db->affected_rows()==1){
+			$ret=$this->ajax->returnData("200","success");
+			die($ret);
+		}else{
+			$ret=$this->ajax->returnData("1","updateFailed");
+			die($ret);
+		}
 	}
 
 

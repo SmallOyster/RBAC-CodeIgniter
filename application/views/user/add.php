@@ -3,7 +3,7 @@
  * @name V-新增用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-02-17
+ * @version V1.0 2018-02-18
  */
 ?>
 
@@ -36,13 +36,13 @@
 	<div class="panel-body">
 		<div class="form-group">
 			<label for="userName">用户名</label>
-			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#realName").focus();'>
+			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();'>
 			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的用户名</p>
 		</div>
 		<br>
 		<div class="form-group">
-			<label for="realName">真实姓名</label>
-			<input class="form-control" id="realName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
+			<label for="realName">昵称</label>
+			<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
 		</div>
 		<br>
 		<div class="form-group">
@@ -54,16 +54,17 @@
 			<label for="email">邮箱</label>
 			<input type="email" class="form-control" id="email">
 		</div>
+		<br>
 		<div class="form-group">
 			<label for="roleID">角色</label>
 			<select class="form-control" id="roleID">
-				<option value="-1">--- 请选择角色 ---</option>
+				<option value="-1" selected disabled>--- 请选择角色 ---</option>
 			</select>
 		</div>
 
 		<hr>
 
-		<button class="btn btn-primary" style="width:100%" onclick='add()'>确 认 新 增 用 户 &gt;</button>
+		<button class="btn btn-success" style="width:100%" onclick='add()'>确 认 新 增 用 户 &gt;</button>
 	</div>
 </div>
 
@@ -104,11 +105,7 @@ function getAllRole(){
 					$("#roleID").append('<option value="'+roleID+'">'+roleID+'. '+roleName+'</option>');
 				}
 				return true;
-			}else if(ret.message=="insertFailed"){
-				$("#tips").html("新增失败！！！");
-				$("#tipsModal").modal('show');
-				return false;
-			}else if(ret.code=="0"){
+			}else if(ret.code=="403"){
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;
@@ -125,7 +122,7 @@ function getAllRole(){
 function add(){
 	lockScreen();
 	userName=$("#userName").val();
-	realName=$("#realName").val();
+	nickName=$("#nickName").val();
 	phone=$("#phone").val();
 	email=$("#email").val();
 	roleID=$("#roleID").val();
@@ -142,9 +139,9 @@ function add(){
 		$("#tipsModal").modal('show');
 		return false;
 	}
-	if(realName==""){
+	if(nickName==""){
 		unlockScreen();
-		$("#tips").html("请输入真实姓名！");
+		$("#tips").html("请输入昵称！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
@@ -176,7 +173,7 @@ function add(){
 	$.ajax({
 		url:"<?php echo site_url('user/toAdd'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"userName":userName,"realName":realName,"phone":phone,"email":email,"roleID":roleID},
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -191,7 +188,7 @@ function add(){
 			
 			if(ret.code=="200"){
 				$("#info_userName_show").html(userName);
-				$("#info_realName_show").html(realName);
+				$("#info_nickName_show").html(nickName);
 				$("#info_phone_show").html(phone);
 				$("#info_email_show").html(email);
 				$("#info_originPwd_show").html(ret.data['originPwd']);
@@ -231,8 +228,8 @@ function add(){
           <th><p id="info_userName_show"></p></th>
         </tr>
         <tr>
-          <td>真名</td>
-          <th><p id="info_realName_show"></p></th>
+          <td>昵称</td>
+          <th><p id="info_nickName_show"></p></th>
         </tr>
         <tr>
           <td>手机</td>

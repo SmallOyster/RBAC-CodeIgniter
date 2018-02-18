@@ -1,95 +1,60 @@
 CREATE DATABASE IF NOT EXISTS `rbac`;
 USE `rbac`;
 
+CREATE TABLE IF NOT EXISTS `log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT '类型',
+  `content` text COLLATE utf8_unicode_ci NOT NULL COMMENT '内容',
+  `user_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT '记录用户名',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_ip` varchar(15) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.0.0.0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `father_id` int(11) NOT NULL,
-  `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `icon` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `url` text COLLATE utf8_unicode_ci,
+  `father_id` int(11) NOT NULL COMMENT '父菜单ID（0为主菜单）',
+  `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '名称',
+  `icon` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '图标名（FA）',
+  `url` text COLLATE utf8_unicode_ci COMMENT '链接URL',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DELETE FROM `menu`;
-INSERT INTO `menu` (`id`, `father_id`, `name`, `icon`, `url`) VALUES
-	(1, 0, '系统管理', 'gears', ''),
-	(2, 1, '用户列表', 'user-circle-o', 'user/list'),
-	(3, 1, '角色列表', 'users', 'role/list'),
-	(4, 1, '菜单管理', 'bars', 'sys/menu/list'),
-	(5, 1, '操作记录列表', 'list-alt', 'sys/log/list'),
-	(6, 1, '数据库后台', 'database', '/show/jumpout/https%3a%2f%2fsql.itrclub.com%2fsql_admin'),
-	(7, 0, '发布公告', 'bullhorn', 'notice/pub');
+INSERT INTO `menu` (`id`, `father_id`, `name`, `icon`, `url`, `create_time`, `update_time`) VALUES
+	(1, 0, '系统管理', 'gears', '', '2018-02-18 20:46:23', ''),
+	(2, 1, '用户列表', 'user-circle-o', 'user/list', '2018-02-18 20:46:23', ''),
+	(3, 1, '角色列表', 'users', 'role/list', '2018-02-18 20:46:23', ''),
+	(4, 1, '菜单管理', 'bars', 'sys/menu/list', '2018-02-18 20:46:23', ''),
+	(5, 1, '操作记录列表', 'list-alt', 'sys/log/list', '2018-02-18 20:46:23', ''),
+	(6, 1, '数据库后台', 'database', '/show/jumpout/https%3a%2f%2fwww.baidu.com', '2018-02-18 20:46:23', ''),
+	(7, 0, '发布公告', 'bullhorn', 'notice/pub', '2018-02-18 20:46:23', '');
 
 CREATE TABLE IF NOT EXISTS `role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `remark` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='角色表';
+  `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '角色名称',
+  `remark` text COLLATE utf8_unicode_ci COMMENT '备注',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='角色表';
 
-DELETE FROM `role`;
-INSERT INTO `role` (`id`, `name`, `remark`) VALUES
-	(1, '超级管理员', NULL),
-	(2, 'xDO5zZ948V', NULL),
-	(3, 'JvcdSqYshz', NULL),
-	(4, 't2NcPaRGAE', NULL),
-	(5, 'Tc7Y2UtHrb', NULL),
-	(6, 'BPYihLqg37', NULL),
-	(7, 'MVjaPAcOf0', NULL),
-	(8, 'ApVRmaO7ct', NULL),
-	(9, 'A6bY4v9DNf', NULL),
-	(11, 'CR0nHSLZXu', NULL),
-	(12, 'pT0rojiRBU', NULL),
-	(13, 'jhdQ9zFa4L', NULL),
-	(14, 'c78nrCh0fQ', NULL),
-	(15, '3Ppz21oNrD', NULL),
-	(16, 'uWUkgpT3xd', NULL),
-	(17, '34dMCLrYVm', NULL),
-	(18, 'FTkEwf5inX', NULL),
-	(19, 'AEeRzQypn1', NULL),
-	(20, 'bVwz8DYMe9', NULL),
-	(21, '7sz2MvKAV8', NULL),
-	(22, 'muGNnL6g5Q', NULL),
-	(23, 'scbey7uBr3', NULL),
-	(24, 'u3VlByOdQv', NULL),
-	(25, 'PL2FsBdiWO', NULL),
-	(26, 'V5qWpXwHRv', NULL),
-	(27, 'RLdMx4WcPs', NULL),
-	(28, 'hDSyrU7dLv', NULL),
-	(29, 'O7XYdMSL86', NULL),
-	(30, 'Vf3Zaj896l', NULL),
-	(31, 'ku8DI50apr', NULL),
-	(32, 'lR1LaF3HfP', NULL),
-	(33, 'JH7OusnCqy', NULL),
-	(34, 'secy8AICnp', NULL),
-	(36, 'ds8PqpLCrj', NULL),
-	(37, 'wvV09fyE4e', NULL),
-	(38, 'Ojx2gJr3d5', NULL),
-	(39, 'CeWgqUpcdu', NULL),
-	(40, 'EyfCWj9FqB', NULL),
-	(41, 't6qcSI2EjJ', NULL),
-	(42, 'NvFP9wn7Uh', NULL),
-	(43, '410vr6c8Cb', NULL),
-	(44, 'rpzu2YXfEa', NULL),
-	(45, 'IgFQeWtBhN', NULL),
-	(46, 'V87rZNofM5', NULL),
-	(47, 'mD5Yoz1g4G', NULL),
-	(48, 'TAGLcJsKMn', NULL),
-	(49, 'YXnrQPRB2k', NULL),
-	(50, 'BsaZc6xqjP', NULL),
-	(51, 'RXv0kQW5bC', NULL),
-	(52, 'O2xpBmS39Y', NULL),
-	(53, 'JWl90NVt1R', NULL),
-	(54, 'NJkERHVpgf', NULL);
+INSERT INTO `role` (`id`, `name`, `remark`, `create_time`, `update_time`) VALUES
+	(1, 'KljGfipz', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
+	(2, 'vQytYX1z', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
+	(3, 'GNVmjJha', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
+	(4, 'w19ZdFeJ', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
+	(5, 'oUlFnadP', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00');
 
 CREATE TABLE IF NOT EXISTS `role_permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `role_id` int(11) NOT NULL,
-  `menu_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL COMMENT '角色ID',
+  `menu_id` int(11) NOT NULL COMMENT '菜单ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DELETE FROM `role_permission`;
 INSERT INTO `role_permission` (`id`, `role_id`, `menu_id`) VALUES
 	(1, 1, 1),
 	(2, 1, 2),
@@ -101,16 +66,21 @@ INSERT INTO `role_permission` (`id`, `role_id`, `menu_id`) VALUES
 
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `real_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `salt` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `role_id` int(11) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT '1',
-  `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `user_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '用户名',
+  `nick_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '昵称',
+  `password` varchar(60) COLLATE utf8_unicode_ci NOT NULL COMMENT '密码',
+  `salt` varchar(8) COLLATE utf8_unicode_ci NOT NULL COMMENT '盐',
+  `role_id` int(11) NOT NULL COMMENT '角色ID',
+  `status` int(1) NOT NULL DEFAULT '1' COMMENT '状态(0:禁用,1:正常,2:未激活)',
+  `phone` varchar(11) COLLATE utf8_unicode_ci NOT NULL COMMENT '手机号',
+  `email` varchar(60) COLLATE utf8_unicode_ci NOT NULL COMMENT '邮箱地址',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `phone` (`phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  UNIQUE KEY `phone` (`phone`),
+  UNIQUE KEY `user_name` (`user_name`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `user` (`id`, `user_name`, `nick_name`, `password`, `salt`, `role_id`, `status`, `phone`, `email`, `create_time`, `update_time`) VALUES
+	(1, 'g', '1', '1e29791d34cee9b8091bf444a3c67203a330f321', 'YrtPXlA1', 18, 1, '11111111111', '1', '2018-02-17 21:19:58', '0000-00-00 00:00:00');

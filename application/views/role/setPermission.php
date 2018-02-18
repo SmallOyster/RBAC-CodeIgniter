@@ -3,7 +3,7 @@
  * @name V-给角色设置权限
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-17
+ * @version V1.0 2018-02-18
  */
 ?>
 
@@ -89,12 +89,14 @@ $(document).ready(function(){
 });
 
 function getAllMenu(){
+	roleID=$("#roleID").val();
+	
 	$.ajax({
-		url:"<?php echo site_url('api/getSimpleAllMenu'); ?>",
+		url:"<?php echo site_url('api/getAllMenuForZtree'); ?>",
 		type:"post",
 		dataType:"json",
 		async:false,
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>},
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,'roleID':roleID},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
@@ -142,7 +144,7 @@ function toSetPermission(){
 				$("#tips").html("权限清空失败！！<br>请联系管理员！");
 				$("#tipsModal").modal('show');
 				return false;
-			}else if(ret.code=="0"){
+			}else if(ret.code=="403"){
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;

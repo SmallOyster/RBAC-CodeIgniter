@@ -1,8 +1,8 @@
 <?php 
 /**
- * @name V-新增菜单
+ * @name V-修改菜单
  * @author SmallOysyer <master@xshgzs.com>
- * @since 2018-02-17
+ * @since 2018-02-18
  * @version V1.0 2018-02-18
  */
 ?>
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>新增菜单 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>修改菜单 / <?php echo $this->config->item('systemName'); ?></title>
 </head>
 
 <body>
@@ -23,39 +23,53 @@
 <div id="page-wrapper">
 <!-- Page Main Content -->
 
-<input type="hidden" id="fatherID" value="<?php echo $fatherID; ?>">
+<input type="hidden" id="menuID" value="<?php echo $menuID; ?>">
 
 <!-- Page Name-->
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">新增菜单</h1>
+		<h1 class="page-header">修改菜单</h1>
 	</div>
 </div>
 <!-- ./Page Name-->
 
 <div class="panel panel-default">
-	<div class="panel-heading">新增菜单（父菜单：<i class="fa fa-<?php echo $fatherIcon; ?>" aria-hidden="true"></i> <?php echo $fatherName; ?>）</div>
+	<div class="panel-heading">修改菜单（父菜单：<i class="fa fa-<?php echo $fatherIcon; ?>" aria-hidden="true"></i> <?php echo $fatherName; ?>）</div>
 	
 	<div class="panel-body">
 		<div class="form-group">
 			<label for="name">菜单名称</label>
-			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#icon").focus();'>
+			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#icon").focus();' value="<?php echo $info['name']; ?>">
 			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的菜单名称</p>
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="icon">菜单图标 (预览: <i id="icon_preview" class="" aria-hidden="true"></i>)</label>
-			<input class="form-control" id="icon" onkeyup='if(event.keyCode==13)$("#url").focus();' oninput='iconPreview();'>
+			<input class="form-control" id="icon" onkeyup='if(event.keyCode==13)$("#url").focus();' oninput='iconPreview();' value="<?php echo $info['icon']; ?>">
 			<p class="help-block">请输入Font-Awesome图标名称，无需输入前缀“fa-”，输入后可在上方预览</p>
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="url">链接URL</label>
-			<input class="form-control" id="url" onkeyup='if(event.keyCode==13)add();'>
+			<input class="form-control" id="url" onkeyup='if(event.keyCode==13)edit();' value="<?php echo $info['url']; ?>">
 			<p class="help-block">若此菜单为父菜单，请留空此项</p>
 		</div>
+
 		<hr>
-		<button class="btn btn-success" style="width:100%" onclick='add()'>确 认 新 增 菜 单 &gt;</button>
+
+		<div class="form-group">
+			<label>创建时间</label>
+			<input class="form-control" value="<?php echo $info['create_time']; ?>" disabled>
+		</div>
+		<br>
+		<div class="form-group">
+			<label>最后修改时间</label>
+			<input class="form-control" value="<?php echo $info['update_time']; ?>" disabled>
+		</div>
+
+		<hr>
+
+		<button class="btn btn-success" style="width:100%" onclick='edit()'>确 认 修 改 菜 单 &gt;</button>
 	</div>
 </div>
 
@@ -65,14 +79,18 @@
 </div>
 
 <script>
+window.onload=function(){
+	iconPreview();
+}
+
 function iconPreview(){
 	icon=$("#icon").val();
 	$("#icon_preview").attr("class","fa fa-"+icon);
 }
 
-function add(){
+function edit(){
 	lockScreen();
-	fatherID=$("#fatherID").val();
+	menuID=$("#menuID").val();
 	name=$("#name").val();
 	icon=$("#icon").val();
 	url=$("#url").val();
@@ -97,9 +115,9 @@ function add(){
 	}
 	
 	$.ajax({
-		url:"<?php echo site_url('sys/menu/toAdd'); ?>",
+		url:"<?php echo site_url('sys/menu/toEdit'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"fatherID":fatherID,"name":name,"icon":icon,"url":url},
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"menuID":menuID,"name":name,"icon":icon,"url":url},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -112,11 +130,11 @@ function add(){
 			unlockScreen();
 			
 			if(ret.code=="200"){
-				alert("新增成功！");
+				alert("编辑成功！");
 				history.go(-1);
 				return true;
-			}else if(ret.message=="insertFailed"){
-				$("#tips").html("新增失败！！！");
+			}else if(ret.message=="updateFailed"){
+				$("#tips").html("编辑失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code=="403"){

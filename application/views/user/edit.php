@@ -3,7 +3,7 @@
  * @name V-修改用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-17
+ * @version V1.0 2018-02-18
  */
 ?>
 
@@ -38,34 +38,47 @@
 	<div class="panel-body">
 		<div class="form-group">
 			<label for="userName">用户名</label>
-			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#realName").focus();'>
+			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();' value="<?php echo $info['user_name']; ?>">
 			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的用户名</p>
 		</div>
 		<br>
 		<div class="form-group">
-			<label for="realName">真实姓名</label>
-			<input class="form-control" id="realName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
+			<label for="realName">昵称</label>
+			<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();' value="<?php echo $info['nick_name']; ?>">
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="phone">手机号</label>
-			<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();'>
+			<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();' value="<?php echo $info['phone']; ?>">
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="email">邮箱</label>
-			<input type="email" class="form-control" id="email">
+			<input type="email" class="form-control" id="email" value="<?php echo $info['email']; ?>">
 		</div>
+		<br>
 		<div class="form-group">
 			<label for="roleID">角色</label>
 			<select class="form-control" id="roleID">
-				<option value="-1">--- 请选择角色 ---</option>
+				<option value="-1" selected disabled>--- 请选择角色 ---</option>
 			</select>
 		</div>
 
 		<hr>
 
-		<button class="btn btn-primary" style="width:100%" onclick='edit()'>确 认 修 改 用 户 &gt;</button>
+		<div class="form-group">
+			<label>注册时间</label>
+			<input class="form-control" value="<?php echo $info['create_time']; ?>" disabled>
+		</div>
+		<br>
+		<div class="form-group">
+			<label>最后修改时间</label>
+			<input class="form-control" value="<?php echo $info['update_time']; ?>" disabled>
+		</div>
+
+		<hr>
+
+		<button class="btn btn-success" style="width:100%" onclick='edit()'>确 认 修 改 用 户 &gt;</button>
 	</div>
 </div>
 
@@ -106,11 +119,7 @@ function getAllRole(){
 					$("#roleID").append('<option value="'+roleID+'">'+roleID+'. '+roleName+'</option>');
 				}
 				return true;
-			}else if(ret.message=="insertFailed"){
-				$("#tips").html("新增失败！！！");
-				$("#tipsModal").modal('show');
-				return false;
-			}else if(ret.code=="0"){
+			}else if(ret.code=="403"){
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;
@@ -126,27 +135,60 @@ function getAllRole(){
 
 function edit(){
 	lockScreen();
-	name=$("#name").val();
-	remark=$("#remark").val();
+	userID=$("#userID").val();
+	userName=$("#userName").val();
+	nickName=$("#nickName").val();
+	phone=$("#phone").val();
+	email=$("#email").val();
 	roleID=$("#roleID").val();
 
-	if(name==""){
+	if(userName==""){
 		unlockScreen();
-		$("#tips").html("请输入角色名称！");
+		$("#tips").html("请输入用户名！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
-	if(name.length<1 || name.length>20){
+	if(userName.length<1 || userName.length>20){
 		unlockScreen();
-		$("#tips").html("请输入 1-20字 的角色名称！");
+		$("#tips").html("请输入 1-20字 的用户名！");
+		$("#tipsModal").modal('show');
+		return false;
+	}
+	if(nickName==""){
+		unlockScreen();
+		$("#tips").html("请输入昵称！");
+		$("#tipsModal").modal('show');
+		return false;
+	}
+	if(phone==""){
+		unlockScreen();
+		$("#tips").html("请输入手机号！");
+		$("#tipsModal").modal('show');
+		return false;
+	}
+	if(phone.length!=11){
+		unlockScreen();
+		$("#tips").html("请正确输入手机号！");
+		$("#tipsModal").modal('show');
+		return false;
+	}
+	if(email==""){
+		unlockScreen();
+		$("#tips").html("请输入邮箱！");
+		$("#tipsModal").modal('show');
+		return false;
+	}
+	if(roleID=="-1"){
+		unlockScreen();
+		$("#tips").html("请选择角色！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('role/toEdit'); ?>",
+		url:"<?php echo site_url('user/toEdit'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark,'roleID':roleID},
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,'userID':userID,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));

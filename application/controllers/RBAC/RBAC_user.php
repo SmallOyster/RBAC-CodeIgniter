@@ -3,7 +3,7 @@
 * @name C-RBAC-用户
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-02-17
+* @version V1.0 2018-02-18
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -12,16 +12,26 @@ class RBAC_user extends CI_Controller {
 	
 	public $allMenu;
 	public $sessPrefix;
+	public $nowUserName;
 	
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('RBAC_model');
 		$this->load->helper('string');
 		$this->load->library(array('Ajax'));
 
 		$this->allMenu=$this->RBAC_model->getAllMenuByRole("1");
 		$this->sessPrefix=$this->safe->getSessionPrefix();
+		$this->nowUserName="super";
+	}
+
+
+	public function list()
+	{
+		$query=$this->db->query("SELECT * FROM user");
+		$list=$query->result_array();
+
+		$this->load->view('user/list',['list'=>$list,"navData"=>$this->allMenu]);
 	}
 
 
@@ -37,7 +47,7 @@ class RBAC_user extends CI_Controller {
 		$this->ajax->checkAjaxToken($token);
 
 		$userName=$this->input->post('userName');
-		$realName=$this->input->post('realName');
+		$nickName=$this->input->post('nickName');
 		$phone=$this->input->post('phone');
 		$email=$this->input->post('email');
 		$roleID=$this->input->post('roleID');
@@ -48,8 +58,8 @@ class RBAC_user extends CI_Controller {
 		$hashSalt=md5($salt);
 		$hashPwd=sha1($originPwd.$hashSalt);
 
-		$sql="INSERT INTO user(user_name,real_name,password,salt,phone,email,role_id,status) VALUES (?,?,?,?,?,?,?,?)";
-		$query=$this->db->query($sql,[$userName,$realName,$hashPwd,$salt,$phone,$email,$roleID,$status]);
+		$sql="INSERT INTO user(user_name,nick_name,password,salt,phone,email,role_id,status) VALUES (?,?,?,?,?,?,?,?)";
+		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$phone,$email,$roleID,$status]);
 
 		if($this->db->affected_rows()==1){
 			$data['originPwd']=$originPwd;
@@ -62,12 +72,45 @@ class RBAC_user extends CI_Controller {
 	}
 
 	
-	public function list()
+	public function edit($userID)
 	{
-		$query=$this->db->query("SELECT * FROM user");
+		$this->ajax->makeAjaxToken();
+
+		$query=$this->db->query("SELECT * FROM user WHERE id=?",[$userID]);
+
+		if($query->num_rows()!=1){
+			header("Location:".site_url());
+		}
+
 		$list=$query->result_array();
 
-		$this->load->view('user/list',['list'=>$list,"navData"=>$this->allMenu]);
+		$this->load->view('user/edit',["navData"=>$this->allMenu,'userID'=>$userID,'info'=>$list[0]]);
+	}
+
+
+	public function toEdit()
+	{
+		$token=$this->input->post('token');
+		$this->ajax->checkAjaxToken($token);
+
+		$userID=$this->input->post('userID');
+		$userName=$this->input->post('userName');
+		$nickName=$this->input->post('nickName');
+		$phone=$this->input->post('phone');
+		$email=$this->input->post('email');
+		$roleID=$this->input->post('roleID');
+		$nowTime=date("Y-m-d H:i:s");
+		
+		$sql="UPDATE user SET user_name=?,nick_name=?,phone=?,email=?,role_id=?,update_time=? WHERE id=?";
+		$query=$this->db->query($sql,[$userName,$nickName,$phone,$email,$roleID,$nowTime,$userID]);
+
+		if($this->db->affected_rows()==1){
+			$ret=$this->ajax->returnData("200","success");
+			die($ret);
+		}else{
+			$ret=$this->ajax->returnData("1","updateFailed");
+			die($ret);
+		}
 	}
 
 
@@ -82,6 +125,8 @@ class RBAC_user extends CI_Controller {
 		$query=$this->db->query($sql,[$id]);
 
 		if($this->db->affected_rows()==1){
+			$logContent='删除用户|'.$id;
+			$this->Log_model->create('用户',$logContent,$this->nowUserName);
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{

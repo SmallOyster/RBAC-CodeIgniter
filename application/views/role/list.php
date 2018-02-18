@@ -3,7 +3,7 @@
  * @name V-角色列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-02-17
+ * @version V1.0 2018-02-18
  */
 ?>
 
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">角色列表（共 <font color="green"><?php echo count($list); ?></font> 个角色）</h1>
-		<a href="<?php echo site_url('role/add'); ?>" class="btn btn-success" style="width: 98%">新 增 角 色</a>
+		<a href="<?php echo site_url('role/add'); ?>" class="btn btn-primary" style="width: 98%">新 增 角 色</a>
 		<hr>
 	</div>
 </div>
@@ -101,7 +101,7 @@ function del_sure(){
 				$("#tips").html("删除失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
-			}else if(ret.code=="0"){
+			}else if(ret.code=="403"){
 				$("#delModal").modal('hide');
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');

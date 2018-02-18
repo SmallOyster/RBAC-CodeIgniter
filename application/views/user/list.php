@@ -3,7 +3,7 @@
  * @name V-用户列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-02-17
+ * @version V1.0 2018-02-18
  */
 ?>
 
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">用户列表（共 <font color="green"><?php echo count($list); ?></font> 个用户）</h1>
-		<a href="<?php echo site_url('user/add'); ?>" class="btn btn-success" style="width: 98%">新 增 用 户</a>
+		<a href="<?php echo site_url('user/add'); ?>" class="btn btn-primary" style="width: 98%">新 增 用 户</a>
 		<hr>
 	</div>
 </div>
@@ -37,7 +37,7 @@
 	<thead>
 		<tr>
 			<th>用户名</th>
-			<th>真实姓名</th>
+			<th>昵称</th>
 			<th>手机号</th>
 			<th>操作</th>
 		</tr>
@@ -46,9 +46,9 @@
 		<?php foreach($list as $info){ ?>
 		<tr>
 			<td><?php echo $info['user_name']; ?></td>
-			<td><?php echo $info['real_name']; ?></td>
+			<td><?php echo $info['nick_name']; ?></td>
 			<td><?php echo $info['phone']; ?></td>
-			<td><a href="<?php echo site_url('role/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['real_name']; ?>")' class="btn btn-danger">删除</a></td>
+			<td><a href="<?php echo site_url('user/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
 		</tr>
 	<?php } ?>
 	</tbody>
@@ -66,6 +66,24 @@ window.onload=function(){
 	});
 };
 
+
+function resetPwd_ready(id,name){
+	$("#resetID").val(id);
+	$("#resetName_show").html(name);
+	$("#resetModal").modal('show');
+}
+
+
+function resetPwd_sure(){
+	lockScreen();
+	id=$("#resetID").val();
+	
+	$.ajax({
+		url:"",
+		type:"post",
+		dataType:"json"
+	});
+}
 
 function del_ready(id,name){
 	$("#delID").val(id);
@@ -105,7 +123,7 @@ function del_sure(){
 				$("#tips").html("删除失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
-			}else if(ret.code=="0"){
+			}else if(ret.code=="403"){
 				$("#delModal").modal('hide');
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');

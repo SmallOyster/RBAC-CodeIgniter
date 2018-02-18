@@ -3,7 +3,7 @@
  * @name V-菜单管理
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-17
+ * @version V1.0 2018-02-18
  */
 ?>
 
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">菜单管理</h1>
-		<a href="<?php echo site_url('sys/menu/add/0'); ?>" class="btn btn-success" style="width: 98%">新 增 主 菜 单</a>
+		<a href="<?php echo site_url('sys/menu/add/0'); ?>" class="btn btn-primary" style="width: 98%">新 增 主 菜 单</a>
 	</div>
 </div>
 <!-- ./Page Name-->
@@ -114,7 +114,7 @@ function del_sure(){
 				$("#tips").html("删除失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
-			}else if(ret.code=="0"){
+			}else if(ret.code=="403"){
 				$("#delModal").modal('hide');
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
