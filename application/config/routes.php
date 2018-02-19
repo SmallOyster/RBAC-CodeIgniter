@@ -21,30 +21,34 @@ $route['admin/translate_uri_dashes'] = FALSE;
 $route['api/getAllRole']='API/API_rbac_role/getAllRole';
 $route['api/getAllMenuForZtree']='API/API_rbac_menu/getAllMenuForZtree';
 
-/************* RBAC-Role **************/
-$route['admin/role/list']='RBAC/admin/RBAC_role/list';
-$route['admin/role/toList']='RBAC/admin/RBAC_role/toList';
-$route['admin/role/add']='RBAC/admin/RBAC_role/add';
-$route['admin/role/toAdd']['POST']='RBAC/admin/RBAC_role/toAdd';
-$route['admin/role/edit/(:num)/(:any)']['GET']='RBAC/admin/RBAC_role/edit/$1/$2';
-$route['admin/role/toEdit']['POST']='RBAC/admin/RBAC_role/toEdit';
-$route['admin/role/toDel']['POST']='RBAC/admin/RBAC_role/toDel';
-$route['admin/role/setPermission/(:num)/(:any)']='RBAC/admin/RBAC_role/setPermission/$1/$2';
-$route['admin/role/toSetPermission']['POST']='RBAC/admin/RBAC_role/toSetPermission';
+/************* RBAC-Admin-Role **************/
+$route['admin/role/list']='RBAC/RBAC_role/list';
+$route['admin/role/toList']='RBAC/RBAC_role/toList';
+$route['admin/role/add']='RBAC/RBAC_role/add';
+$route['admin/role/toAdd']['POST']='RBAC/RBAC_role/toAdd';
+$route['admin/role/edit/(:num)/(:any)']['GET']='RBAC/RBAC_role/edit/$1/$2';
+$route['admin/role/toEdit']['POST']='RBAC/RBAC_role/toEdit';
+$route['admin/role/toDel']['POST']='RBAC/RBAC_role/toDel';
+$route['admin/role/setPermission/(:num)/(:any)']='RBAC/RBAC_role/setPermission/$1/$2';
+$route['admin/role/toSetPermission']['POST']='RBAC/RBAC_role/toSetPermission';
+
+/************* RBAC-Admin-User **************/
+$route['admin/user/list']='RBAC/RBAC_user/list';
+$route['admin/user/add']='RBAC/RBAC_user/add';
+$route['admin/user/toAdd']['POST']='RBAC/RBAC_user/toAdd';
+$route['admin/user/toDel']['POST']='RBAC/RBAC_user/toDel';
+$route['admin/user/edit/(:num)']['GET']='RBAC/RBAC_user/edit/$1';
+$route['admin/user/toEdit']['POST']='RBAC/RBAC_user/toEdit';
+$route['admin/user/toResetPwd']['POST']='RBAC/RBAC_user/toResetPwd';
+
+/************* RBAC-Admin-Menu **************/
+$route['admin/sys/menu/list']='RBAC/RBAC_menu/list';
+$route['admin/sys/menu/toDel']['POST']='RBAC/RBAC_menu/toDel';
+$route['admin/sys/menu/add/(:num)']='RBAC/RBAC_menu/add/$1';
+$route['admin/sys/menu/toAdd']['POST']='RBAC/RBAC_menu/toAdd';
+$route['admin/sys/menu/edit/(:num)']='RBAC/RBAC_menu/edit/$1';
+$route['admin/sys/menu/toEdit']['POST']='RBAC/RBAC_menu/toEdit';
 
 /************* RBAC-User **************/
-$route['admin/user/list']='RBAC/admin/RBAC_user/list';
-$route['admin/user/add']='RBAC/admin/RBAC_user/add';
-$route['admin/user/toAdd']['POST']='RBAC/admin/RBAC_user/toAdd';
-$route['admin/user/toDel']['POST']='RBAC/admin/RBAC_user/toDel';
-$route['admin/user/edit/(:num)']['GET']='RBAC/admin/RBAC_user/edit/$1';
-$route['admin/user/toEdit']['POST']='RBAC/admin/RBAC_user/toEdit';
-$route['admin/user/toResetPwd']['POST']='RBAC/admin/RBAC_user/toResetPwd';
-
-/************* RBAC-Menu **************/
-$route['admin/sys/menu/list']='RBAC/admin/RBAC_menu/list';
-$route['admin/sys/menu/toDel']['POST']='RBAC/admin/RBAC_menu/toDel';
-$route['admin/sys/menu/add/(:num)']='RBAC/admin/RBAC_menu/add/$1';
-$route['admin/sys/menu/toAdd']['POST']='RBAC/admin/RBAC_menu/toAdd';
-$route['admin/sys/menu/edit/(:num)']='RBAC/admin/RBAC_menu/edit/$1';
-$route['admin/sys/menu/toEdit']['POST']='RBAC/admin/RBAC_menu/toEdit';
+$route['user/updateProfile']='User/updateProfile';
+$route['user/toUpdateProfile']['POST']='User/toUpdateProfile';
