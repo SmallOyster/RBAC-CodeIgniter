@@ -24,12 +24,12 @@ CREATE TABLE IF NOT EXISTS `menu` (
 
 INSERT INTO `menu` (`id`, `father_id`, `name`, `icon`, `url`, `create_time`, `update_time`) VALUES
 	(1, 0, '系统管理', 'gears', '', '2018-02-18 20:46:23', ''),
-	(2, 1, '用户列表', 'user-circle-o', 'user/list', '2018-02-18 20:46:23', ''),
-	(3, 1, '角色列表', 'users', 'role/list', '2018-02-18 20:46:23', ''),
-	(4, 1, '菜单管理', 'bars', 'sys/menu/list', '2018-02-18 20:46:23', ''),
-	(5, 1, '操作记录列表', 'list-alt', 'sys/log/list', '2018-02-18 20:46:23', ''),
-	(6, 1, '数据库后台', 'database', '/show/jumpout/https%3a%2f%2fwww.baidu.com', '2018-02-18 20:46:23', ''),
-	(7, 0, '发布公告', 'bullhorn', 'notice/pub', '2018-02-18 20:46:23', '');
+	(2, 1, '用户列表', 'user-circle-o', 'admin/user/list', '2018-02-18 20:46:23', ''),
+	(3, 1, '角色列表', 'users', 'admin/role/list', '2018-02-18 20:46:23', ''),
+	(4, 1, '菜单管理', 'bars', 'admin/sys/menu/list', '2018-02-18 20:46:23', ''),
+	(5, 1, '操作记录列表', 'list-alt', 'admin/sys/log/list', '2018-02-18 20:46:23', ''),
+	(6, 1, '数据库后台', 'database', 'show/jumpout/https%3a%2f%2fwww.baidu.com', '2018-02-18 20:46:23', ''),
+	(7, 0, '发布公告', 'bullhorn', 'admin/notice/pub', '2018-02-18 20:46:23', '');
 
 CREATE TABLE IF NOT EXISTS `role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -83,4 +83,4 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `user` (`id`, `user_name`, `nick_name`, `password`, `salt`, `role_id`, `status`, `phone`, `email`, `create_time`, `update_time`) VALUES
-	(1, 'g', '1', '1e29791d34cee9b8091bf444a3c67203a330f321', 'YrtPXlA1', 18, 1, '11111111111', '1', '2018-02-17 21:19:58', '0000-00-00 00:00:00');
+	(1, 'test', '1', '1e29791d34cee9b8091bf444a3c67203a330f321', 'YrtPXlA1', 18, 1, '11111111111', '1', '2018-02-17 21:19:58', '0000-00-00 00:00:00');
