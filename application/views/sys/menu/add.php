@@ -102,9 +102,9 @@ function add(){
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"fatherID":fatherID,"name":name,"icon":icon,"url":url},
 		dataType:'json',
 		error:function(e){
-			console.log(JSON.stringify(e));
-			unlockScreen();$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-
+			console.log(e);
+			unlockScreen();
+			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			$("#tipsModal").modal('show');
 			return false;
 		},
