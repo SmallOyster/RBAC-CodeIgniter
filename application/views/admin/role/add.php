@@ -3,7 +3,7 @@
  * @name V-新增角色
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-02-18
+ * @version V1.0 2018-02-19
  */
 ?>
 
@@ -75,7 +75,7 @@ function add(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('role/toAdd'); ?>",
+		url:"<?php echo site_url('admin/role/toAdd'); ?>",
 		type:"post",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark},
 		dataType:'json',

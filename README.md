@@ -8,13 +8,17 @@
 
 ▲ 开发商：生蚝科技
 
-▲ 代码版本信息：***Build 00126 (2018-02-19 15:11)***
+▲ 代码版本信息：***Build 00151 (2018-02-19 15:48)***
 
 ▲ 系统版本信息：***V1.0 Build***
 
 ---
 
 ## 重大更新日志
+
+***--- 2018-02-19 (00151) ---***
+
+修改 | 所有RBAC的view视图统一归入admin文件夹
 
 ***--- 2018-02-18 (00114) ---***
 
@@ -56,7 +60,7 @@
 
 ## 待开发 TODO
 
-猛戳 * [`此Issue`](https://github.com/OysterTech/RBAC-CodeIgniter/issues/1) 查看
+猛戳 [`此Issue`](https://github.com/OysterTech/RBAC-CodeIgniter/issues/1) 查看
 
 ---
 

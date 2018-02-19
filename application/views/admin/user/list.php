@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">用户列表（共 <font color="green"><?php echo count($list); ?></font> 个用户）</h1>
-		<a href="<?php echo site_url('user/add'); ?>" class="btn btn-primary" style="width: 98%">新 增 用 户</a>
+		<a href="<?php echo site_url('admin/user/add'); ?>" class="btn btn-primary" style="width: 98%">新 增 用 户</a>
 		<hr>
 	</div>
 </div>
@@ -48,7 +48,7 @@
 			<td><?php echo $info['user_name']; ?></td>
 			<td><?php echo $info['nick_name']; ?></td>
 			<td><?php echo $info['phone']; ?></td>
-			<td><a href="<?php echo site_url('user/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
+			<td><a href="<?php echo site_url('admin/user/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
 		</tr>
 	<?php } ?>
 	</tbody>
@@ -79,7 +79,7 @@ function resetPwd_sure(){
 	id=$("#resetID").val();
 	
 	$.ajax({
-		url:"<?php echo site_url('user/toResetPwd'); ?>",
+		url:"<?php echo site_url('admin/user/toResetPwd'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},
@@ -138,7 +138,7 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('user/toDel'); ?>",
+		url:"<?php echo site_url('admin/user/toDel'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},

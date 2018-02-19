@@ -31,13 +31,13 @@ class RBAC_user extends CI_Controller {
 		$query=$this->db->query("SELECT * FROM user");
 		$list=$query->result_array();
 
-		$this->load->view('user/list',['list'=>$list,"navData"=>$this->allMenu]);
+		$this->load->view('admin/user/list',['list'=>$list,"navData"=>$this->allMenu]);
 	}
 
 
 	public function add()
 	{
-		$this->load->view('user/add',["navData"=>$this->allMenu]);
+		$this->load->view('admin/user/add',["navData"=>$this->allMenu]);
 	}
 
 
@@ -84,7 +84,7 @@ class RBAC_user extends CI_Controller {
 
 		$list=$query->result_array();
 
-		$this->load->view('user/edit',["navData"=>$this->allMenu,'userID'=>$userID,'info'=>$list[0]]);
+		$this->load->view('admin/user/edit',["navData"=>$this->allMenu,'userID'=>$userID,'info'=>$list[0]]);
 	}
 
 

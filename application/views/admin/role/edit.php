@@ -3,7 +3,7 @@
  * @name V-修改角色
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-18
+ * @version V1.0 2018-02-19
  */
 ?>
 
@@ -92,7 +92,7 @@ function edit(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('role/toEdit'); ?>",
+		url:"<?php echo site_url('admin/role/toEdit'); ?>",
 		type:"post",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark,'roleID':roleID},
 		dataType:'json',

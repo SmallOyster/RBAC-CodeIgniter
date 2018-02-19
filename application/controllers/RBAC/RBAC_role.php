@@ -3,7 +3,7 @@
 * @name C-RBAC-角色
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-02-18
+* @version V1.0 2018-02-19
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -32,14 +32,14 @@ class RBAC_role extends CI_Controller {
 		$list=$query->result_array();
 
 		$this->ajax->makeAjaxToken();
-		$this->load->view('role/list',['list'=>$list,"navData"=>$this->allMenu]);
+		$this->load->view('admin/role/list',['list'=>$list,"navData"=>$this->allMenu]);
 	}
 
 
 	public function add()
 	{
 		$this->ajax->makeAjaxToken();
-		$this->load->view('role/add',["navData"=>$this->allMenu]);
+		$this->load->view('admin/role/add',["navData"=>$this->allMenu]);
 	}
 
 
@@ -67,7 +67,7 @@ class RBAC_role extends CI_Controller {
 	public function edit($roleID,$roleName)
 	{
 		$this->ajax->makeAjaxToken();
-		$this->load->view('role/edit',["navData"=>$this->allMenu,'roleID'=>$roleID,'roleName'=>$roleName]);
+		$this->load->view('admin/role/edit',["navData"=>$this->allMenu,'roleID'=>$roleID,'roleName'=>$roleName]);
 	}
 
 
@@ -123,7 +123,7 @@ class RBAC_role extends CI_Controller {
 		$permissions=implode(",",$permissions);
 		
 		$this->ajax->makeAjaxToken();
-		$this->load->view('role/setPermission',["navData"=>$this->allMenu,'list'=>$list,'roleID'=>$roleID,"permission"=>$permissions,'roleName'=>$roleName]);
+		$this->load->view('admin/role/setPermission',["navData"=>$this->allMenu,'list'=>$list,'roleID'=>$roleID,"permission"=>$permissions,'roleName'=>$roleName]);
 	}
 
 

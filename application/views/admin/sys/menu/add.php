@@ -3,7 +3,7 @@
  * @name V-新增菜单
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-18
+ * @version V1.0 2018-02-19
  */
 ?>
 
@@ -97,7 +97,7 @@ function add(){
 	}
 	
 	$.ajax({
-		url:"<?php echo site_url('sys/menu/toAdd'); ?>",
+		url:"<?php echo site_url('admin/sys/menu/toAdd'); ?>",
 		type:"post",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"fatherID":fatherID,"name":name,"icon":icon,"url":url},
 		dataType:'json',

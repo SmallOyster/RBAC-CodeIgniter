@@ -3,7 +3,7 @@
  * @name V-新增用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-02-18
+ * @version V1.0 2018-02-19
  */
 ?>
 
@@ -171,7 +171,7 @@ function add(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('user/toAdd'); ?>",
+		url:"<?php echo site_url('admin/user/toAdd'); ?>",
 		type:"post",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
 		dataType:'json',

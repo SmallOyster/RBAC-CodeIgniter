@@ -3,7 +3,7 @@
  * @name V-角色列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-02-18
+ * @version V1.0 2018-02-19
  */
 ?>
 
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">角色列表（共 <font color="green"><?php echo count($list); ?></font> 个角色）</h1>
-		<a href="<?php echo site_url('role/add'); ?>" class="btn btn-primary" style="width: 98%">新 增 角 色</a>
+		<a href="<?php echo site_url('admin/role/add'); ?>" class="btn btn-primary" style="width: 98%">新 增 角 色</a>
 		<hr>
 	</div>
 </div>
@@ -44,7 +44,7 @@
 		<?php foreach($list as $info){ ?>
 		<tr>
 			<td><?php echo $info['name']; ?></td>
-			<td><a href="<?php echo site_url('role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a> <a href="<?php echo site_url('role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</a></td>
+			<td><a href="<?php echo site_url('admin/role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a> <a href="<?php echo site_url('admin/role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</a></td>
 		</tr>
 	<?php } ?>
 	</tbody>
@@ -75,7 +75,7 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('role/toDel'); ?>",
+		url:"<?php echo site_url('admin/role/toDel'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},

@@ -3,7 +3,7 @@
 * @name C-RBAC-菜单
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-17
-* @version V1.0 2018-02-18
+* @version V1.0 2018-02-19
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -28,7 +28,7 @@ class RBAC_menu extends CI_Controller {
 		$list=$this->RBAC_model->getAllMenu();
 
 		$this->ajax->makeAjaxToken();
-		$this->load->view('sys/menu/list',["navData"=>$this->allMenu,'list'=>$list]);
+		$this->load->view('admin/sys/menu/list',["navData"=>$this->allMenu,'list'=>$list]);
 	}
 
 
@@ -51,7 +51,7 @@ class RBAC_menu extends CI_Controller {
 			}
 		}
 		
-		$this->load->view('sys/menu/add',["navData"=>$this->allMenu,'fatherID'=>$fatherID,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/sys/menu/add',["navData"=>$this->allMenu,'fatherID'=>$fatherID,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
 	}
 
 
@@ -104,7 +104,7 @@ class RBAC_menu extends CI_Controller {
 			$fatherIcon=$fatherInfo['icon'];
 		}
 
-		$this->load->view('sys/menu/edit',["navData"=>$this->allMenu,'menuID'=>$menuID,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/sys/menu/edit',["navData"=>$this->allMenu,'menuID'=>$menuID,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
 	}
 
 

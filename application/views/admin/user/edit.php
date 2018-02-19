@@ -1,9 +1,9 @@
-<?php 
+admin/<?php 
 /**
  * @name V-修改用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-18
+ * @version V1.0 2018-02-19
  */
 ?>
 
@@ -185,7 +185,7 @@ function edit(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('user/toEdit'); ?>",
+		url:"<?php echo site_url('admin/user/toEdit'); ?>",
 		type:"post",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,'userID':userID,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
 		dataType:'json',

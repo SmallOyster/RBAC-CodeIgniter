@@ -3,7 +3,7 @@
  * @name V-给角色设置权限
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-18
+ * @version V1.0 2018-02-19
  */
 ?>
 
@@ -117,7 +117,7 @@ function toSetPermission(){
 	menuIDs=$("#menuIDs").val();
 
 	$.ajax({
-		url:"<?php echo site_url('role/toSetPermission'); ?>",
+		url:"<?php echo site_url('admin/role/toSetPermission'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,'roleID':roleID,'menuIDs':menuIDs},

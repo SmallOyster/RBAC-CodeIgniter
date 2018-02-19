@@ -3,7 +3,7 @@
  * @name V-菜单管理
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-18
+ * @version V1.0 2018-02-19
  */
 ?>
 
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">菜单管理</h1>
-		<a href="<?php echo site_url('sys/menu/add/0'); ?>" class="btn btn-primary" style="width: 98%">新 增 主 菜 单</a>
+		<a href="<?php echo site_url('admin/sys/menu/add/0'); ?>" class="btn btn-primary" style="width: 98%">新 增 主 菜 单</a>
 	</div>
 </div>
 <!-- ./Page Name-->
@@ -46,21 +46,21 @@
 	?>
 	<tr>
 		<td><i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i> <?php echo $info['name']; ?></td>
-		<td><a href="<?php echo site_url('sys/menu/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?php echo site_url('sys/menu/add/').$info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
+		<td><a href="<?php echo site_url('admin/sys/menu/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?php echo site_url('admin/sys/menu/add/').$info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
 	</tr>
 	<?php
 	foreach($info['child'] as $child_info){
 	?>
 	<tr>
 		<td>---- <i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child_info['name']; ?></td>
-		<td><a href="<?php echo site_url('sys/menu/edit/').$child_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $child_info['id']; ?>","<?php echo $child_info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?php echo site_url('sys/menu/add/').$child_info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
+		<td><a href="<?php echo site_url('admin/sys/menu/edit/').$child_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $child_info['id']; ?>","<?php echo $child_info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?php echo site_url('admin/sys/menu/add/').$child_info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
 	</tr>
 	<?php
 		foreach($child_info['child'] as $child2_info){
 	?>
 	<tr>
 		<td>-------- <i class="fa fa-<?php echo $child2_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child2_info['name']; ?></td>
-		<td><a href="<?php echo site_url('sys/menu/edit/').$child2_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $child2_info['id']; ?>","<?php echo $child2_info['name']; ?>")' class="btn btn-danger">删除</button></td>
+		<td><a href="<?php echo site_url('admin/sys/menu/edit/').$child2_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $child2_info['id']; ?>","<?php echo $child2_info['name']; ?>")' class="btn btn-danger">删除</button></td>
 	</tr>
 	<?php
 		}

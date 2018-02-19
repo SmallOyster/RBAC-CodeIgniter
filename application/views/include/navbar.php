@@ -92,13 +92,22 @@
 			</a>
 			<ul class="dropdown-menu dropdown-user">
 				<li>
-					<a href="#">
-						<i class="fa fa-user fa-fw"></i>User Profile</a>
+					<!-- @TODO 动态显示用户名 -->
+					<!-- @TODO 显示对应时段的问候语 -->
+					<a href="javascript:void(0)"><b><font color="green">super</font></b>，你好！</a>
+				</li>
+				<li>
+					<!-- @TODO 动态显示角色名 -->
+					<a href="javascript:void(0)">角色：<b><font color="#F57C00">超级管理员</font></b></a>
 				</li>
 				<li class="divider"></li>
 				<li>
+					<a href="<?php echo site_url('user/updateProfile'); ?>">
+						<i class="fa fa-user fa-fw"></i>修改个人资料</a>
+				</li>
+				<li>
 					<a href="login.html">
-						<i class="fa fa-sign-out fa-fw"></i>Logout</a>
+						<i class="fa fa-sign-out fa-fw"></i>登出系统</a>
 				</li>
 			</ul>
 		</li>
@@ -111,28 +120,9 @@
 		<div class="sidebar-nav navbar-collapse">
 			<ul class="nav" id="side-menu">
 				<li>
-					<a href="<?php echo site_url(''); ?>">
-						<i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+					<a href="<?php echo site_url(); ?>">
+						<i class="fa fa-home fa-fw"></i>主页面</a>
 				</li>
-				<li>
-					<a href="#">
-						<i class="fa fa-sitemap fa-fw"></i>Multi-Level Dropdown
-						<span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level">
-						<li>
-							<a href="#">Second Level Item</a></li>
-						<li>
-							<a href="#">Third Level
-								<span class="fa arrow"></span></a>
-							<ul class="nav nav-third-level">
-								<li>
-									<a href="#">Third Level Item</a></li>
-							</ul>
-						</li>
-						<!-- /.nav-third-level -->
-					</ul>
-				</li>
-				<!-- /.nav-second-level -->
 				<li>
 					<a href="#">
 						<i class="fa fa-files-o fa-fw"></i>Sample Pages
@@ -154,7 +144,7 @@
 					<li>
 						<a href="<?php echo site_url($info['url']); ?>">
 							<i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i>
-							<?php echo $info[ 'name']; ?>
+							<?php echo $info['name']; ?>
 						</a>
 					</li>
 					<!-- ./父菜单 -->
