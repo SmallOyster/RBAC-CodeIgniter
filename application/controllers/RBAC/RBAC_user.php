@@ -3,7 +3,7 @@
 * @name C-RBAC-用户
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-02-19
+* @version V1.0 2018-02-20
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -12,6 +12,7 @@ class RBAC_user extends CI_Controller {
 	
 	public $allMenu;
 	public $sessPrefix;
+	public $nowUserID;
 	public $nowUserName;
 	
 	function __construct()
@@ -22,7 +23,9 @@ class RBAC_user extends CI_Controller {
 
 		$this->allMenu=$this->RBAC_model->getAllMenuByRole("1");
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$this->nowUserName="super";
+		
+		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
+		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
 
 

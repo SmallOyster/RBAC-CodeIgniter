@@ -1,18 +1,18 @@
 <?php
 /**
-* @name 全局路由
-* @author CodeIgniter,SmallOyster
-* @since 2018-02-06
-* @version V1.0 2018-02-19
-*/
+ * @name 全局路由
+ * @author CodeIgniter,SmallOyster
+ * @since 2018-02-06
+ * @version V1.0 2018-02-20
+ */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 // System Default Routes
-$route['admin/default_controller'] = 'main/index';
-$route['admin/404_override'] = '';
-$route['admin/translate_uri_dashes'] = FALSE;
+$route['default_controller'] = 'Main/index';
+$route['404_override'] = '';
+$route['translate_uri_dashes'] = FALSE;
 
 
 // Custom Routes
@@ -52,3 +52,5 @@ $route['admin/sys/menu/toEdit']['POST']='RBAC/RBAC_menu/toEdit';
 /************* RBAC-User **************/
 $route['user/updateProfile']='User/updateProfile';
 $route['user/toUpdateProfile']['POST']='User/toUpdateProfile';
+$route['user/login']='User/login';
+$route['user/toLogin']['POST']='User/toLogin';

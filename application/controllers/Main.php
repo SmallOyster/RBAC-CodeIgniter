@@ -1,10 +1,10 @@
 <?php
 /**
-* @name C-基本
-* @author SmallOysyer <master@xshgzs.com>
-* @since 2018-02-07
-* @version V1.0-B180207 2018-02-07
-*/
+ * @name C-基本
+ * @author SmallOysyer <master@xshgzs.com>
+ * @since 2018-02-07
+ * @version V1.0-B180207 2018-02-07
+ */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 

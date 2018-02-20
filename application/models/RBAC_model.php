@@ -1,10 +1,10 @@
 <?php
 /**
-* @name M-RBAC
-* @author SmallOysyer <master@xshgzs.com>
-* @since 2018-02-06
-* @version V1.0 2018-02-19
-*/
+ * @name M-RBAC
+ * @author SmallOysyer <master@xshgzs.com>
+ * @since 2018-02-06
+ * @version V1.0 2018-02-20
+ */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -36,28 +36,6 @@ class RBAC_model extends CI_Model {
 		$query=$this->db->query("SELECT * FROM role");
 		$list=$query->result_array();
 		return $list;
-	}
-
-
-	public function validateUser($userID,$pwd)
-	{
-		$sql1="SELECT salt,password FROM user WHERE id=?";
-		$query1=$this->db->query($sql1,[$userID]);
-		
-		if($query1->num_rows()!=1){
-			return "404";
-		}
-		
-		$info=$query1->result_array();
-		$salt=$info[0]['salt'];
-		$pwd_indb=$info[0]['password'];
-		$hashSalt=md5($salt);
-
-		if(sha1($pwd.$hashSalt)==$pwd_indb){
-			return "200";
-		}else{
-			return "0";
-		}
 	}
 	
 	

@@ -28,49 +28,73 @@
 
 
 <script>
+/**
+* -----------------------------------
+* setCookie 设置Cookie
+* -----------------------------------
+* @param String Cookie名称
+* @param String Cookie内容
+* -----------------------------------
+**/
+function setCookie(name,value)
+{
+  var Days = 30;// Cookies有效天数
+  var exp = new Date();
+  exp.setTime(exp.getTime() + Days*24*60*60*1000);
+  document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+}
+
 
 /**
 * -----------------------------------
-* isInArray 妫€娴嬫寚瀹氬瓧绗︿覆鏄惁瀛樺湪浜庢暟缁�
+* getCookie 获取Cookie
 * -----------------------------------
-* @param Array  寰呮娴嬬殑鏁扮粍
-* @param String 鎸囧畾瀛楃涓�
+* @param String Cookie名称
 * -----------------------------------
 **/
-function isInArray(arr,val){
-  length=arr.length;
-  
-  if(length>0){
-    for(var i=0;i<length;i++){
-      if(arr[i] == val){
-        return i;
-      }
-    }
-    return false;
+function getCookie(name)
+{
+  var arr;
+  var reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+  if(arr=document.cookie.match(reg)){
+    return unescape(arr[2]);
   }else{
-    return false;
+    return null;
   }
-}/**
-* -------------------------------
-* lockScreen 屏幕锁定，显示加载图标
-* -------------------------------
+}
+
+
+/**
+* -----------------------------------
+* delCookie 删除Cookie
+* -----------------------------------
+* @param String Cookie名称
+* -----------------------------------
 **/
+function delCookie(name){
+  var exp = new Date();
+  exp.setTime(exp.getTime()-1);
+  var cval=getCookie(name);
+  if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+}
+
+/**
+ * lockScreen 屏幕锁定，显示加载图标
+ **/
 function lockScreen(){
 $('body').append(
-	'<div id="lockContent" style="opacity: 0.2; filter:alpha(opacity=20); width: 100%; height: 100%; z-index: 9999; position:fixed; _position:absolute; top:0; left:0;left:50%; margin-left:-20px; top:50%; margin-top:-20px;">'+
-	'<div><img src="<?php echo site_url('resource/images/loading.gif'); ?>"></img></div>'+
+	'<div id="lockContent" style="opacity: 0.8; filter:alpha(opacity=20); width: 100%; height: 100%; z-index: 9999; position:fixed; _position:absolute; top:0; left:0;left:50%; margin-left:-20px; top:50%; margin-top:-20px;">'+
+	'<div><i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw"></i><span class="sr-only">Loading...</span></div>'+
 	'</div>'+
-	'<div id="lockScreen" style="background: #000; opacity: 0.2; filter:alpha(opacity=20); width: 100%; height: 100%; z-index: 9999; position:fixed; _position:absolute; top:0; left:0;">'+
+	'<div id="lockScreen" style="background: #000; opacity: 0.35; filter:alpha(opacity=20); width: 100%; height: 100%; z-index: 9999; position:fixed; _position:absolute; top:0; left:0;">'+
 	'</div>'
 	);
 }
 
 
 /**
-* -------------------------------
-* unlockScreen 屏幕解锁
-* -------------------------------
-**/
+ * unlockScreen 屏幕解锁
+ **/
 function unlockScreen(){
 	$('#lockScreen').remove();
 	$('#lockContent').remove();

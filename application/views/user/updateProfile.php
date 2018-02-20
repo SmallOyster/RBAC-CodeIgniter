@@ -3,7 +3,7 @@
  * @name V-修改个人资料
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-19
- * @version V1.0 2018-02-19
+ * @version V1.0 2018-02-20
  */
 ?>
 
@@ -73,7 +73,7 @@
 		<br>
 		<div class="form-group">
 			<label for="email">邮箱</label>
-			<input type="email" class="form-control" id="email" value="<?php echo $info['email']; ?>">
+			<input type="email" class="form-control" id="email" value="<?php echo $info['email']; ?>" onkeyup='if(event.keyCode==13)updateProfile();'>
 		</div>
 
 		<hr>
@@ -175,11 +175,21 @@ function updateProfile(){
 			unlockScreen();
 			
 			if(ret.code=="200"){
-				alert("修改成功！");
-				history.go(-1);
-				return true;
+				if(oldPwd!=""){
+					alert("修改成功！请使用新密码重新登录！");
+					window.location.href="<?php echo site_url('user/login'); ?>";
+					return true;
+				}else{
+					alert("修改成功！");
+					history.go(-1);
+					return true;
+				}
 			}else if(ret.message=="updateFailed"){
 				$("#tips").html("修改失败！！！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="userForbidden"){
+				$("#tips").html("当前用户被禁用！<br>请联系管理员！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.message=="invaildPwd"){
