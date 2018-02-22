@@ -3,7 +3,7 @@
  * @name M-RBAC
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-06
- * @version V1.0 2018-02-20
+ * @version V1.0 2018-02-21
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -15,6 +15,22 @@ class RBAC_model extends CI_Model {
 	}
 
 
+	public function getMenuID($uri)
+	{
+		$sql="SELECT id FROM menu WHERE uri=?";
+		$query=$this->db->query($sql,[$uri]);
+		
+		if($query->num_rows()!=1){
+			return "404";
+		}
+		
+		$list=$query->result_array();
+		$info=$list[0];
+		
+		return $info['id'];
+	}
+	
+	
 	public function getAllPermissionByRole($roleID)
 	{
 		$rtn=array();

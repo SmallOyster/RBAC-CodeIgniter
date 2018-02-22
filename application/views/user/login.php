@@ -3,7 +3,7 @@
  * @name V-登录
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-20
- * @version V1.0 2018-02-20
+ * @version V1.0 2018-02-22
  */
 ?>
 
@@ -13,30 +13,33 @@
 <head>
 	<?php $this->load->view('include/header'); ?>
 	<title>登录 / <?php echo $this->config->item('systemName'); ?></title>
+	<style>
+	body{
+		padding-top: 40px;
+	}
+	</style>
 </head>
 
 <body>
 <div class="container">
-	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
-			<div class="login-panel panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">欢迎登录<?php echo $this->config->item('systemName'); ?></h3>
+	<div class="col-md-6 col-md-offset-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">欢迎登录<?php echo $this->config->item('systemName'); ?></h3>
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<input class="form-control" placeholder="用户名 / UserName" id="userName" onkeyup='if(event.keyCode==13)$("#pwd").focus();'>
 				</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<input class="form-control" placeholder="用户名 / userName" id="userName" onkeyup='if(event.keyCode==13)$("#pwd").focus();'>
-					</div>
-					<div class="form-group">
-						<input class="form-control" placeholder="密码 / Password" id="pwd" type="password" onkeyup='if(event.keyCode==13)toLogin();'>
-					</div>
-					<div class="checkbox">
-						<label for="Remember">
-							<input type="checkbox" id="Remember">记住用户名
-						</label>
-					</div>
-					<button class="btn btn-lg btn-success btn-block" onclick='toLogin();'>登录 Login &gt;</button>
+				<div class="form-group">
+					<input class="form-control" placeholder="密码 / Password" id="pwd" type="password" onkeyup='if(event.keyCode==13)toLogin();'>
 				</div>
+				<div class="checkbox">
+					<label for="Remember">
+						<input type="checkbox" id="Remember">记住用户名
+					</label>
+				</div>
+				<button class="btn btn-lg btn-success btn-block" onclick='toLogin();'>登录 Login &gt;</button>
 			</div>
 		</div>
 	</div>
@@ -67,8 +70,10 @@ window.onload=function(){
 }
 
 function toLogin(){
+	
+	// 防止多次提交
 	if(isAjaxing==1){
-		return;
+		return false;
 	}
 
 	isAjaxing=1;
@@ -147,7 +152,11 @@ function toLogin(){
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.message=="invaildPwd"){
-				console.log(ret);$("#tips").html("用户名或密码错误！");
+				$("#tips").html("用户名或密码错误！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="noRoleInfo"){
+				$("#tips").html("获取角色信息失败！请联系管理员！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else{

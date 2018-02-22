@@ -3,7 +3,7 @@
 * @name C-RBAC-菜单
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-17
-* @version V1.0 2018-02-19
+* @version V1.0 2018-02-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -12,22 +12,29 @@ class RBAC_menu extends CI_Controller {
 
 	public $allMenu;
 	public $sessPrefix;
+	public $nowUserID;
+	public $nowUserName;
 	
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->library(array('Ajax'));
 
-		$this->allMenu=$this->RBAC_model->getAllMenuByRole("1");
 		$this->sessPrefix=$this->safe->getSessionPrefix();
+		$roleID=$this->session->userdata($this->sessPrefix."roleID");
+		$this->allMenu=$this->RBAC_model->getAllMenuByRole($roleID);
+		
+		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
+		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
 
 
 	public function list()
 	{
-		$list=$this->RBAC_model->getAllMenu();
-
+		$this->safe->checkPermission();
 		$this->ajax->makeAjaxToken();
+		
+		$list=$this->RBAC_model->getAllMenu();
 		$this->load->view('admin/sys/menu/list',["navData"=>$this->allMenu,'list'=>$list]);
 	}
 
@@ -63,16 +70,16 @@ class RBAC_menu extends CI_Controller {
 		$fatherID=$this->input->post('fatherID');
 		$name=$this->input->post('name');
 		$icon=$this->input->post('icon');
-		$url=$this->input->post('url');
+		$uri=$this->input->post('uri');
 		
-		$sql="INSERT INTO menu(father_id,name,icon,url) VALUES (?,?,?,?)";
-		$query=$this->db->query($sql,[$fatherID,$name,$icon,$url]);
+		$sql="INSERT INTO menu(father_id,name,icon,uri) VALUES (?,?,?,?)";
+		$query=$this->db->query($sql,[$fatherID,$name,$icon,$uri]);
 
 		if($this->db->affected_rows()==1){
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","insertFailed");
+			$ret=$this->ajax->returnData("0","insertFailed");
 			die($ret);
 		}
 	}
@@ -116,17 +123,17 @@ class RBAC_menu extends CI_Controller {
 		$menuID=$this->input->post('menuID');
 		$name=$this->input->post('name');
 		$icon=$this->input->post('icon');
-		$url=$this->input->post('url');
+		$uri=$this->input->post('uri');
 		$nowTime=date("Y-m-d H:i:s");
 		
-		$sql="UPDATE menu SET name=?,icon=?,url=?,update_time=? WHERE id=?";
-		$query=$this->db->query($sql,[$name,$icon,$url,$nowTime,$menuID]);
+		$sql="UPDATE menu SET name=?,icon=?,uri=?,update_time=? WHERE id=?";
+		$query=$this->db->query($sql,[$name,$icon,$uri,$nowTime,$menuID]);
 
 		if($this->db->affected_rows()==1){
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","updateFailed");
+			$ret=$this->ajax->returnData("0","updateFailed");
 			die($ret);
 		}
 	}
@@ -148,7 +155,7 @@ class RBAC_menu extends CI_Controller {
 		$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","deleteFailed");
+			$ret=$this->ajax->returnData("0","deleteFailed");
 			die($ret);
 		}
 	}

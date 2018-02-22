@@ -3,7 +3,7 @@
 * @name C-RBAC-用户
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-02-20
+* @version V1.0 2018-02-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -21,8 +21,9 @@ class RBAC_user extends CI_Controller {
 		$this->load->helper('string');
 		$this->load->library(array('Ajax'));
 
-		$this->allMenu=$this->RBAC_model->getAllMenuByRole("1");
 		$this->sessPrefix=$this->safe->getSessionPrefix();
+		$roleID=$this->session->userdata($this->sessPrefix."roleID");
+		$this->allMenu=$this->RBAC_model->getAllMenuByRole($roleID);
 		
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
@@ -31,6 +32,9 @@ class RBAC_user extends CI_Controller {
 
 	public function list()
 	{
+		$this->safe->checkPermission();
+		$this->ajax->makeAjaxToken();
+
 		$query=$this->db->query("SELECT * FROM user");
 		$list=$query->result_array();
 
@@ -40,6 +44,8 @@ class RBAC_user extends CI_Controller {
 
 	public function add()
 	{
+		$this->ajax->makeAjaxToken();
+
 		$this->load->view('admin/user/add',["navData"=>$this->allMenu]);
 	}
 
@@ -56,6 +62,26 @@ class RBAC_user extends CI_Controller {
 		$roleID=$this->input->post('roleID');
 		$status=1;
 		
+		// 检查用户名手机邮箱是否已存在
+		$sql1="SELECT id FROM user WHERE user_name=?";
+		$query1=$this->db->query($sql1,[$userName]);
+		if($query1->num_rows()!=0){
+			$ret=$this->ajax->returnData("1","haveUserName");
+			die($ret);
+		}
+		$sql2="SELECT id FROM user WHERE phone=?";
+		$query2=$this->db->query($sql2,[$phone]);
+		if($query2->num_rows()!=0){
+			$ret=$this->ajax->returnData("2","havePhone");
+			die($ret);
+		}
+		$sql3="SELECT id FROM user WHERE email=?";
+		$query3=$this->db->query($sql3,[$email]);
+		if($query3->num_rows()!=0){
+			$ret=$this->ajax->returnData("3","haveEmail");
+			die($ret);
+		}
+
 		$originPwd=random_string('nozero');
 		$salt=random_string('alnum');
 		$hashSalt=md5($salt);
@@ -69,7 +95,7 @@ class RBAC_user extends CI_Controller {
 			$ret=$this->ajax->returnData("200","success",$data);
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","insertFailed");
+			$ret=$this->ajax->returnData("0","insertFailed");
 			die($ret);
 		}
 	}
@@ -111,7 +137,7 @@ class RBAC_user extends CI_Controller {
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","updateFailed");
+			$ret=$this->ajax->returnData("0","updateFailed");
 			die($ret);
 		}
 	}
@@ -133,7 +159,7 @@ class RBAC_user extends CI_Controller {
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","deleteFailed");
+			$ret=$this->ajax->returnData("0","deleteFailed");
 			die($ret);
 		}
 	}
@@ -173,7 +199,7 @@ class RBAC_user extends CI_Controller {
 			$ret=$this->ajax->returnData("200","success",['originPwd'=>$originPwd,'userName'=>$userName,'nickName'=>$nickName]);
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("2","resetFailed");
+			$ret=$this->ajax->returnData("0","resetFailed");
 			die($ret);
 		}
 	}

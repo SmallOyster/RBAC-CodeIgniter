@@ -3,7 +3,7 @@
 * @name L-安全类
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-01-18
-* @version V1.0.1 2018-02-19
+* @version V1.0.1 2018-02-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -27,5 +27,17 @@ class Safe {
 	public function getSessionPrefix()
 	{
 		return $this->sessPrefix;
+	}
+	
+	
+	public function checkPermission()
+	{
+		$roleID=$this->_CI->session->userdata($this->sessPrefix."roleID");
+		$menuID=$this->_CI->RBAC_model->getMenuID($this->_CI->uri->uri_string());
+		$allPermission=$this->_CI->RBAC_model->getAllPermissionByRole($roleID);
+		
+		if(!in_array($menuID,$allPermission)){
+			header("Location:".site_url('user/logout'.var_dump($allPermission)));
+		}
 	}
 }

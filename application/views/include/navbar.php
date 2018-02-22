@@ -9,23 +9,21 @@
 		</button>
 		<a class="navbar-brand" href="<?php echo site_url(); ?>"><?php echo $this->config->item('systemName'); ?></a>
 	</div>
-	<!-- /.dropdown-head-right -->
+	<!-- dropdown-head-right -->
 	<ul class="nav navbar-top-links navbar-right">
-		<!-- /.dropdown-user -->
+		<!-- dropdown-user -->
 		<li class="dropdown">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 				<i class="fa fa-user fa-lg"></i>
 				<i class="fa fa-caret-down"></i>
 			</a>
-			<ul class="dropdown-menu dropdown-user">
+			<ul class="dropdown-menu">
 				<li>
-					<!-- @TODO 动态显示用户名 -->
 					<!-- @TODO 显示对应时段的问候语 -->
-					<a href="javascript:void(0)"><b><font color="green">super</font></b>，你好！</a>
+					<a href="javascript:void(0)"><b><font color="green"><?php echo $this->nowUserName; ?></font></b>，你好！</a>
 				</li>
 				<li>
-					<!-- @TODO 动态显示角色名 -->
-					<a href="javascript:void(0)">角色：<b><font color="#F57C00">超级管理员</font></b></a>
+					<a href="javascript:void(0)">角色：<b><font color="#F57C00"><?php echo $this->session->userdata($this->sessPrefix.'roleName'); ?></font></b></a>
 				</li>
 				<li class="divider"></li>
 				<li>
@@ -33,7 +31,7 @@
 						<i class="fa fa-user fa-fw"></i>修改个人资料</a>
 				</li>
 				<li>
-					<a href="login.html">
+					<a href="<?php echo site_url('user/logout'); ?>">
 						<i class="fa fa-sign-out fa-fw"></i>登出系统</a>
 				</li>
 			</ul>
@@ -42,26 +40,15 @@
 	</ul>
 	<!-- /.dropdown-head-right -->
 
-	<!-- /.navbar-main -->
+	<!-- navbar-main -->
 	<div class="navbar-default sidebar" role="navigation">
 		<div class="sidebar-nav navbar-collapse">
 			<ul class="nav" id="side-menu">
 				<li>
 					<a href="<?php echo site_url(); ?>">
-						<i class="fa fa-home fa-fw"></i>主页面</a>
+						<i class="fa fa-home fa-fw"></i> 主页面</a>
 				</li>
-				<li>
-					<a href="#">
-						<i class="fa fa-files-o fa-fw"></i>Sample Pages
-						<span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level">
-						<li>
-							<a href="<?php echo site_url('show/blank'); ?>">Blank Page</a></li>
-						<li>
-							<a href="<?php echo site_url('user/login'); ?>">Login Page</a></li>
-					</ul>
-				</li>
-				<!-- nav-second-level -->
+				
 				<?php
 				// 显示父菜单
 				foreach($navData as $info){
@@ -69,7 +56,7 @@
 					// 没有二级菜单
 				?>
 					<li>
-						<a href="<?php echo site_url($info['url']); ?>">
+						<a href="<?php echo site_url($info['uri']); ?>">
 							<i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i>
 							<?php echo $info['name']; ?>
 						</a>
@@ -93,7 +80,7 @@
 							// 没有三级菜单
 						?>
 							<li>
-								<a href="<?php echo site_url($child_info['url']); ?>">
+								<a href="<?php echo site_url($child_info['uri']); ?>">
 									<i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i>
 									<?php echo $child_info['name']; ?>
 								</a>
@@ -115,7 +102,7 @@
 									foreach($child_info['child'] as $child2_info){
 									?>
 									<li>
-										<a href="<?php echo site_url($child2_info['url']); ?>">
+										<a href="<?php echo site_url($child2_info['uri']); ?>">
 											<i class="fa fa-<?php echo $child2_info['icon']; ?>" aria-hidden="true"></i>
 											<?php echo $child2_info[ 'name']; ?>
 										</a>

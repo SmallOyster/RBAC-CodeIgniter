@@ -3,7 +3,7 @@
 * @name C-RBAC-角色
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-02-20
+* @version V1.0 2018-02-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -21,8 +21,9 @@ class RBAC_role extends CI_Controller {
 		$this->load->library(array('Ajax'));
 		$this->load->helper('string');
 
-		$this->allMenu=$this->RBAC_model->getAllMenuByRole("1");
 		$this->sessPrefix=$this->safe->getSessionPrefix();
+		$roleID=$this->session->userdata($this->sessPrefix."roleID");
+		$this->allMenu=$this->RBAC_model->getAllMenuByRole($roleID);
 		
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
@@ -31,10 +32,12 @@ class RBAC_role extends CI_Controller {
 
 	public function list()
 	{
+		$this->safe->checkPermission();
+		$this->ajax->makeAjaxToken();
+		
 		$query=$this->db->query("SELECT * FROM role");
 		$list=$query->result_array();
 
-		$this->ajax->makeAjaxToken();
 		$this->load->view('admin/role/list',['list'=>$list,"navData"=>$this->allMenu]);
 	}
 
@@ -42,6 +45,7 @@ class RBAC_role extends CI_Controller {
 	public function add()
 	{
 		$this->ajax->makeAjaxToken();
+		
 		$this->load->view('admin/role/add',["navData"=>$this->allMenu]);
 	}
 
@@ -61,7 +65,7 @@ class RBAC_role extends CI_Controller {
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","insertFailed");
+			$ret=$this->ajax->returnData("0","insertFailed");
 			die($ret);
 		}
 	}
@@ -70,6 +74,7 @@ class RBAC_role extends CI_Controller {
 	public function edit($roleID,$roleName)
 	{
 		$this->ajax->makeAjaxToken();
+		
 		$this->load->view('admin/role/edit',["navData"=>$this->allMenu,'roleID'=>$roleID,'roleName'=>$roleName]);
 	}
 
@@ -91,7 +96,7 @@ class RBAC_role extends CI_Controller {
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","updateFailed");
+			$ret=$this->ajax->returnData("0","updateFailed");
 			die($ret);
 		}
 	}
@@ -113,19 +118,20 @@ class RBAC_role extends CI_Controller {
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("1","deleteFailed");
+			$ret=$this->ajax->returnData("0","deleteFailed");
 			die($ret);
 		}
 	}
 	
 	
 	public function setPermission($roleID,$roleName){
+		$this->ajax->makeAjaxToken();
+		
 		$list=$this->RBAC_model->getAllMenu();
 
 		$permissions=$this->RBAC_model->getAllPermissionByRole($roleID);
 		$permissions=implode(",",$permissions);
 		
-		$this->ajax->makeAjaxToken();
 		$this->load->view('admin/role/setPermission',["navData"=>$this->allMenu,'list'=>$list,'roleID'=>$roleID,"permission"=>$permissions,'roleName'=>$roleName]);
 	}
 
@@ -143,7 +149,7 @@ class RBAC_role extends CI_Controller {
 		$sql1="DELETE FROM role_permission WHERE role_id='".$roleID."'";
 		$query1=$this->db->simple_query($sql1);
 		if($query1!==TRUE){
-			$ret=$this->ajax->returnData("2","truncateFailed");
+			$ret=$this->ajax->returnData("0","truncateFailed");
 			die($ret);
 		}
 

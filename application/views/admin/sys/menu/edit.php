@@ -3,7 +3,7 @@
  * @name V-修改菜单
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-18
- * @version V1.0 2018-02-19
+ * @version V1.0 2018-02-22
  */
 ?>
 
@@ -45,14 +45,17 @@
 		<br>
 		<div class="form-group">
 			<label for="icon">菜单图标 (预览: <i id="icon_preview" class="" aria-hidden="true"></i>)</label>
-			<input class="form-control" id="icon" onkeyup='if(event.keyCode==13)$("#url").focus();' oninput='iconPreview();' value="<?php echo $info['icon']; ?>">
+			<input class="form-control" id="icon" onkeyup='if(event.keyCode==13)$("#uri").focus();' oninput='iconPreview();' value="<?php echo $info['icon']; ?>">
 			<p class="help-block">请输入Font-Awesome图标名称，无需输入前缀“fa-”，输入后可在上方预览</p>
 		</div>
 		<br>
 		<div class="form-group">
-			<label for="url">链接URL</label>
-			<input class="form-control" id="url" onkeyup='if(event.keyCode==13)edit();' value="<?php echo $info['url']; ?>">
-			<p class="help-block">若此菜单为父菜单，请留空此项</p>
+			<label for="uri">链接URL</label>
+			<input class="form-control" id="uri" onkeyup='if(event.keyCode==13)edit();' value="<?php echo $info['uri']; ?>">
+			<p class="help-block">
+				若此菜单为父菜单，请留空此项<br>
+				如此菜单需跳出站外，请<a onclick="inputJumpOutURI()">点此输入</a>
+			</p>
 		</div>
 
 		<hr>
@@ -88,12 +91,25 @@ function iconPreview(){
 	$("#icon_preview").attr("class","fa fa-"+icon);
 }
 
+function inputJumpOutURI(){
+  uri=prompt("请输入需要跳转到的网站的完整URL（包括HTTP/HTTPS头）","http://");
+  
+  if(uri=="http://" || uri=="https://" || uri==""){
+  	alert("请输入需要跳转到的网站的完整URL（包括HTTP/HTTPS头）！");
+  	return false;
+  }else if(uri==null){
+  	return;
+  }else{
+  	$("#uri").val("show/jumpout/"+encodeURIComponent(uri));
+  }
+}
+
 function edit(){
 	lockScreen();
 	menuID=$("#menuID").val();
 	name=$("#name").val();
 	icon=$("#icon").val();
-	url=$("#url").val();
+	uri=$("#uri").val();
 
 	if(name==""){
 		unlockScreen();
@@ -115,9 +131,9 @@ function edit(){
 	}
 	
 	$.ajax({
-		url:"<?php echo site_url('admin/sys/menu/toEdit'); ?>",
+		uri:"<?php echo site_url('admin/sys/menu/toEdit'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"menuID":menuID,"name":name,"icon":icon,"url":url},
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"menuID":menuID,"name":name,"icon":icon,"uri":uri},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));

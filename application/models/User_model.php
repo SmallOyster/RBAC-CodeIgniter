@@ -3,7 +3,7 @@
  * @name M-用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-20
- * @version V1.0 2018-02-20
+ * @version V1.0 2018-02-22
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -15,19 +15,17 @@ class User_model extends CI_Model {
 	}
 
 
-	public function getUserIDByUserName($userName)
+	public function getUserInfoByUserName($userName)
 	{
-		$sql="SELECT id FROM user WHERE user_name=?";
+		$sql="SELECT * FROM user WHERE user_name=?";
 		$query=$this->db->query($sql,[$userName]);
 
 		if($query->num_rows()!=1){
-			return "0";
+			return array();
 		}
 		
 		$info=$query->result_array();
-		$id=$info[0]['id'];
-
-		return $id;
+		return $info[0];
 	}
 
 

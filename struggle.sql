@@ -11,18 +11,21 @@ CREATE TABLE IF NOT EXISTS `log` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DELETE FROM `log`;
+
 CREATE TABLE IF NOT EXISTS `menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `father_id` int(11) NOT NULL COMMENT '父菜单ID（0为主菜单）',
   `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '名称',
   `icon` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '图标名（FA）',
-  `url` text COLLATE utf8_unicode_ci COMMENT '链接URL',
+  `uri` text COLLATE utf8_unicode_ci COMMENT '链接URI',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `menu` (`id`, `father_id`, `name`, `icon`, `url`, `create_time`, `update_time`) VALUES
+DELETE FROM `menu`;
+INSERT INTO `menu` (`id`, `father_id`, `name`, `icon`, `uri`, `create_time`, `update_time`) VALUES
 	(1, 0, '系统管理', 'gears', '', '2018-02-18 20:46:23', ''),
 	(2, 1, '用户列表', 'user-circle-o', 'admin/user/list', '2018-02-18 20:46:23', ''),
 	(3, 1, '角色列表', 'users', 'admin/role/list', '2018-02-18 20:46:23', ''),
@@ -35,18 +38,20 @@ CREATE TABLE IF NOT EXISTS `role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '角色名称',
   `remark` text COLLATE utf8_unicode_ci COMMENT '备注',
+  `is_default` int(1) NOT NULL DEFAULT '0' COMMENT '是否为默认角色',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='角色表';
 
-INSERT INTO `role` (`id`, `name`, `remark`, `create_time`, `update_time`) VALUES
-	(1, 'KljGfipz', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
-	(2, 'vQytYX1z', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
-	(3, 'GNVmjJha', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
-	(4, 'w19ZdFeJ', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
-	(5, 'oUlFnadP', '系统自动创建', '2018-02-18 17:33:20', '0000-00-00 00:00:00');
+DELETE FROM `role`;
+INSERT INTO `role` (`id`, `name`, `remark`, `is_default`, `create_time`, `update_time`) VALUES
+	(1, 'KljGfipz', '系统自动创建', 1, '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
+	(2, 'vQytYX1z', '系统自动创建', 0, '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
+	(3, 'GNVmjJha', '系统自动创建', 0, '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
+	(4, 'w19ZdFeJ', '系统自动创建', 0, '2018-02-18 17:33:20', '0000-00-00 00:00:00'),
+	(5, 'oUlFnadP', '系统自动创建', 0, '2018-02-18 17:33:20', '0000-00-00 00:00:00');
 
 CREATE TABLE IF NOT EXISTS `role_permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -55,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `role_permission` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DELETE FROM `role_permission`;
 INSERT INTO `role_permission` (`id`, `role_id`, `menu_id`) VALUES
 	(1, 1, 1),
 	(2, 1, 2),
@@ -82,5 +88,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DELETE FROM `user`;
 INSERT INTO `user` (`id`, `user_name`, `nick_name`, `password`, `salt`, `role_id`, `status`, `phone`, `email`, `create_time`, `update_time`) VALUES
-	(1, 'test', '1', '1e29791d34cee9b8091bf444a3c67203a330f321', 'YrtPXlA1', 18, 1, '11111111111', '1', '2018-02-17 21:19:58', '0000-00-00 00:00:00');
+	(1, 'super', 'xsh', '322fd52ada7d025a073526fc26f6d30f3c59f487', 'xce4H1Jv', 1, 2, '13902253100', '571339406@qq.com', '2018-02-17 21:19:58', '2018-02-19 17:40:38');

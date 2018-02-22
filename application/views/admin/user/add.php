@@ -3,7 +3,7 @@
  * @name V-新增用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-02-19
+ * @version V1.0 2018-02-22
  */
 ?>
 
@@ -37,17 +37,18 @@
 		<div class="form-group">
 			<label for="userName">用户名</label>
 			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();'>
-			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的用户名</p>
+			<p class="help-block">请输入<font color="green">4</font>-<font color="green">20</font>字的用户名</p>
 		</div>
 		<br>
 		<div class="form-group">
-			<label for="realName">昵称</label>
+			<label for="nickName">昵称</label>
 			<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="phone">手机号</label>
 			<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();'>
+			<p class="help-block">目前仅支持中国大陆的手机号码</p>
 		</div>
 		<br>
 		<div class="form-group">
@@ -133,9 +134,9 @@ function add(){
 		$("#tipsModal").modal('show');
 		return false;
 	}
-	if(userName.length<1 || userName.length>20){
+	if(userName.length<4 || userName.length>20){
 		unlockScreen();
-		$("#tips").html("请输入 1-20字 的用户名！");
+		$("#tips").html("请输入 4-20字 的用户名！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
@@ -193,8 +194,20 @@ function add(){
 				$("#info_originPwd_show").html(ret.data['originPwd']);
 				$("#infoModal").modal('show');
 				return true;
-			}else if(ret.code=="1"){
+			}else if(ret.message=="insertFailed"){
 				$("#tips").html("新增失败！！！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="haveUserName"){
+				$("#tips").html("此用户名已存在！<br>请输入其他用户名！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="havePhone"){
+				$("#tips").html("此手机号已存在！<br>请输入其他手机号！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="haveEmail"){
+				$("#tips").html("此邮箱已存在！<br>请输入其他邮箱！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code=="403"){
@@ -202,7 +215,7 @@ function add(){
 				$("#tipsModal").modal('show');
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.data+"</font>");
+				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				$("#tipsModal").modal('show');
 				return false;
 			}
