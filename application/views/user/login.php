@@ -3,7 +3,7 @@
  * @name V-登录
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-20
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-25
  */
 ?>
 
@@ -29,9 +29,12 @@
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
+					<label for="userName">用户名</label>
 					<input class="form-control" placeholder="用户名 / UserName" id="userName" onkeyup='if(event.keyCode==13)$("#pwd").focus();'>
 				</div>
+				<br>
 				<div class="form-group">
+					<label for="pwd">密码</label> <a href="<?php echo site_url('user/forgetPwd'); ?>" target="_blank">（忘记密码 Forget Password）</a>
 					<input class="form-control" placeholder="密码 / Password" id="pwd" type="password" onkeyup='if(event.keyCode==13)toLogin();'>
 				</div>
 				<div class="checkbox">
@@ -39,7 +42,9 @@
 						<input type="checkbox" id="Remember">记住用户名
 					</label>
 				</div>
-				<button class="btn btn-lg btn-success btn-block" onclick='toLogin();'>登录 Login &gt;</button>
+				<center>
+					<button class="btn btn-primary" style="width:48%" onclick='toLogin();'>注册 / Register</button> <button class="btn btn-success" style="width:48%" onclick='toLogin();'>登录 / Login &gt;</button>
+				</center>
 			</div>
 		</div>
 	</div>

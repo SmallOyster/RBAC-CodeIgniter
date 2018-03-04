@@ -3,7 +3,7 @@
  * @name V-修改角色
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-24
  */
 ?>
 
@@ -38,13 +38,13 @@
 	<div class="panel-body">
 		<div class="form-group">
 			<label>角色名称</label>
-			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' value="<?php echo $roleName; ?>">
+			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' value="<?php echo $info['name']; ?>">
 			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
 		</div>
 		<br>
 		<div class="form-group">
 			<label>备注</label>
-			<textarea class="form-control" id="remark"></textarea>
+			<textarea class="form-control" id="remark"><?php echo $info['remark']; ?></textarea>
 			<p class="help-block">选填</p>
 		</div>
 
@@ -62,7 +62,7 @@
 
 		<hr>
 		
-		<button class="btn btn-success" style="width:100%" onclick='edit()'>确 认 编 辑 角 色 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='edit()'>确 认 编 辑 角 色 &gt;</button>
 	</div>
 </div>
 

@@ -3,7 +3,7 @@
  * @name V-给角色设置权限
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-24
  */
 ?>
 
@@ -45,7 +45,7 @@
 
 <hr>
 
-<button onclick='getCheckedNodes();toSetPermission();' class="btn btn-success" style="width: 100%">确 认 分 配 权 限</button>
+<button onclick='getCheckedNodes();toSetPermission();' class="btn btn-success btn-block">确 认 分 配 权 限</button>
 
 <!-- ./Page Main Content -->
 </div>

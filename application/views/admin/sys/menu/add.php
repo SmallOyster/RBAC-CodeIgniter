@@ -3,7 +3,7 @@
  * @name V-新增菜单
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-03-02
  */
 ?>
 
@@ -58,7 +58,7 @@
 			</p>
 		</div>
 		<hr>
-		<button class="btn btn-success" style="width:100%" onclick='add()'>确 认 新 增 菜 单 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='add()'>确 认 新 增 菜 单 &gt;</button>
 	</div>
 </div>
 
@@ -82,7 +82,7 @@ function inputJumpOutURI(){
   }else if(uri==null){
   	return;
   }else{
-  	$("#uri").val("show/jumpout/"+encodeURIComponent(uri));
+  	$("#uri").val("show/jumpout/"+uri);
   }
 }
 
@@ -113,10 +113,10 @@ function add(){
 	}
 	
 	$.ajax({
-		uri:"<?php echo site_url('admin/sys/menu/toAdd'); ?>",
-		type:"post",
+		url:"<?php echo site_url('admin/sys/menu/toAdd'); ?>",
+		type:"POST",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"fatherID":fatherID,"name":name,"icon":icon,"uri":uri},
-		dataType:'json',
+		dataType:"JSON",
 		error:function(e){
 			console.log(e);
 			unlockScreen();

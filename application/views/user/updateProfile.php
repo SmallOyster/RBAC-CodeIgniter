@@ -90,7 +90,7 @@
 
 		<hr>
 
-		<button class="btn btn-success" style="width:100%" onclick='updateProfile()'>确 认 修 改 用 户 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='updateProfile()'>确 认 修 改 用 户 &gt;</button>
 	</div>
 </div>
 

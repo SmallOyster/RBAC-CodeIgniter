@@ -3,7 +3,7 @@
  * @name 全局路由
  * @author CodeIgniter,SmallOyster
  * @since 2018-02-06
- * @version V1.0 2018-02-21
+ * @version V1.0 2018-03-04
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -31,6 +31,7 @@ $route['admin/role/toEdit']['POST']='RBAC/RBAC_role/toEdit';
 $route['admin/role/toDel']['POST']='RBAC/RBAC_role/toDel';
 $route['admin/role/setPermission/(:num)/(:any)']='RBAC/RBAC_role/setPermission/$1/$2';
 $route['admin/role/toSetPermission']['POST']='RBAC/RBAC_role/toSetPermission';
+$route['admin/role/toSetDefaultRole']['POST']='RBAC/RBAC_role/toSetDefaultRole';
 
 /************* RBAC-Admin-User **************/
 $route['admin/user/list']='RBAC/RBAC_user/list';
@@ -48,6 +49,14 @@ $route['admin/sys/menu/add/(:num)']='RBAC/RBAC_menu/add/$1';
 $route['admin/sys/menu/toAdd']['POST']='RBAC/RBAC_menu/toAdd';
 $route['admin/sys/menu/edit/(:num)']='RBAC/RBAC_menu/edit/$1';
 $route['admin/sys/menu/toEdit']['POST']='RBAC/RBAC_menu/toEdit';
+
+/************* Setting **************/
+$route['admin/sys/setting/list']='Setting/list';
+$route['admin/sys/setting/toSave']['POST']='Setting/toSave';
+
+/************* Admin-Log **************/
+$route['admin/sys/log/list']='Log/list';
+$route['admin/sys/log/toTruncateLog']['POST']='Log/toTruncateLog';
 
 /************* RBAC-User **************/
 $route['user/updateProfile']='User/updateProfile';

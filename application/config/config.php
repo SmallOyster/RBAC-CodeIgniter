@@ -53,10 +53,6 @@ $config['index_page'] = '';
 | WARNING: If you set this to 'PATH_INFO', URIs will always be URL-decoded!
 */
 
-/*
-| Test Route by Nginx - 2018.01.05 - in YC
-| $config['uri_protocol']	= 'REQUEST_URI';
-*/
 $config['uri_protocol']	= 'REQUEST_URI';
 
 /*

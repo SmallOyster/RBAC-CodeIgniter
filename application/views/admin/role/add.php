@@ -3,7 +3,7 @@
  * @name V-新增角色
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-24
  */
 ?>
 
@@ -46,7 +46,7 @@
 			<p class="help-block">选填</p>
 		</div>
 		<hr>
-		<button class="btn btn-success" style="width:100%" onclick='add()'>确 认 新 增 角 色 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='add()'>确 认 新 增 角 色 &gt;</button>
 	</div>
 </div>
 

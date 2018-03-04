@@ -3,7 +3,7 @@
  * @name V-修改菜单
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-18
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-25
  */
 ?>
 
@@ -72,7 +72,7 @@
 
 		<hr>
 
-		<button class="btn btn-success" style="width:100%" onclick='edit()'>确 认 修 改 菜 单 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='edit()'>确 认 修 改 菜 单 &gt;</button>
 	</div>
 </div>
 
@@ -100,7 +100,7 @@ function inputJumpOutURI(){
   }else if(uri==null){
   	return;
   }else{
-  	$("#uri").val("show/jumpout/"+encodeURIComponent(uri));
+  	$("#uri").val("show/jumpout/"+uri);
   }
 }
 
@@ -131,10 +131,10 @@ function edit(){
 	}
 	
 	$.ajax({
-		uri:"<?php echo site_url('admin/sys/menu/toEdit'); ?>",
-		type:"post",
+		url:"<?php echo site_url('admin/sys/menu/toEdit'); ?>",
+		type:"POST",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"menuID":menuID,"name":name,"icon":icon,"uri":uri},
-		dataType:'json',
+		dataType:"JSON",
 		error:function(e){
 			console.log(JSON.stringify(e));
 			unlockScreen();

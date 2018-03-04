@@ -3,7 +3,7 @@
  * @name V-角色列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-03-04
  */
 ?>
 
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">角色列表（共 <font color="green"><?php echo count($list); ?></font> 个角色）</h1>
-		<a href="<?php echo site_url('admin/role/add'); ?>" class="btn btn-primary" style="width: 98%">新 增 角 色</a>
+		<a href="<?php echo site_url('admin/role/add'); ?>" class="btn btn-primary btn-block">新 增 角 色</a>
 		<hr>
 	</div>
 </div>
@@ -44,7 +44,15 @@
 		<?php foreach($list as $info){ ?>
 		<tr>
 			<td><?php echo $info['name']; ?></td>
-			<td><a href="<?php echo site_url('admin/role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a> <a href="<?php echo site_url('admin/role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</a></td>
+			<td>
+				<a href="<?php echo site_url('admin/role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a>
+				<a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</a>
+				<a href="<?php echo site_url('admin/role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a>
+				
+				<?php if($info['is_default']==0){ ?>
+				<a onclick='setDefaultRole("<?php echo $info['id']; ?>")' class="btn btn-primary">设为默认角色</a>
+				<?php } ?>
+			</td>
 		</tr>
 	<?php } ?>
 	</tbody>
@@ -107,6 +115,47 @@ function del_sure(){
 				return false;
 			}else{
 				$("#delModal").modal('hide');
+				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
+				$("#tipsModal").modal('show');
+				return false;
+			}
+		}
+	});
+}
+
+
+function setDefaultRole(id){
+	lockScreen();
+
+	$.ajax({
+		url:"<?php echo site_url('admin/role/toSetDefaultRole'); ?>",
+		type:"post",
+		dataType:"json",
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},
+		error:function(e){
+			console.log(e);
+			unlockScreen();
+			$("#delModal").modal('hide');
+			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+			$("#tipsModal").modal('show');
+			return false;
+		},
+		success:function(ret){
+			unlockScreen();
+			
+			if(ret.code=="200"){
+				alert("设置成功！");
+				location.reload();
+				return true;
+			}else if(ret.message=="setFailed"){
+				$("#tips").html("设置失败！！！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.code=="403"){
+				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
+				$("#tipsModal").modal('show');
+				return false;
+			}else{
 				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				$("#tipsModal").modal('show');
 				return false;

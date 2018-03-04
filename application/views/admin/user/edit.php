@@ -3,7 +3,7 @@
  * @name V-修改用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-24
  */
 ?>
 
@@ -79,7 +79,7 @@
 
 		<hr>
 
-		<button class="btn btn-success" style="width:100%" onclick='edit()'>确 认 修 改 用 户 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='edit()'>确 认 修 改 用 户 &gt;</button>
 	</div>
 </div>
 

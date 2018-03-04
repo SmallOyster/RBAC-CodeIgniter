@@ -3,7 +3,7 @@
 * @name C-RBAC-用户
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-02-22
+* @version V1.0 2018-03-01
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -155,7 +155,7 @@ class RBAC_user extends CI_Controller {
 
 		if($this->db->affected_rows()==1){
 			$logContent='删除用户|'.$id;
-			$this->Log_model->create('用户',$logContent,$this->nowUserName);
+			$this->Log_model->create('用户',$logContent);
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{

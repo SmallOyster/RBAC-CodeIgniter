@@ -3,7 +3,7 @@
  * @name C-用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-19
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-25
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -207,6 +207,54 @@ class User extends CI_Controller {
 			die($ret);
 		}else{
 			$ret=$this->ajax->returnData("0","regFailed");
+			die($ret);
+		}
+	}
+	
+	
+	public function forgetPassword()
+	{
+		$this->ajax->makeAjaxToken();
+
+		$this->load->view('user/forgetPwd');
+	}
+	
+	
+	public function toForgetPassword()
+	{
+		$token=$this->input->post('token');
+		$this->ajax->checkAjaxToken($token);
+		
+		$userName=$this->input->post('userName');
+		$pwd=$this->input->post('pwd');
+		$phone=$this->input->post('phone');
+		$email=$this->input->post('email');
+		
+		$userInfo_sql="SELECT id FROM user WHERE user_name=? AND email=? AND phone=?";
+		$userInfo_query=$this->db->query($userInfo_sql,[$userName,$email,$phone]);
+		
+		if($userInfo_query->num_rows()==1){
+			$userInfo_list=$userInfo_query->result_array();
+			$userInfo=$userInfo_list[0];
+			$userID=$userInfo['id'];
+		}else{
+			$ret=$this->ajax->returnData("1","noUser");
+			die($ret);
+		}
+		
+		$salt=random_string('alnum');
+		$hashSalt=md5($salt);
+		$hashPwd=sha1($pwd.$hashSalt);
+		
+		$nowTime=date("Y-m-d H:i:s");
+		$sql="UPDATE user SET password=?,salt=?,update_time=? WHERE id=?";
+		$query=$this->db->query($sql,[$hashPwd,$salt,$nowTime,$userID]);
+		
+		if($this->db->affected_rows()==1){
+			$ret=$this->ajax->returnData("200","success");
+			die($ret);
+		}else{
+			$ret=$this->ajax->returnData("0","resetFailed");
 			die($ret);
 		}
 	}

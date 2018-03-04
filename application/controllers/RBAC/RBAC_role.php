@@ -3,7 +3,7 @@
 * @name C-RBAC-角色
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-02-22
+* @version V1.0 2018-03-04
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -71,11 +71,20 @@ class RBAC_role extends CI_Controller {
 	}
 
 
-	public function edit($roleID,$roleName)
+	public function edit($roleID)
 	{
 		$this->ajax->makeAjaxToken();
+
+		$query=$this->db->query("SELECT * FROM role WHERE id=?",[$roleID]);
 		
-		$this->load->view('admin/role/edit',["navData"=>$this->allMenu,'roleID'=>$roleID,'roleName'=>$roleName]);
+		if($query->num_rows()!=1){
+			header("Location: ".site_url('/'));
+		}
+
+		$list=$query->result_array();
+		$info=$list[0];
+		
+		$this->load->view('admin/role/edit',["navData"=>$this->allMenu,'roleID'=>$roleID,'info'=>$info]);
 	}
 
 
@@ -114,7 +123,7 @@ class RBAC_role extends CI_Controller {
 
 		if($this->db->affected_rows()==1){
 			$logContent='删除角色|'.$id;
-			$this->Log_model->create('角色',$logContent,$this->nowUserName);
+			$this->Log_model->create('角色',$logContent);
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
@@ -171,6 +180,28 @@ class RBAC_role extends CI_Controller {
 			die($ret);
 		}else{
 			$ret=$this->ajax->returnData("1","quantityMismatch");
+			die($ret);
+		}
+	}
+
+
+	public function toSetDefaultRole()
+	{
+		$token=$this->input->post('token');
+		$this->ajax->checkAjaxToken($token);
+
+		$id=$this->input->post('id');
+		$sql1="UPDATE role SET is_default=1 WHERE id=?";
+		$query1=$this->db->query($sql1,[$id]);
+
+		if($this->db->affected_rows()==1){
+			$sql2="UPDATE role SET is_default=0 WHERE id<>?";
+			$query2=$this->db->query($sql2,[$id]);
+			
+			$ret=$this->ajax->returnData("200","success");
+			die($ret);
+		}else{
+			$ret=$this->ajax->returnData("0","setFailed");
 			die($ret);
 		}
 	}

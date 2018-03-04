@@ -3,7 +3,7 @@
 * @name C-RBAC-菜单
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-17
-* @version V1.0 2018-02-22
+* @version V1.0 2018-02-25
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -72,6 +72,11 @@ class RBAC_menu extends CI_Controller {
 		$icon=$this->input->post('icon');
 		$uri=$this->input->post('uri');
 		
+		if(substr($uri,0,13)=='show/jumpout/'){
+			$jumpToURL=urlencode(substr(12));
+			$uri='show/jumpout'.$jumpToURL;
+		}
+		
 		$sql="INSERT INTO menu(father_id,name,icon,uri) VALUES (?,?,?,?)";
 		$query=$this->db->query($sql,[$fatherID,$name,$icon,$uri]);
 
@@ -125,6 +130,11 @@ class RBAC_menu extends CI_Controller {
 		$icon=$this->input->post('icon');
 		$uri=$this->input->post('uri');
 		$nowTime=date("Y-m-d H:i:s");
+	
+		if(substr($uri,0,13)=='show/jumpout/'){
+			$jumpToURL=urlencode(substr($uri,13));
+			$uri='show/jumpout/'.$jumpToURL;
+		}
 		
 		$sql="UPDATE menu SET name=?,icon=?,uri=?,update_time=? WHERE id=?";
 		$query=$this->db->query($sql,[$name,$icon,$uri,$nowTime,$menuID]);

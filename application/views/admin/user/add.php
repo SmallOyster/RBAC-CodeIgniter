@@ -3,7 +3,7 @@
  * @name V-新增用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-24
  */
 ?>
 
@@ -65,7 +65,7 @@
 
 		<hr>
 
-		<button class="btn btn-success" style="width:100%" onclick='add()'>确 认 新 增 用 户 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='add()'>确 认 新 增 用 户 &gt;</button>
 	</div>
 </div>
 

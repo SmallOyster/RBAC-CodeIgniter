@@ -3,7 +3,7 @@
  * @name V-用户列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-02-24
  */
 ?>
 
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">用户列表（共 <font color="green"><?php echo count($list); ?></font> 个用户）</h1>
-		<a href="<?php echo site_url('admin/user/add'); ?>" class="btn btn-primary" style="width: 98%">新 增 用 户</a>
+		<a href="<?php echo site_url('admin/user/add'); ?>" class="btn btn-primary btn-block">新 增 用 户</a>
 		<hr>
 	</div>
 </div>
