@@ -3,7 +3,7 @@
  * @name C-系统配置
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-03
- * @version V1.0 2018-03-03
+ * @version V1.0 2018-03-06
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -33,8 +33,9 @@ class Setting extends CI_Controller {
 	public function list()
 	{
 		$this->ajax->makeAjaxToken();
+		$list=$this->Setting_model->list();
 		
-		$this->load->view('admin/sys/setting/list',["navData"=>$this->allMenu]);
+		$this->load->view('admin/sys/setting/list',["navData"=>$this->allMenu,'list'=>$list]);
 	}
 
 
@@ -45,15 +46,14 @@ class Setting extends CI_Controller {
 		
 		$name=$this->input->post('name');
 		$value=$this->input->post('value');
-		$allConfig=$this->config->item('allConfig');
-
-		if(!array_key_exists($name,$allConfig)){
-			$ret=$this->ajax->returnData("1","noSetting");
+		
+		$saveStatus=$this->Setting_model->save($name,$value);
+		
+		if($saveStatus==TRUE){
+			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
-			$this->config->set_item('index_page','item_value');
-			$this->config->set_item($name,$value);
-			$ret=$this->ajax->returnData("200".$name.$value,"success1");
+			$ret=$this->ajax->returnData("0","saveFailed");
 			die($ret);
 		}
 	}

@@ -7,7 +7,7 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand" href="<?php echo site_url(); ?>"><?php echo $this->config->item('systemName'); ?></a>
+		<a class="navbar-brand" href="<?php echo site_url(); ?>"><?php echo $this->Setting_model->get('systemName'); ?></a>
 	</div>
 	<!-- dropdown-head-right -->
 	<ul class="nav navbar-top-links navbar-right">

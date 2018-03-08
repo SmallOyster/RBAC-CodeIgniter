@@ -3,7 +3,7 @@
  * @name V-系统设置列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-03
- * @version V1.0 2018-03-04
+ * @version V1.0 2018-03-05
  */
  
 ?>
@@ -45,20 +45,20 @@
 	
 	<tbody>
 	<?php
-	foreach($this->config->item('allConfig') as $key=>$value){
+	foreach($list as $info){
 	?>
 	<tr>
-		<td><?php echo $value; ?></td>
+		<td><?php echo $info['chinese_name']; ?></td>
 		<td>
 			<!-- 显示 -->
-			<p id="<?php echo $key; ?>_show"><?php echo $this->config->item($key); ?></p>
+			<p id="<?php echo $info['name']; ?>_show"><?php echo $info['value']; ?></p>
 
 			<!-- 输入框 -->
-			<input type="hidden" id="<?php echo $key; ?>_input" class="form-control" value="<?php echo $this->config->item($key); ?>">
+			<input type="hidden" id="<?php echo $info['name']; ?>_input" class="form-control" value="<?php echo $info['value']; ?>">
 		</td>
 		<td>
-			<button class="btn btn-primary" id="<?php echo $key; ?>_btn1" onclick='edit("<?php echo $key; ?>")'>修改</button>
-			<button class="btn btn-success" id="<?php echo $key; ?>_btn2" onclick='save("<?php echo $key; ?>")' style="display:none">保存</button>
+			<button class="btn btn-primary" id="<?php echo $info['name']; ?>_btn1" onclick='edit("<?php echo $info['name']; ?>")'>修改</button>
+			<button class="btn btn-success" id="<?php echo $info['name']; ?>_btn2" onclick='save("<?php echo $info['name']; ?>")' style="display:none">保存</button>
 		</td>
 	</tr>
 	<?php } ?>
@@ -91,7 +91,7 @@ function save(name){
 			console.log(e);
 			unlockScreen();
 			$("#truncateModal").modal('hide');
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.responseText+"</font>");
 			$("#tipsModal").modal('show');
 			return false;
 		},
@@ -108,6 +108,10 @@ function save(name){
 				return true;
 			}else if(ret.message=="noSetting"){
 				$("#tips").html("无此配置项！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="saveFailed"){
+				$("#tips").html("保存失败！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code=="403"){

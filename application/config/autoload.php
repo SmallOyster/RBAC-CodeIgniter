@@ -103,7 +103,7 @@ $autoload['helper'] = array('url');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('custom');
+$autoload['config'] = array('custom','email');
 
 /*
 | -------------------------------------------------------------------
@@ -132,4 +132,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('RBAC_model','Log_model','User_model');
+$autoload['model'] = array('RBAC_model','Log_model','User_model','Setting_model');

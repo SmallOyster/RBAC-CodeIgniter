@@ -3,7 +3,7 @@
  * @name 全局路由
  * @author CodeIgniter,SmallOyster
  * @since 2018-02-06
- * @version V1.0 2018-03-04
+ * @version V1.0 2018-03-08
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -64,9 +64,11 @@ $route['user/toUpdateProfile']['POST']='User/toUpdateProfile';
 $route['user/login']='User/login';
 $route['user/toLogin']['POST']='User/toLogin';
 $route['user/logout']='User/logout';
-$route['user/reg']='User/reg';
-$route['user/toReg']['POST']='User/toReg';
+$route['user/reg']='User/register';
+$route['user/toReg']['POST']='User/toRegister';
+$route['user/reg/verify/(:any)']='User/verifyRegister/$1';
 $route['user/forgetPwd']='User/forgetPassword';
-$route['user/toForgetPwd']['POST']='User/toForgetPassword';
+$route['user/forgetPwd/sendMail']['POST']='User/sendMailForgetPassword';
+$route['user/forgetPwd/verify/(:any)']['POST']='User/toVerifyForgetPassword/$1';
 $route['user/resetPwd']='User/resetPassword';
 $route['user/toResetPwd']['POST']='User/toResetPassword';
