@@ -202,7 +202,8 @@ class User extends CI_Controller {
 		$sql="INSERT INTO user(user_name,nick_name,password,salt,role_id,phone,email,status) VALUES (?,?,?,?,?,?,?,0)";
 		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$roleID,$phone,$email]);
 		
-		$emailURL=site_url('user/register/verify/').md5(random_string('alnum',16).session_id());
+		$emailToken=md5(random_string('alnum',16).session_id());
+		$emailURL=site_url('user/reg/verify/').$emailToken;
 		$message='Email注册验证 / '.$this->Setting_model->get("systemName").'<hr>';
 		$message.='尊敬的'.$userName.'用户，感谢您注册'.$this->Setting_model->get("systemName").'！为验证您的身份，请点击下方链接以完成注册激活：<br>';
 		$message.='<a href="'.$emailURL.'">'.$emailURL.'</a><br><br>';
@@ -227,7 +228,7 @@ class User extends CI_Controller {
 			$param=json_encode($param);
 			$expireTime=time()+900;
 			$sql2="INSERT INTO send_mail(email,token,param,expire_time,ip) VALUES (?,?,?,?,?)";
-			$query2=$this->db->query($sql2,[$email,$token,$param,$expireTime,$ip]);
+			$query2=$this->db->query($sql2,[$email,$emailToken,$param,$expireTime,$ip]);
 			$ret=$this->ajax->returnData("200","success");
 			die($ret);
 		}else{
@@ -251,7 +252,7 @@ class User extends CI_Controller {
 		$expire_time=$info['expire_time'];
 		$param=$info['param'];
 		
-		if($expire_time>=time()){
+		if($expire_time<=time()){
 			die('<script>alert("激活链接已过期！");window.location.href="'.site_url().'";</script>');
 		}
 		
