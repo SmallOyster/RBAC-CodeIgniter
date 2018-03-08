@@ -43,7 +43,7 @@
 					</label>
 				</div>
 				<center>
-					<a href="<?php echo site_url('user/reg'); ?>" target="_blank" class="btn btn-primary" style="width:48%">注册 / Register</button> <button class="btn btn-success" style="width:48%" onclick='toLogin();'>登录 / Login &gt;</button>
+					<a href="<?php echo site_url('user/reg'); ?>" target="_blank" class="btn btn-primary" style="width:48%">注册 / Register</a> <button class="btn btn-success" style="width:48%" onclick='toLogin();'>登录 / Login &gt;</button>
 				</center>
 			</div>
 		</div>
