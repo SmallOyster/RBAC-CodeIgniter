@@ -3,7 +3,7 @@
  * @name V-登录
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-20
- * @version V1.0 2018-02-25
+ * @version V1.0 2018-03-11
  */
 ?>
 
@@ -158,6 +158,14 @@ function toLogin(){
 				return false;
 			}else if(ret.message=="invaildPwd"){
 				$("#tips").html("用户名或密码错误！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="userForbidden"){
+				$("#tips").html("用户被禁用！<br>请联系管理员！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="userNotActive"){
+				$("#tips").html("用户暂未激活！<br>请尽快进行激活！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.message=="noRoleInfo"){

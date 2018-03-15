@@ -3,7 +3,7 @@
  * @name V-菜单管理
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-24
+ * @version V1.0 2018-03-08
  */
 ?>
 
@@ -88,7 +88,7 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('sys/menu/toDel'); ?>",
+		url:"<?php echo site_url('admin/sys/menu/toDel'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},

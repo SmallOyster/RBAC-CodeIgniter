@@ -3,7 +3,7 @@
  * @name V-角色列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-03-04
+ * @version V1.0 2018-03-14
  */
 ?>
 
@@ -26,7 +26,7 @@
 <!-- Page Name-->
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">角色列表（共 <font color="green"><?php echo count($list); ?></font> 个角色）</h1>
+		<h1 class="page-header">角色列表</h1>
 		<a href="<?php echo site_url('admin/role/add'); ?>" class="btn btn-primary btn-block">新 增 角 色</a>
 		<hr>
 	</div>

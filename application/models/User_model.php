@@ -3,7 +3,7 @@
  * @name M-用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-20
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-03-14
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -15,6 +15,11 @@ class User_model extends CI_Model {
 	}
 
 
+	/**
+	 * 根据用户名获取用户信息
+	 * @param String 用户名
+	 * @return Array 用户信息
+	 */
 	public function getUserInfoByUserName($userName)
 	{
 		$sql="SELECT * FROM user WHERE user_name=?";
@@ -29,6 +34,13 @@ class User_model extends CI_Model {
 	}
 
 
+	/**
+	 * 用户登录验证
+	 * @param String 用户ID
+	 * @param String 用户名
+	 * @param String 用户密码
+	 * @return String 验证状态码
+	 */
 	public function validateUser($userID=0,$userName="",$pwd)
 	{
 		$sql1="SELECT salt,password,status FROM user WHERE id=? OR user_name=?";

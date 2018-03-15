@@ -3,7 +3,7 @@
  * @name C-系统配置
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-03
- * @version V1.0 2018-03-06
+ * @version V1.0 2018-03-14
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -30,7 +30,7 @@ class Setting extends CI_Controller {
 	}
 
 
-	public function list()
+	public function toList()
 	{
 		$this->ajax->makeAjaxToken();
 		$list=$this->Setting_model->list();

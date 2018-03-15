@@ -3,7 +3,7 @@
  * @name C-Log日志
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-26
- * @version V1.0 2018-03-04
+ * @version V1.0 2018-03-15
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -30,14 +30,14 @@ class Log extends CI_Controller {
 	}
 
 
-	public function list()
+	public function toList()
 	{
 		$this->ajax->makeAjaxToken();
 		
 		$query=$this->db->query("SELECT * FROM log",[]);
 		$list=$query->result_array();
 		
-		$this->load->view('admin/sys/log/list',["navData"=>$this->allMenu,'list'=>$list]);
+		$this->load->view('admin/sys/log/list',['list'=>$list]);
 	}
 	
 	

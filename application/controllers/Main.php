@@ -34,6 +34,6 @@ class Main extends CI_Controller {
 			header("Location:".site_url('user/logout'));
 		}
 		
-		$this->load->view('index',["navData"=>$this->allMenu]);
+		$this->load->view('index');
 	}
 }

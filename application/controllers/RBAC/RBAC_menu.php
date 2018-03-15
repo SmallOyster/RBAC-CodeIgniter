@@ -3,7 +3,7 @@
 * @name C-RBAC-菜单
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-17
-* @version V1.0 2018-02-25
+* @version V1.0 2018-03-14
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -29,7 +29,7 @@ class RBAC_menu extends CI_Controller {
 	}
 
 
-	public function list()
+	public function toList()
 	{
 		$this->safe->checkPermission();
 		$this->ajax->makeAjaxToken();

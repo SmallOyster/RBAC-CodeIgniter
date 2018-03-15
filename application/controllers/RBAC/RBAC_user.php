@@ -3,7 +3,7 @@
 * @name C-RBAC-用户
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-03-01
+* @version V1.0 2018-03-15
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -30,7 +30,7 @@ class RBAC_user extends CI_Controller {
 	}
 
 
-	public function list()
+	public function toList()
 	{
 		$this->safe->checkPermission();
 		$this->ajax->makeAjaxToken();
@@ -149,6 +149,11 @@ class RBAC_user extends CI_Controller {
 		$this->ajax->checkAjaxToken($token);
 
 		$id=$this->input->post('id');
+		
+		if($id==$this->nowUserID){			
+			$ret=$this->ajax->returnData("1","nowUser");
+			die($ret);
+		}
 
 		$sql="DELETE FROM user WHERE id=?";
 		$query=$this->db->query($sql,[$id]);
@@ -171,7 +176,12 @@ class RBAC_user extends CI_Controller {
 		$this->ajax->checkAjaxToken($token);
 
 		$id=$this->input->post('id');
-
+		
+		if($id==$this->nowUserID){			
+			$ret=$this->ajax->returnData("1","nowUser");
+			die($ret);
+		}
+		
 		// 获取用户名
 		$sql1="SELECT user_name,nick_name FROM user WHERE id=?";
 		$query1=$this->db->query($sql1,[$id]);
@@ -190,7 +200,7 @@ class RBAC_user extends CI_Controller {
 		$hashSalt=md5($salt);
 		$hashPwd=sha1($originPwd.$hashSalt);
 
-		$sql2="UPDATE user SET password=?,salt=?,status=2 WHERE id=? AND user_name=?";
+		$sql2="UPDATE user SET password=?,salt=? WHERE id=? AND user_name=?";
 		$query2=$this->db->query($sql2,[$hashPwd,$salt,$id,$userName]);
 
 		if($this->db->affected_rows()==1){
@@ -200,6 +210,32 @@ class RBAC_user extends CI_Controller {
 			die($ret);
 		}else{
 			$ret=$this->ajax->returnData("0","resetFailed");
+			die($ret);
+		}
+	}
+	
+
+	public function toUpdateStatus()
+	{
+		$token=$this->input->post('token');
+		$this->ajax->checkAjaxToken($token);
+
+		$id=$this->input->post('id');
+		$status=$this->input->post('status');
+		
+		if($id==$this->nowUserID){			
+			$ret=$this->ajax->returnData("1","nowUser");
+			die($ret);
+		}
+
+		$sql="UPDATE user SET status=? WHERE id=?";
+		$query=$this->db->query($sql,[$status,$id]);
+
+		if($this->db->affected_rows()==1){
+			$ret=$this->ajax->returnData("200","success");
+			die($ret);
+		}else{
+			$ret=$this->ajax->returnData("0","deleteFailed");
 			die($ret);
 		}
 	}

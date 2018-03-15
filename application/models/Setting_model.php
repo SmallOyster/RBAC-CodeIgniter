@@ -3,7 +3,7 @@
 * @name M-系统配置
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-03-05
-* @version V1.0 2018-03-05
+* @version V1.0 2018-03-14
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -15,6 +15,11 @@ class Setting_model extends CI_Model {
 	}
 
 
+	/**
+	 * 保存系统配置
+	 * @param String 配置名称
+	 * @param String 配置值
+	 */
 	public function save($name,$value)
 	{
 		$nowTime=date("Y-m-d H:i:s");
@@ -31,6 +36,11 @@ class Setting_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * 获取指定系统配置值
+	 * @param String 配置名
+	 * @return String 配置值
+	 */
 	public function get($name)
 	{
 		$sql="SELECT value FROM setting WHERE name=?";
@@ -45,6 +55,10 @@ class Setting_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * 获取所有系统配置
+	 * @return Array 所有系统配置
+	 */
 	public function list()
 	{
 		$sql="SELECT * FROM setting";

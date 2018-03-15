@@ -23,4 +23,4 @@ $config['smtp_port'] = 465;
 $config['mailtype'] = 'html';
 $config['crlf']="\r\n";
 $config['newline']="\r\n";
-/* !!!!!!!!!! 上方配置无需修改 !!!!!!!!!!!! */
+/* !!!!!!!!!! 上方配置无需修改 !!!!!!!!!!! */

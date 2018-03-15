@@ -3,7 +3,7 @@
  * @name M-RBAC
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-06
- * @version V1.0 2018-02-21
+ * @version V1.0 2018-03-14
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -21,7 +21,7 @@ class RBAC_model extends CI_Model {
 		$query=$this->db->query($sql,[$uri]);
 		
 		if($query->num_rows()!=1){
-			return "404";
+			return NULL;
 		}
 		
 		$list=$query->result_array();

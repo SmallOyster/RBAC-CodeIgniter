@@ -1,9 +1,9 @@
 <?php 
 /**
- * @name V-用户忘记密码
+ * @name V-用户忘记密码（邮箱验证）
  * @author SmallOysyer <master@xshgzs.com>
- * @since 2018-02-24
- * @version V1.0 2018-02-25
+ * @since 2018-03-08
+ * @version V1.0 2018-03-10
  */
 ?>
 
@@ -25,107 +25,33 @@
 	<div class="col-md-6 col-md-offset-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">忘记密码</h3>
+				<h3 class="panel-title">忘记密码（邮箱验证）</h3>
 			</div>
 			<div class="panel-body">
-				<div class="form-group">
-					<label for="userName">用户名</label>
-					<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
-					<p class="help-block">请输入<font color="green">4</font>-<font color="green">20</font>字的用户名</p>
+				<div class="input-group">
+					<input type="email" class="form-control" id="email" onkeyup='if(event.keyCode==13)sendCode();' placeholder="注册邮箱">
+					<span class="input-group-btn">
+						<button id="sendCode_btn" class="btn btn-primary" onclick="sendCode();">发送验证码</button>
+					</span>
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="phone">手机号</label>
-					<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();'>
-					<p class="help-block">目前仅支持中国大陆的手机号码</p>
+					<input type="number" class="form-control" id="verifyCode" onkeyup='if(event.keyCode==13)resetPwd();' placeholder="邮箱验证码">
 				</div>
-				<br>
-				<div class="form-group">
-					<label for="email">邮箱</label>
-					<input type="email" class="form-control" id="email" onkeyup='if(event.keyCode==13)$("#newPwd").focus();'>
-				</div>
-
+				
 				<hr>
 
-				<div class="form-group">
-					<label for="newPwd">新密码</label>
-					<input type="password" class="form-control" id="newPwd" onkeyup='if(event.keyCode==13)$("#checkPwd").focus();'>
-					<p class="help-block">请输入<font color="green">6</font>-<font color="green">20</font>字的密码</p>
-				</div>
-				<br>
-				<div class="form-group">
-					<label for="checkPwd">确认密码</label>
-					<input type="password" class="form-control" id="checkPwd" onkeyup='if(event.keyCode==13)forgetPwd();'>
-					<p class="help-block">请再次输入密码</p>
-				</div>
-
-				<hr>
-
-				<button class="btn btn-success btn-block" onclick='forgetPwd();'>确认忘记密码 &gt;</button>
+				<button class="btn btn-success btn-block" onclick='resetPwd();'>重置密码 &gt;</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-function forgetPwd(){
+function sendCode(){
 	lockScreen();
-	userName=$("#userName").val();
-	newPwd=$("#newPwd").val();
-	checkPwd=$("#checkPwd").val();
-	phone=$("#phone").val();
 	email=$("#email").val();
 
-	if(userName==""){
-		unlockScreen();
-		$("#tips").html("请输入用户名！");
-		$("#tipsModal").modal('show');
-		return false;
-	}
-	if(userName.length<4 || userName.length>20){
-		unlockScreen();
-		$("#tips").html("请输入 4~20字 的用户名！");
-		$("#tipsModal").modal('show');
-		return false;
-	}
-	
-	if(newPwd==""){
-		unlockScreen();
-		$("#tips").html("请输入新密码！");
-		$("#tipsModal").modal('show');
-		return false;
-	}
-	if(checkPwd==""){
-		unlockScreen();
-		$("#tips").html("请再次输入新密码！");
-		$("#tipsModal").modal('show');
-		return false;
-	}
-	if(newPwd.length<6 || newPwd.length>20){
-		unlockScreen();
-		$("#tips").html("请输入 6~20 字的密码！");
-		$("#tipsModal").modal('show');
-		return false;
-	}
-	if(newPwd!=checkPwd){
-		unlockScreen();
-		$("#tips").html("两次输入的密码不相同！<br>请重新输入！");
-		$("#tipsModal").modal('show');
-		return false;
-	}
-	
-	if(phone==""){
-		unlockScreen();
-		$("#tips").html("请输入手机号！");
-		$("#tipsModal").modal('show');
-		return false;
-	}
-	if(phone.length!=11){
-		unlockScreen();
-		$("#tips").html("请正确输入中国大陆手机号！");
-		$("#tipsModal").modal('show');
-		return false;
-	}
 	if(email==""){
 		unlockScreen();
 		$("#tips").html("请输入邮箱！");
@@ -134,9 +60,9 @@ function forgetPwd(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('user/toForgetPwd'); ?>",
+		url:"<?php echo site_url('user/forgetPwd/sendCode'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"userName":userName,"phone":phone,"email":email,"pwd":newPwd},
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"email":email},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
@@ -149,15 +75,75 @@ function forgetPwd(){
 			unlockScreen();
 			
 			if(ret.code=="200"){
-				alert("成功重置密码！\n请牢记您的新密码！\n\n即将跳转至登录页面！");
-				window.location.href="<?php echo site_url('user/login'); ?>";
+				// @TODO timer();
+				timer();
 				return true;
-			}else if(ret.message=="resetFailed"){
-				$("#tips").html("重置密码失败！！！");
+			}else if(ret.message=="sendFailed"){
+				$("#tips").html("邮件发送失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.message=="noUser"){
-				$("#tips").html("无此用户资料！");
+				$("#tips").html("此邮箱暂未注册！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.code=="403"){
+				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
+				$("#tipsModal").modal('show');
+				return false;
+			}else{
+				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
+				$("#tipsModal").modal('show');
+				return false;
+			}
+		}
+	});
+}
+
+function resetPwd(){
+	lockScreen();
+	email=$("#email").val();
+	verifyCode=$("#verifyCode").val();
+
+	if(email==""){
+		unlockScreen();
+		$("#tips").html("请输入邮箱！");
+		$("#tipsModal").modal('show');
+		return false;
+	}
+	if(verifyCode==""){
+		unlockScreen();
+		$("#tips").html("请输入邮箱验证码！");
+		$("#tipsModal").modal('show');
+		return false;
+	}
+
+	$.ajax({
+		url:"<?php echo site_url('user/forgetPwd/verify'); ?>",
+		type:"post",
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"email":email,"verifyCode":verifyCode},
+		dataType:'json',
+		error:function(e){
+			console.log(e);
+			unlockScreen();
+			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+			$("#tipsModal").modal('show');
+			return false;
+		},
+		success:function(ret){
+			unlockScreen();
+			
+			if(ret.code=="200"){
+				window.location.href=ret.data;
+			}else if(ret.message=="invalidCode"){
+				$("#tips").html("验证码错误！！！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="invalidMail"){
+				$("#tips").html("邮箱与验证码不匹配！！！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.message=="expired"){
+				$("#tips").html("验证码已过期！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code=="403"){

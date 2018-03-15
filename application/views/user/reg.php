@@ -3,7 +3,7 @@
  * @name V-用户注册
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-22
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-03-09
  */
 ?>
 
@@ -63,7 +63,7 @@
 				<br>
 				<div class="form-group">
 					<label for="email">邮箱</label>
-					<input type="email" class="form-control" id="email">
+					<input type="email" class="form-control" id="email" onkeyup='if(event.keyCode==13)reg();'>
 				</div>
 				<button class="btn btn-lg btn-success btn-block" onclick='reg();'>注册 Register &gt;</button>
 			</div>

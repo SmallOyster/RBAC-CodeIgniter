@@ -1,3 +1,20 @@
+<?php
+function getGreeting(){
+	$nowHour=date("H");
+	if($nowHour>=0 && $nowHour<6) $ret="凌晨好！";
+	elseif($nowHour>=6 && $nowHour<10) $ret="早安！";
+	elseif($nowHour>=10 && $nowHour<12) $ret="上午好！";
+	elseif($nowHour>=12 && $nowHour<15) $ret="中午好！";
+	elseif($nowHour>=15 && $nowHour<17) $ret="下午好！";
+	elseif($nowHour>=17 && $nowHour<20) $ret="傍晚好！";
+	elseif($nowHour>=20 && $nowHour<24) $ret="晚上好！";
+
+	return $ret;
+}
+
+$navData=$this->allMenu;
+?>
+
 <!-- Navigation -->
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
 	<div class="navbar-header">
@@ -11,7 +28,45 @@
 	</div>
 	<!-- dropdown-head-right -->
 	<ul class="nav navbar-top-links navbar-right">
-		<!-- dropdown-user -->
+		<li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				<i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
+			</a>
+			<ul class="dropdown-menu dropdown-messages">
+				<li>
+					<a href="#">
+						<div>
+							<b>John Smith</b>
+							<span class="pull-right text-muted">
+								<em>Yesterday</em>
+							</span>
+						</div>
+						<div>L</div>
+					</a>
+				</li>
+				<li class="divider"></li>
+				<li>
+					<a href="#">
+						<div>
+							<b>John Smith</b>
+							<span class="pull-right text-muted">
+								<em>Yesterday</em>
+							</span>
+						</div>
+						<div>Lo</div>
+					</a>
+				</li>
+				<li class="divider"></li>
+				<li>
+					<a class="text-center" href="#">
+						<b>阅 读 所 有 公 告</b>
+						<i class="fa fa-angle-right"></i>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<!-- /.dropdown-messages -->
+		
 		<li class="dropdown">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 				<i class="fa fa-user fa-lg"></i>
@@ -19,8 +74,7 @@
 			</a>
 			<ul class="dropdown-menu">
 				<li>
-					<!-- @TODO 显示对应时段的问候语 -->
-					<a href="javascript:void(0)"><b><font color="green"><?php echo $this->nowUserName; ?></font></b>，你好！</a>
+					<a href="javascript:void(0)"><b><font color="green"><?php echo $this->nowUserName; ?></font></b>，<?php echo getGreeting(); ?></a>
 				</li>
 				<li>
 					<a href="javascript:void(0)">角色：<b><font color="#F57C00"><?php echo $this->session->userdata($this->sessPrefix.'roleName'); ?></font></b></a>
