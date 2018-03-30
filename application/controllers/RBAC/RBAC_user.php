@@ -3,7 +3,7 @@
 * @name C-RBAC-用户
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-03-15
+* @version V1.0 2018-03-29
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -38,7 +38,7 @@ class RBAC_user extends CI_Controller {
 		$query=$this->db->query("SELECT * FROM user");
 		$list=$query->result_array();
 
-		$this->load->view('admin/user/list',['list'=>$list,"navData"=>$this->allMenu]);
+		$this->load->view('admin/user/list',['list'=>$list]);
 	}
 
 
@@ -46,7 +46,7 @@ class RBAC_user extends CI_Controller {
 	{
 		$this->ajax->makeAjaxToken();
 
-		$this->load->view('admin/user/add',["navData"=>$this->allMenu]);
+		$this->load->view('admin/user/add',[]);
 	}
 
 
@@ -113,7 +113,7 @@ class RBAC_user extends CI_Controller {
 
 		$list=$query->result_array();
 
-		$this->load->view('admin/user/edit',["navData"=>$this->allMenu,'userID'=>$userID,'info'=>$list[0]]);
+		$this->load->view('admin/user/edit',['userID'=>$userID,'info'=>$list[0]]);
 	}
 
 
@@ -143,7 +143,7 @@ class RBAC_user extends CI_Controller {
 	}
 
 
-	public function toDel()
+	public function toDelete()
 	{
 		$token=$this->input->post('token');
 		$this->ajax->checkAjaxToken($token);

@@ -1,8 +1,8 @@
 <?php 
 /**
- * @name V-空白页
+ * @name V-通知详情
  * @author SmallOysyer <master@xshgzs.com>
- * @since 2018-03-15
+ * @since 2018-03-30
  * @version V1.0 2018-03-30
  */ 
 ?>
@@ -12,7 +12,7 @@
 
 <head>
   <?php $this->load->view('include/header'); ?>
-  <title>空白页 / <?php echo $this->config->item('systemName'); ?></title>
+  <title>通知详情 / <?php echo $this->config->item('systemName'); ?></title>
 </head>
 
 <body>
@@ -26,11 +26,13 @@
 <!-- Page Name-->
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">空白页</h1>
+		<h1 class="page-header"><?php echo $info['title']; ?></h1>
 	</div>
 </div>
 <!-- ./Page Name-->
-  
+
+<?php echo $info['content']; ?> 
+
 <?php $this->load->view('include/footer'); ?>
 
 <!-- ./Page Main Content -->

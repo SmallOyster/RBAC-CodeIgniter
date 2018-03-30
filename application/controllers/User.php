@@ -39,7 +39,7 @@ class User extends CI_Controller {
 		$query=$this->db->query($sql,[$this->nowUserID]);
 		$list=$query->result_array();
 		$info=$list[0];
-		$this->load->view('user/updateProfile',["navData"=>$this->allMenu,'info'=>$info]);
+		$this->load->view('user/updateProfile',['info'=>$info]);
 	}
 
 
@@ -112,6 +112,7 @@ class User extends CI_Controller {
 		if($validate=="200"){
 			$userInfo=$this->User_model->getUserInfoByUserName($userName);
 			$userID=$userInfo['id'];
+			$nickName=$userInfo['nick_name'];
 			$roleID=$userInfo['role_id'];
 			$status=$userInfo['status'];
 			
@@ -135,6 +136,7 @@ class User extends CI_Controller {
 			
 			// 将用户信息存入session
 			$this->session->set_userdata($this->sessPrefix.'userID',$userID);
+			$this->session->set_userdata($this->sessPrefix.'nickName',$nickName);
 			$this->session->set_userdata($this->sessPrefix.'userName',$userName);
 			$this->session->set_userdata($this->sessPrefix.'roleID',$roleID);
 			$this->session->set_userdata($this->sessPrefix.'roleName',$roleName);

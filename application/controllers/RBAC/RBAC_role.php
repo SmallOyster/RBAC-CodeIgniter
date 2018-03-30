@@ -3,7 +3,7 @@
 * @name C-RBAC-角色
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-03-14
+* @version V1.0 2018-03-29
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -38,7 +38,7 @@ class RBAC_role extends CI_Controller {
 		$query=$this->db->query("SELECT * FROM role");
 		$list=$query->result_array();
 
-		$this->load->view('admin/role/list',['list'=>$list,"navData"=>$this->allMenu]);
+		$this->load->view('admin/role/list',['list'=>$list]);
 	}
 
 
@@ -46,7 +46,7 @@ class RBAC_role extends CI_Controller {
 	{
 		$this->ajax->makeAjaxToken();
 		
-		$this->load->view('admin/role/add',["navData"=>$this->allMenu]);
+		$this->load->view('admin/role/add',[]);
 	}
 
 
@@ -84,7 +84,7 @@ class RBAC_role extends CI_Controller {
 		$list=$query->result_array();
 		$info=$list[0];
 		
-		$this->load->view('admin/role/edit',["navData"=>$this->allMenu,'roleID'=>$roleID,'info'=>$info]);
+		$this->load->view('admin/role/edit',['roleID'=>$roleID,'info'=>$info]);
 	}
 
 
@@ -111,7 +111,7 @@ class RBAC_role extends CI_Controller {
 	}
 
 	
-	public function toDel()
+	public function toDelete()
 	{
 		$token=$this->input->post('token');
 		$this->ajax->checkAjaxToken($token);
@@ -141,7 +141,7 @@ class RBAC_role extends CI_Controller {
 		$permissions=$this->RBAC_model->getAllPermissionByRole($roleID);
 		$permissions=implode(",",$permissions);
 		
-		$this->load->view('admin/role/setPermission',["navData"=>$this->allMenu,'list'=>$list,'roleID'=>$roleID,"permission"=>$permissions,'roleName'=>$roleName]);
+		$this->load->view('admin/role/setPermission',['list'=>$list,'roleID'=>$roleID,"permission"=>$permissions,'roleName'=>$roleName]);
 	}
 
 

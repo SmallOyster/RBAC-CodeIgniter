@@ -3,7 +3,7 @@
  * @name V-登录
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-20
- * @version V1.0 2018-03-11
+ * @version V1.0 2018-03-29
  */
 ?>
 
@@ -25,7 +25,7 @@
 	<div class="col-md-6 col-md-offset-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">欢迎登录<?php echo $this->config->item('systemName'); ?></h3>
+				<h3 class="panel-title">欢迎登录<?php echo $this->Setting_model->get('systemName'); ?></h3>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
@@ -50,7 +50,9 @@
 	</div>
 </div>
 
-<script type="text/javascript">
+<?php $this->load->view('include/footer'); ?>
+
+<script>
 var isAjaxing=0;
 
 // 监听模态框关闭事件
@@ -170,6 +172,10 @@ function toLogin(){
 				return false;
 			}else if(ret.message=="noRoleInfo"){
 				$("#tips").html("获取角色信息失败！请联系管理员！");
+				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.code=="403"){
+				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;
 			}else{

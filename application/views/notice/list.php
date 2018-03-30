@@ -3,7 +3,7 @@
  * @name V-系统设置列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-03
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-03-05
  */
  
 ?>
@@ -31,6 +31,8 @@
 	</div>
 </div>
 <!-- ./Page Name-->
+
+<hr>
 
 <table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
 	<thead>

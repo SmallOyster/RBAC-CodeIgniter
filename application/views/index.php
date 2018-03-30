@@ -1,9 +1,17 @@
+<?php 
+/**
+ * @name V-主页
+ * @author SmallOysyer <master@xshgzs.com>
+ * @since 2018-02-06
+ * @version V1.0 2018-03-28
+ */ 
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
   <?php $this->load->view('include/header'); ?>
-  <title></title>
+  <title><?php echo $this->Setting_model->get('systemName'); ?></title>
 </head>
 
 <body>
@@ -45,6 +53,26 @@
     </div>
   </div>
 </div>
+
+<!-- ▼ 通知栏 ▼ -->
+<ul class="list-group">
+	<?php foreach($allNotice as $info){ ?>
+	<li class="list-group-item">
+		<div class="row">
+			<div class="col-xs-8">
+				<a href="<?php echo site_url('notice/detail/').$info['id']; ?>" target="_blank">
+					<i class="fa fa-bullhorn"></i> <?php echo $info['title']; ?>
+				</a>
+			</div>
+		
+			<div class="col-xs-4" style="text-align:right;">
+				<?php echo substr($info['create_time'],0,10);?>
+		</div>		
+		</div>
+	</li>
+	<?php } ?>
+</ul>
+<!-- ▲ 通知栏 ▲ -->
 
 <!-- ./Page Main Content -->
 </div>

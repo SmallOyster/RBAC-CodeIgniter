@@ -13,6 +13,7 @@ function getGreeting(){
 }
 
 $navData=$this->allMenu;
+$allNotice=$this->Notice_model->get(0,"nav");
 ?>
 
 <!-- Navigation -->
@@ -33,32 +34,29 @@ $navData=$this->allMenu;
 				<i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
 			</a>
 			<ul class="dropdown-menu dropdown-messages">
+				<?php if(count($allNotice)!=0){ ?>
+				<?php foreach($allNotice as $info){ ?>
 				<li>
-					<a href="#">
+					<a href="<?php echo site_url('notice/detail/').$info['id']; ?>" target="_blank">
 						<div>
-							<b>John Smith</b>
+							<b><font color="#FF9800"><?php echo $info['create_user']; ?></font></b>
 							<span class="pull-right text-muted">
-								<em>Yesterday</em>
+								<em><?php echo $info['create_time']; ?></em>
 							</span>
 						</div>
-						<div>L</div>
+						<div><?php echo $info['title']; ?></div>
 					</a>
 				</li>
 				<li class="divider"></li>
+				<?php } ?>
+				<?php }else{ ?>
 				<li>
-					<a href="#">
-						<div>
-							<b>John Smith</b>
-							<span class="pull-right text-muted">
-								<em>Yesterday</em>
-							</span>
-						</div>
-						<div>Lo</div>
-					</a>
+					<p class="text-center" style="color:red;font-weight:bold;">7天内暂无新公告</p>
 				</li>
 				<li class="divider"></li>
+				<?php } ?>
 				<li>
-					<a class="text-center" href="#">
+					<a class="text-center" href="<?php echo site_url('notice/list'); ?>">
 						<b>阅 读 所 有 公 告</b>
 						<i class="fa fa-angle-right"></i>
 					</a>
@@ -74,7 +72,7 @@ $navData=$this->allMenu;
 			</a>
 			<ul class="dropdown-menu">
 				<li>
-					<a href="javascript:void(0)"><b><font color="green"><?php echo $this->nowUserName; ?></font></b>，<?php echo getGreeting(); ?></a>
+					<a href="javascript:void(0)"><b><font color="green"><?php echo $this->session->userdata($this->sessPrefix.'nickName'); ?></font></b>，<?php echo getGreeting(); ?></a>
 				</li>
 				<li>
 					<a href="javascript:void(0)">角色：<b><font color="#F57C00"><?php echo $this->session->userdata($this->sessPrefix.'roleName'); ?></font></b></a>
@@ -100,7 +98,7 @@ $navData=$this->allMenu;
 			<ul class="nav" id="side-menu">
 				<li>
 					<a href="<?php echo site_url(); ?>">
-						<i class="fa fa-home fa-fw"></i> 主页面</a>
+						<i class="fa fa-home"></i> 主页面</a>
 				</li>
 				
 				<?php

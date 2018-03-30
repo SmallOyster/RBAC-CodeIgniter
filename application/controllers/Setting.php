@@ -35,7 +35,7 @@ class Setting extends CI_Controller {
 		$this->ajax->makeAjaxToken();
 		$list=$this->Setting_model->list();
 		
-		$this->load->view('admin/sys/setting/list',["navData"=>$this->allMenu,'list'=>$list]);
+		$this->load->view('admin/sys/setting/list',['list'=>$list]);
 	}
 
 

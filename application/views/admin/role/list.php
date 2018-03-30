@@ -3,7 +3,7 @@
  * @name V-角色列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-03-14
+ * @version V1.0 2018-03-29
  */
 ?>
 
@@ -58,6 +58,8 @@
 	</tbody>
 </table>
 
+<?php $this->load->view('include/footer'); ?>
+
 <!-- ./Page Main Content -->
 </div>
 <!-- ./Page -->
@@ -83,7 +85,7 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/role/toDel'); ?>",
+		url:"<?php echo site_url('admin/role/toDelete'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},

@@ -3,7 +3,7 @@
  * @name 全局路由
  * @author CodeIgniter,SmallOyster
  * @since 2018-02-06
- * @version V1.0 2018-03-14
+ * @version V1.0 2018-03-29
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -27,7 +27,7 @@ $route['admin/role/add']='RBAC/RBAC_role/add';
 $route['admin/role/toAdd']['POST']='RBAC/RBAC_role/toAdd';
 $route['admin/role/edit/(:num)/(:any)']['GET']='RBAC/RBAC_role/edit/$1/$2';
 $route['admin/role/toEdit']['POST']='RBAC/RBAC_role/toEdit';
-$route['admin/role/toDel']['POST']='RBAC/RBAC_role/toDel';
+$route['admin/role/toDelete']['POST']='RBAC/RBAC_role/toDelete';
 $route['admin/role/setPermission/(:num)/(:any)']='RBAC/RBAC_role/setPermission/$1/$2';
 $route['admin/role/toSetPermission']['POST']='RBAC/RBAC_role/toSetPermission';
 $route['admin/role/toSetDefaultRole']['POST']='RBAC/RBAC_role/toSetDefaultRole';
@@ -36,7 +36,7 @@ $route['admin/role/toSetDefaultRole']['POST']='RBAC/RBAC_role/toSetDefaultRole';
 $route['admin/user/list']='RBAC/RBAC_user/toList';
 $route['admin/user/add']='RBAC/RBAC_user/add';
 $route['admin/user/toAdd']['POST']='RBAC/RBAC_user/toAdd';
-$route['admin/user/toDel']['POST']='RBAC/RBAC_user/toDel';
+$route['admin/user/toDelete']['POST']='RBAC/RBAC_user/toDelete';
 $route['admin/user/edit/(:num)']['GET']='RBAC/RBAC_user/edit/$1';
 $route['admin/user/toEdit']['POST']='RBAC/RBAC_user/toEdit';
 $route['admin/user/toResetPwd']['POST']='RBAC/RBAC_user/toResetPwd';
@@ -44,19 +44,29 @@ $route['admin/user/toUpdateStatus']['POST']='RBAC/RBAC_user/toUpdateStatus';
 
 /************* RBAC-Admin-Menu **************/
 $route['admin/sys/menu/list']='RBAC/RBAC_menu/toList';
-$route['admin/sys/menu/toDel']['POST']='RBAC/RBAC_menu/toDel';
+$route['admin/sys/menu/toDelete']['POST']='RBAC/RBAC_menu/toDelete';
 $route['admin/sys/menu/add/(:num)']='RBAC/RBAC_menu/add/$1';
 $route['admin/sys/menu/toAdd']['POST']='RBAC/RBAC_menu/toAdd';
 $route['admin/sys/menu/edit/(:num)']='RBAC/RBAC_menu/edit/$1';
 $route['admin/sys/menu/toEdit']['POST']='RBAC/RBAC_menu/toEdit';
 
-/************* Setting **************/
-$route['admin/sys/setting/toList']='Setting/list';
+/************ Admin-Setting *************/
+$route['admin/sys/setting/list']='Setting/toList';
 $route['admin/sys/setting/toSave']['POST']='Setting/toSave';
 
 /************* Admin-Log **************/
 $route['admin/sys/log/list']='Log/toList';
 $route['admin/sys/log/toTruncateLog']['POST']='Log/toTruncateLog';
+
+/************* Admin-Notice **************/
+$route['admin/notice/list']='Notice/adminList';
+$route['admin/notice/pub']='Notice/Publish';
+$route['admin/notice/toPublish']['POST']='Notice/toPublish';
+$route['admin/notice/toDelete']['POST']='Notice/toDelete';
+
+/************* Notice **************/
+$route['notice/list']='Notice/userList';
+$route['notice/detail/(:num)']='Notice/showDetail/$1';
 
 /************* RBAC-User **************/
 $route['user/updateProfile']='User/updateProfile';

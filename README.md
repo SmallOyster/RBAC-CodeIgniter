@@ -8,7 +8,7 @@
 
 ▲ 开发商：生蚝科技
 
-▲ 代码版本信息：***Build 00272 (2018-03-15 21:45)***
+▲ 代码版本信息：***Build 00325 (2018-03-30 20:25)***
 
 ▲ 系统版本信息：***V1.0 Build***
 
@@ -20,7 +20,7 @@
 
 2. 导入rbac.sql到数据库
 
-3. 根据普通的CI项目配置来配置我们的项目（如：Apache/Config.php/email.php）
+3. 根据普通的CI项目配置来配置我们的项目（如：Apache/Config.php/email.php/database.php文件）
 
 4. 访问 http://example.com/rbac 并使用演示账户 【super|123456】 以登录系统
 

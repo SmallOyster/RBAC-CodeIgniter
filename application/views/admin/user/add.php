@@ -69,6 +69,8 @@
 	</div>
 </div>
 
+<?php $this->load->view('include/footer'); ?>
+
 <!-- ./Page Main Content -->
 </div>
 <!-- ./Page -->

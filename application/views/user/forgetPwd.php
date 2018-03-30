@@ -47,6 +47,8 @@
 	</div>
 </div>
 
+<?php $this->load->view('include/footer'); ?>
+
 <script>
 function sendCode(){
 	lockScreen();

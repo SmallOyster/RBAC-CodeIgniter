@@ -1,9 +1,9 @@
 <?php 
 /**
- * @name V-新增角色
+ * @name V-发布新通知
  * @author SmallOysyer <master@xshgzs.com>
- * @since 2018-02-09
- * @version V1.0 2018-03-29
+ * @since 2018-03-29
+ * @version V1.0 2018-03-30
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>新增角色 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>发布新通知 / <?php echo $this->config->item('systemName'); ?></title>
 </head>
 
 <body>
@@ -26,27 +26,26 @@
 <!-- Page Name-->
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">新增角色</h1>
+		<h1 class="page-header">发布新通知</h1>
 	</div>
 </div>
 <!-- ./Page Name-->
 
 <div class="panel panel-default">
-	<div class="panel-heading">新增角色</div>
+	<div class="panel-heading">发布新通知</div>
 	<div class="panel-body">
 		<div class="form-group">
-			<label for="name">角色名称</label>
-			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();'>
-			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
+			<label for="title">通知标题</label>
+			<input class="form-control" id="title" onkeyup='if(event.keyCode==13)$("#content").focus();'>
+			<p class="help-block">请输入<font color="green">1</font>-<font color="green">50</font>字的通知标题</p>
 		</div>
 		<br>
 		<div class="form-group">
-			<label for="remark">备注</label>
-			<textarea class="form-control" id="remark"></textarea>
-			<p class="help-block">选填</p>
+			<label for="content">通知内容</label>
+			<textarea class="form-control" id="content"></textarea>
 		</div>
 		<hr>
-		<button class="btn btn-success btn-block" onclick='add()'>确 认 新 增 角 色 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='publish()'>确 认 发 布 &gt;</button>
 	</div>
 </div>
 
@@ -58,33 +57,39 @@
 </div>
 
 <script>
-function add(){
+function publish(){
 	lockScreen();
-	name=$("#name").val();
-	remark=$("#remark").val();
+	title=$("#title").val();
+	content=$("#content").val();
 
-	if(name==""){
+	if(title==""){
 		unlockScreen();
-		$("#tips").html("请输入角色名称！");
+		$("#tips").html("请输入通知标题！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
-	if(name.length<1 || name.length>20){
+	if(content==""){
 		unlockScreen();
-		$("#tips").html("请输入 1-20字 的角色名称！");
+		$("#tips").html("请输入通知内容！");
+		$("#tipsModal").modal('show');
+		return false;
+	}
+	if(title.length<1 || title.length>50){
+		unlockScreen();
+		$("#tips").html("请输入 1-50字 的通知标题！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('admin/role/toAdd'); ?>",
+		url:"<?php echo site_url('admin/notice/toPublish'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark},
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"title":title,"content":content},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
 			unlockScreen();
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.responseText+"</font>");
 			$("#tipsModal").modal('show');
 			return false;
 		},

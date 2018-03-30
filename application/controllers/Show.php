@@ -30,7 +30,7 @@ class Show extends CI_Controller {
 
 	public function blank()
 	{
-		$this->load->view('show/blank',["navData"=>$this->allMenu]);
+		$this->load->view('show/blank',[]);
 	}
 
 
@@ -42,6 +42,6 @@ class Show extends CI_Controller {
 
 	public function jumpOut($url){
 		$url=urldecode($url);
-		$this->load->view('show/jumpOut',["url"=>$url,"navData"=>$this->allMenu]);
+		$this->load->view('show/jumpOut',['url'=>$url]);
 	}
 }

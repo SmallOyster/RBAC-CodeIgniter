@@ -24,6 +24,8 @@
 <br><br>
 <a onclick="history.go(-1);" class="btn btn-primary" style="width: 98%">返 回 上 一 页</a>
 
+<?php $this->load->view('include/footer'); ?>
+
 <!-- ./Page Content -->
 </div>
 </div>

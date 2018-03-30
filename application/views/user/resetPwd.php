@@ -60,6 +60,8 @@
 	</div>
 </div>
 
+<?php $this->load->view('include/footer'); ?>
+
 <script>
 function resetPwd(){
 	lockScreen();

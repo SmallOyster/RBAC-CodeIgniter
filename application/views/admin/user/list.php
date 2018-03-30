@@ -3,7 +3,7 @@
  * @name V-用户列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-03-15
+ * @version V1.0 2018-03-29
  */
 ?>
 
@@ -61,6 +61,8 @@
 	<?php } ?>
 	</tbody>
 </table>
+
+<?php $this->load->view('include/footer'); ?>
 
 <!-- ./Page Main Content -->
 </div>
@@ -217,7 +219,7 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/user/toDel'); ?>",
+		url:"<?php echo site_url('admin/user/toDelete'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},

@@ -47,6 +47,8 @@
 
 <button onclick='getCheckedNodes();toSetPermission();' class="btn btn-success btn-block">确 认 分 配 权 限</button>
 
+<?php $this->load->view('include/footer'); ?>
+
 <!-- ./Page Main Content -->
 </div>
 <!-- ./Page -->

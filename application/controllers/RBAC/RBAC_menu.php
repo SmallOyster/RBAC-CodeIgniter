@@ -3,7 +3,7 @@
 * @name C-RBAC-菜单
 * @author SmallOysyer <master@xshgzs.com>
 * @since 2018-02-17
-* @version V1.0 2018-03-14
+* @version V1.0 2018-03-29
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -58,7 +58,7 @@ class RBAC_menu extends CI_Controller {
 			}
 		}
 		
-		$this->load->view('admin/sys/menu/add',["navData"=>$this->allMenu,'fatherID'=>$fatherID,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/sys/menu/add',['fatherID'=>$fatherID,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
 	}
 
 
@@ -116,7 +116,7 @@ class RBAC_menu extends CI_Controller {
 			$fatherIcon=$fatherInfo['icon'];
 		}
 
-		$this->load->view('admin/sys/menu/edit',["navData"=>$this->allMenu,'menuID'=>$menuID,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/sys/menu/edit',['menuID'=>$menuID,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
 	}
 
 
@@ -149,7 +149,7 @@ class RBAC_menu extends CI_Controller {
 	}
 
 
-	public function toDel()
+	public function toDelete()
 	{
 		$token=$this->input->post('token');
 		$this->ajax->checkAjaxToken($token);
