@@ -44,7 +44,7 @@
 		<br>
 		<div class="form-group">
 			<label for="content">通知内容</label>
-			<textarea class="form-control" id="content"><?php echo $info['content']; ?></textarea>
+			<div id="wangEditor_div"></div>
 		</div>
 		<hr>
 		<button class="btn btn-success btn-block" onclick='edit()'>确 认 修 改 &gt;</button>
@@ -59,26 +59,35 @@
 </div>
 
 <script>
+var E = window.wangEditor;
+var editor = new E('#wangEditor_div');
+editor.create();
+editor.txt.html("<?php echo $info['content']; ?>");
+
 function edit(){
 	lockScreen();
 	id=$("#noticeID").val();
 	title=$("#title").val();
-	content=$("#content").val();
+	content=editor.txt.html();
+	editor.$textElem.attr('contenteditable', false);
 
 	if(title==""){
 		unlockScreen();
+		editor.$textElem.attr('contenteditable', true)
 		$("#tips").html("请输入通知标题！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
 	if(content==""){
 		unlockScreen();
+		editor.$textElem.attr('contenteditable', true)
 		$("#tips").html("请输入通知内容！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
 	if(title.length<1 || title.length>50){
 		unlockScreen();
+		editor.$textElem.attr('contenteditable', true)
 		$("#tips").html("请输入 1-50字 的通知标题！");
 		$("#tipsModal").modal('show');
 		return false;
@@ -92,6 +101,7 @@ function edit(){
 		error:function(e){
 			console.log(JSON.stringify(e));
 			unlockScreen();
+			editor.$textElem.attr('contenteditable', true)
 			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.responseText+"</font>");
 			$("#tipsModal").modal('show');
 			return false;
@@ -104,14 +114,17 @@ function edit(){
 				history.go(-1);
 				return true;
 			}else if(ret.message=="updateFailed"){
+				editor.$textElem.attr('contenteditable', true)
 				$("#tips").html("编辑失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code=="403"){
+				editor.$textElem.attr('contenteditable', true)
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;
 			}else{
+				editor.$textElem.attr('contenteditable', true)
 				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				$("#tipsModal").modal('show');
 				return false;
