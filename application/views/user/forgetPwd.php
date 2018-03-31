@@ -3,7 +3,7 @@
  * @name V-用户忘记密码（邮箱验证）
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-08
- * @version V1.0 2018-03-10
+ * @version V1.0 2018-03-31
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>忘记密码 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>忘记密码 / <?php echo $this->Setting_model->get('systemName'); ?></title>
 	<style>
 	body{
 		padding-top: 40px;
@@ -50,6 +50,22 @@
 <?php $this->load->view('include/footer'); ?>
 
 <script>
+var countdown=60;
+function timer(){
+	if(countdown==0){
+		$("#sendCode_btn").removeAttr("disabled");
+		$("#sendCode_btn").attr("class","btn btn-primary");
+		$("#sendCode_btn").html("发送验证码");
+		countdown=60;
+	}else{
+		$("#sendCode_btn").attr("disabled",true);
+		$("#sendCode_btn").attr("class","btn btn-default");
+		$("#sendCode_btn").html("重新发送 ("+countdown+")");
+		countdown--;
+	}
+	setTimeout(function(){timer()},1000);
+}
+
 function sendCode(){
 	lockScreen();
 	email=$("#email").val();
@@ -77,7 +93,6 @@ function sendCode(){
 			unlockScreen();
 			
 			if(ret.code=="200"){
-				// @TODO timer();
 				timer();
 				return true;
 			}else if(ret.message=="sendFailed"){

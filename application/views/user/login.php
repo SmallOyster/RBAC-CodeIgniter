@@ -3,7 +3,7 @@
  * @name V-登录
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-20
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-03-31
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>登录 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>登录 / <?php echo $this->Setting_model->get('systemName'); ?></title>
 	<style>
 	body{
 		padding-top: 40px;

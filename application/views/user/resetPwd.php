@@ -3,7 +3,7 @@
  * @name V-用户重置密码
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-24
- * @version V1.0 2018-03-11
+ * @version V1.0 2018-03-31
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>重置密码 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>重置密码 / <?php echo $this->Setting_model->get('systemName'); ?></title>
 	<style>
 	body{
 		padding-top: 40px;

@@ -3,7 +3,7 @@
  * @name V-修改个人资料
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-19
- * @version V1.0 2018-02-22
+ * @version V1.0 2018-03-31
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>修改个人资料 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>修改个人资料 / <?php echo $this->Setting_model->get('systemName'); ?></title>
 </head>
 
 <body>
