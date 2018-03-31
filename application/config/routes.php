@@ -3,7 +3,7 @@
  * @name 全局路由
  * @author CodeIgniter,SmallOyster
  * @since 2018-02-06
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-03-31
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -56,12 +56,14 @@ $route['admin/sys/setting/toSave']['POST']='Setting/toSave';
 
 /************* Admin-Log **************/
 $route['admin/sys/log/list']='Log/toList';
-$route['admin/sys/log/toTruncateLog']['POST']='Log/toTruncateLog';
+$route['admin/sys/log/toTruncate']['POST']='Log/toTruncate';
 
 /************* Admin-Notice **************/
 $route['admin/notice/list']='Notice/adminList';
 $route['admin/notice/pub']='Notice/Publish';
 $route['admin/notice/toPublish']['POST']='Notice/toPublish';
+$route['admin/notice/edit/(:num)']='Notice/edit/$1';
+$route['admin/notice/toEdit']['POST']='Notice/toEdit';
 $route['admin/notice/toDelete']['POST']='Notice/toDelete';
 
 /************* Notice **************/

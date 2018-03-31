@@ -1,8 +1,8 @@
 <?php 
 /**
- * @name V-发布新通知
+ * @name V-编辑通知
  * @author SmallOysyer <master@xshgzs.com>
- * @since 2018-03-29
+ * @since 2018-03-31
  * @version V1.0 2018-03-31
  */
 ?>
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>发布新通知 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>通知编辑 / <?php echo $this->config->item('systemName'); ?></title>
 </head>
 
 <body>
@@ -23,29 +23,31 @@
 <div id="page-wrapper">
 <!-- Page Main Content -->
 
+<input type="hidden" id="noticeID" value="<?php echo $info['id']; ?>">
+
 <!-- Page Name-->
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">发布新通知</h1>
+		<h1 class="page-header">通知编辑</h1>
 	</div>
 </div>
 <!-- ./Page Name-->
 
 <div class="panel panel-default">
-	<div class="panel-heading">发布新通知</div>
+	<div class="panel-heading">通知编辑</div>
 	<div class="panel-body">
 		<div class="form-group">
 			<label for="title">通知标题</label>
-			<input class="form-control" id="title" onkeyup='if(event.keyCode==13)$("#content").focus();'>
+			<input class="form-control" id="title" onkeyup='if(event.keyCode==13)$("#content").focus();' value="<?php echo $info['title']; ?>">
 			<p class="help-block">请输入<font color="green">1</font>-<font color="green">50</font>字的通知标题</p>
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="content">通知内容</label>
-			<textarea class="form-control" id="content"></textarea>
+			<textarea class="form-control" id="content"><?php echo $info['content']; ?></textarea>
 		</div>
 		<hr>
-		<button class="btn btn-success btn-block" onclick='publish()'>确 认 发 布 &gt;</button>
+		<button class="btn btn-success btn-block" onclick='edit()'>确 认 修 改 &gt;</button>
 	</div>
 </div>
 
@@ -57,8 +59,9 @@
 </div>
 
 <script>
-function publish(){
+function edit(){
 	lockScreen();
+	id=$("#noticeID").val();
 	title=$("#title").val();
 	content=$("#content").val();
 
@@ -82,9 +85,9 @@ function publish(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('admin/notice/toPublish'); ?>",
+		url:"<?php echo site_url('admin/notice/toEdit'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"title":title,"content":content},
+		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id,"title":title,"content":content},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -97,11 +100,11 @@ function publish(){
 			unlockScreen();
 			
 			if(ret.code=="200"){
-				alert("发布成功！");
+				alert("编辑成功！");
 				history.go(-1);
 				return true;
-			}else if(ret.message=="publishFailed"){
-				$("#tips").html("发布失败！！！");
+			}else if(ret.message=="updateFailed"){
+				$("#tips").html("编辑失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code=="403"){

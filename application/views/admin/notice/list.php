@@ -3,7 +3,7 @@
  * @name V-通知管理
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-28
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-03-31
  */ 
 ?>
 
@@ -31,7 +31,7 @@
 </div>
 <!-- ./Page Name-->
 
-<a href="<?php echo site_url('admin/notice/pub'); ?>" target="_blank" class="btn btn-primary btn-block">发 布 新 通 知 &gt;</a>
+<a href="<?php echo site_url('admin/notice/pub'); ?>" class="btn btn-primary btn-block">发 布 新 通 知 &gt;</a>
 <hr>
 
 <table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
