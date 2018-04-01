@@ -3,7 +3,7 @@
  * @name V-发布新通知
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-29
- * @version V1.0 2018-03-31
+ * @version V1.0 2018-04-01
  */
 ?>
 
@@ -60,29 +60,32 @@ var E = window.wangEditor;
 var editor = new E('#wangEditor_div');
 editor.create();
 
+$(function(){
+	$('#tipsModal').on('hidden.bs.modal',function (){
+		$("#wangEditor_div").removeAttr("style");
+	});
+});
+
 function publish(){
 	lockScreen();
 	title=$("#title").val();
 	content=editor.txt.html();
-	editor.$textElem.attr('contenteditable', false);
-
+	$("#wangEditor_div").attr("style","display:none;");
+	
 	if(title==""){
 		unlockScreen();
-		editor.$textElem.attr('contenteditable', true)
 		$("#tips").html("请输入通知标题！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
 	if(content==""){
 		unlockScreen();
-		editor.$textElem.attr('contenteditable', true)
 		$("#tips").html("请输入通知内容！");
 		$("#tipsModal").modal('show');
 		return false;
 	}
 	if(title.length<1 || title.length>50){
 		unlockScreen();
-		editor.$textElem.attr('contenteditable', true)
 		$("#tips").html("请输入 1-50字 的通知标题！");
 		$("#tipsModal").modal('show');
 		return false;
@@ -96,8 +99,7 @@ function publish(){
 		error:function(e){
 			console.log(JSON.stringify(e));
 			unlockScreen();
-			editor.$textElem.attr('contenteditable', true)
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.responseText+"</font>");
+			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			$("#tipsModal").modal('show');
 			return false;
 		},
@@ -109,17 +111,14 @@ function publish(){
 				history.go(-1);
 				return true;
 			}else if(ret.message=="publishFailed"){
-				editor.$textElem.attr('contenteditable', true)
 				$("#tips").html("发布失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code=="403"){
-				editor.$textElem.attr('contenteditable', true)
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;
 			}else{
-				editor.$textElem.attr('contenteditable', true)
 				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				$("#tipsModal").modal('show');
 				return false;

@@ -3,7 +3,7 @@
  * @name V-通知管理
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-28
- * @version V1.0 2018-03-31
+ * @version V1.0 2018-04-01
  */ 
 ?>
 
@@ -48,8 +48,8 @@
 	<?php foreach($list as $info){ ?>
 		<tr>
 			<td><?php echo $info['title']; ?></td>
-			<td><?php echo $info['create_time']; ?></td>
 			<td><?php echo $info['create_user']; ?></td>
+			<td><?php echo $info['create_time']; ?></td>
 			<td>
 				<a href="<?php echo site_url('notice/detail/').$info['id']; ?>" class="btn btn-primary">详细</a>
 				<a href="<?php echo site_url('admin/notice/edit/').$info['id']; ?>" class="btn btn-info">编辑</a>
@@ -70,7 +70,12 @@
 <script>
 window.onload=function(){
 	$('#table').DataTable({
-		responsive: true
+		responsive: true,
+		"order":[[2,'desc']],
+		"columnDefs":[{
+			"targets":[3],
+			"orderable": false
+		}]
 	});
 };
 

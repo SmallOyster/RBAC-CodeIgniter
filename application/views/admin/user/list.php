@@ -3,7 +3,7 @@
  * @name V-用户列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-04-01
  */
 ?>
 
@@ -75,7 +75,11 @@ var statusNum="";
 
 window.onload=function(){
 	$('#table').DataTable({
-		responsive: true
+		responsive: true,
+		"columnDefs":[{
+			"targets":[3],
+			"orderable": false
+		}]
 	});
 };
 
