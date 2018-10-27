@@ -3,7 +3,7 @@
  * @name V-通知详情
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-30
- * @version V1.0 2018-03-30
+ * @version 2018-10-24
  */ 
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
   <?php $this->load->view('include/header'); ?>
-  <title>通知详情 / <?php echo $this->config->item('systemName'); ?></title>
+  <title>通知详情 / <?=$this->Setting_model->get('systemName'); ?></title>
 </head>
 
 <body>

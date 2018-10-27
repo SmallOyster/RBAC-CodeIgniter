@@ -3,7 +3,7 @@
  * @name V-登录
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-20
- * @version V1.0 2018-03-31
+ * @version 2018-10-24
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>登录 / <?php echo $this->Setting_model->get('systemName'); ?></title>
+	<title>登录 / <?=$this->Setting_model->get('systemName'); ?></title>
 	<style>
 	body{
 		padding-top: 40px;
@@ -25,7 +25,7 @@
 	<div class="col-md-6 col-md-offset-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">欢迎登录<?php echo $this->Setting_model->get('systemName'); ?></h3>
+				<h3 class="panel-title">欢迎登录<?=$this->Setting_model->get('systemName'); ?></h3>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
@@ -34,7 +34,7 @@
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="pwd">密码</label> <a href="<?php echo site_url('user/forgetPwd'); ?>" target="_blank">（忘记密码 Forget Password）</a>
+					<label for="pwd">密码</label> <a href="<?=base_url('user/forgetPwd'); ?>" target="_blank">（忘记密码 Forget Password）</a>
 					<input class="form-control" placeholder="密码 / Password" id="pwd" type="password" onkeyup='if(event.keyCode==13)toLogin();'>
 				</div>
 				<div class="checkbox">
@@ -43,7 +43,7 @@
 					</label>
 				</div>
 				<center>
-					<a href="<?php echo site_url('user/reg'); ?>" target="_blank" class="btn btn-primary" style="width:48%">注册 / Register</a> <button class="btn btn-success" style="width:48%" onclick='toLogin();'>登录 / Login &gt;</button>
+					<a href="<?=base_url('user/reg'); ?>" target="_blank" class="btn btn-primary" style="width:48%">注册 / Register</a> <button class="btn btn-success" style="width:48%" onclick='toLogin();'>登录 / Login &gt;</button>
 				</center>
 			</div>
 		</div>
@@ -65,7 +65,7 @@ $(function (){
 window.onload=function(){
   
   /********** ▼ 记住密码 ▼ **********/
-  Remember=getCookie("<?php echo $this->sessPrefix; ?>RmUN");
+  Remember=getCookie("<?=$this->sessPrefix;?>RmUN");
   if(Remember!=null){
     $("#userName").val(Remember);
     $("#pwd").focus();
@@ -93,9 +93,9 @@ function toLogin(){
 	/********** ▼ 记住密码 ▼ **********/
 	Remember=$("input[type='checkbox']").is(':checked');
 	if(Remember==true){
-		setCookie("<?php echo $this->sessPrefix; ?>RmUN",userName);
+		setCookie("<?=$this->sessPrefix;?>RmUN",userName);
 	}else{
-		delCookie("<?php echo $this->sessPrefix; ?>RmUN");
+		delCookie("<?=$this->sessPrefix;?>RmUN");
 	}
 	/********** ▲ 记住密码 ▲ **********/
 
@@ -133,9 +133,9 @@ function toLogin(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('user/toLogin'); ?>",
+		url:"<?=base_url('user/toLogin');?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"userName":userName,"pwd":pwd},
+		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"pwd":pwd},
 		dataType:"json",
 		error:function(e){
 			console.log(e);
@@ -153,7 +153,7 @@ function toLogin(){
 			$("#pwd").removeAttr("disabled");
 
 			if(ret.code==200){
-				window.location.href="<?php echo site_url('/'); ?>"
+				window.location.href="<?=base_url('/');?>"
 			}else if(ret.message=="userForbidden"){
 				$("#tips").html("当前用户被禁用！<br>请联系管理员！");
 				$("#tipsModal").modal('show');

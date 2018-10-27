@@ -3,7 +3,7 @@
  * @name V-用户忘记密码（邮箱验证）
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-08
- * @version V1.0 2018-03-31
+ * @version 2018-10-24
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>忘记密码 / <?php echo $this->Setting_model->get('systemName'); ?></title>
+	<title>忘记密码 / <?=$this->Setting_model->get('systemName'); ?></title>
 	<style>
 	body{
 		padding-top: 40px;
@@ -78,9 +78,9 @@ function sendCode(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('user/forgetPwd/sendCode'); ?>",
+		url:"<?=base_url('user/forgetPwd/sendCode'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"email":email},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"email":email},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
@@ -135,9 +135,9 @@ function resetPwd(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('user/forgetPwd/verify'); ?>",
+		url:"<?=base_url('user/forgetPwd/verify'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"email":email,"verifyCode":verifyCode},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"email":email,"verifyCode":verifyCode},
 		dataType:'json',
 		error:function(e){
 			console.log(e);

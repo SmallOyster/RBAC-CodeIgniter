@@ -3,7 +3,7 @@
  * @name V-用户注册
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-22
- * @version V1.0 2018-03-31
+ * @version 2018-03-31
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>注册 / <?php echo $this->Setting_model->get('systemName'); ?></title>
+	<title>注册 / <?=$this->Setting_model->get('systemName'); ?></title>
 	<style>
 	body{
 		padding-top: 40px;

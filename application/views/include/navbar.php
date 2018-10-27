@@ -25,7 +25,7 @@ $allNotice=$this->Notice_model->get(0,"nav");
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		</button>
-		<a class="navbar-brand" href="<?php echo site_url(); ?>"><?php echo $this->Setting_model->get('systemName'); ?></a>
+		<a class="navbar-brand" href="<?php echo base_url(); ?>"><?php echo $this->Setting_model->get('systemName'); ?></a>
 	</div>
 	<!-- dropdown-head-right -->
 	<ul class="nav navbar-top-links navbar-right">
@@ -37,7 +37,7 @@ $allNotice=$this->Notice_model->get(0,"nav");
 				<?php if(count($allNotice)!=0){ ?>
 				<?php foreach($allNotice as $info){ ?>
 				<li>
-					<a href="<?php echo site_url('notice/detail/').$info['id']; ?>" target="_blank">
+					<a href="<?php echo base_url('notice/detail/').$info['id']; ?>" target="_blank">
 						<div>
 							<b><font color="#FF9800"><?php echo $info['create_user']; ?></font></b>
 							<span class="pull-right text-muted">
@@ -56,7 +56,7 @@ $allNotice=$this->Notice_model->get(0,"nav");
 				<li class="divider"></li>
 				<?php } ?>
 				<li>
-					<a class="text-center" href="<?php echo site_url('notice/list'); ?>">
+					<a class="text-center" href="<?php echo base_url('notice/list'); ?>">
 						<b>阅 读 所 有 公 告</b>
 						<i class="fa fa-angle-right"></i>
 					</a>
@@ -79,11 +79,11 @@ $allNotice=$this->Notice_model->get(0,"nav");
 				</li>
 				<li class="divider"></li>
 				<li>
-					<a href="<?php echo site_url('user/updateProfile'); ?>">
+					<a href="<?php echo base_url('user/updateProfile'); ?>">
 						<i class="fa fa-user fa-fw"></i>修改个人资料</a>
 				</li>
 				<li>
-					<a href="<?php echo site_url('user/logout'); ?>">
+					<a href="<?php echo base_url('user/logout'); ?>">
 						<i class="fa fa-sign-out fa-fw"></i>登出系统</a>
 				</li>
 			</ul>
@@ -97,7 +97,7 @@ $allNotice=$this->Notice_model->get(0,"nav");
 		<div class="sidebar-nav navbar-collapse">
 			<ul class="nav" id="side-menu">
 				<li>
-					<a href="<?php echo site_url(); ?>">
+					<a href="<?php echo base_url(); ?>">
 						<i class="fa fa-home"></i> 主页面</a>
 				</li>
 				
@@ -108,7 +108,7 @@ $allNotice=$this->Notice_model->get(0,"nav");
 					// 没有二级菜单
 				?>
 					<li>
-						<a href="<?php echo site_url($info['uri']); ?>">
+						<a href="<?php echo base_url($info['uri']); ?>">
 							<i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i>
 							<?php echo $info['name']; ?>
 						</a>
@@ -132,7 +132,7 @@ $allNotice=$this->Notice_model->get(0,"nav");
 							// 没有三级菜单
 						?>
 							<li>
-								<a href="<?php echo site_url($child_info['uri']); ?>">
+								<a href="<?php echo base_url($child_info['uri']); ?>">
 									<i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i>
 									<?php echo $child_info['name']; ?>
 								</a>
@@ -154,7 +154,7 @@ $allNotice=$this->Notice_model->get(0,"nav");
 									foreach($child_info['child'] as $child2_info){
 									?>
 									<li>
-										<a href="<?php echo site_url($child2_info['uri']); ?>">
+										<a href="<?php echo base_url($child2_info['uri']); ?>">
 											<i class="fa fa-<?php echo $child2_info['icon']; ?>" aria-hidden="true"></i>
 											<?php echo $child2_info[ 'name']; ?>
 										</a>

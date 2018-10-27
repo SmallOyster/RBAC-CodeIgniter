@@ -3,7 +3,7 @@
  * @name V-修改个人资料
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-19
- * @version V1.0 2018-03-31
+ * @version 2018-10-24
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>修改个人资料 / <?php echo $this->Setting_model->get('systemName'); ?></title>
+	<title>修改个人资料 / <?=$this->Setting_model->get('systemName'); ?></title>
 </head>
 
 <body>
@@ -36,12 +36,12 @@
 	<div class="panel-body">
 		<div class="form-group">
 			<label for="userName">用户名</label>
-			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();' value="<?php echo $info['user_name']; ?>" disabled>
+			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();' value="<?=$info['user_name']; ?>" disabled>
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="realName">昵称</label>
-			<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#oldPwd").focus();' value="<?php echo $info['nick_name']; ?>">
+			<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#oldPwd").focus();' value="<?=$info['nick_name']; ?>">
 		</div>
 		
 		<hr>
@@ -68,24 +68,24 @@
 
 		<div class="form-group">
 			<label for="phone">手机号</label>
-			<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();' value="<?php echo $info['phone']; ?>">
+			<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();' value="<?=$info['phone']; ?>">
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="email">邮箱</label>
-			<input type="email" class="form-control" id="email" value="<?php echo $info['email']; ?>" onkeyup='if(event.keyCode==13)updateProfile();'>
+			<input type="email" class="form-control" id="email" value="<?=$info['email']; ?>" onkeyup='if(event.keyCode==13)updateProfile();'>
 		</div>
 
 		<hr>
 
 		<div class="form-group">
 			<label>注册时间</label>
-			<input class="form-control" value="<?php echo $info['create_time']; ?>" disabled>
+			<input class="form-control" value="<?=$info['create_time']; ?>" disabled>
 		</div>
 		<br>
 		<div class="form-group">
 			<label>最后修改时间</label>
-			<input class="form-control" value="<?php echo $info['update_time']; ?>" disabled>
+			<input class="form-control" value="<?=$info['update_time']; ?>" disabled>
 		</div>
 
 		<hr>
@@ -162,9 +162,9 @@ function updateProfile(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('user/toUpdateProfile'); ?>",
+		url:"<?=base_url('user/toUpdateProfile'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,'oldPwd':oldPwd,'newPwd':newPwd,"phone":phone,"email":email},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,'oldPwd':oldPwd,'newPwd':newPwd,"phone":phone,"email":email},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
@@ -179,7 +179,7 @@ function updateProfile(){
 			if(ret.code=="200"){
 				if(oldPwd!=""){
 					alert("修改成功！请使用新密码重新登录！");
-					window.location.href="<?php echo site_url('user/login'); ?>";
+					window.location.href="<?=base_url('user/login'); ?>";
 					return true;
 				}else{
 					alert("修改成功！");

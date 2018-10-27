@@ -20,7 +20,7 @@
   </div>
 </div>
 
-<a href="<?php echo $url; ?>" target="_blank" class="btn btn-success" style="width: 98%">请 点 此 手 动 跳 转</a>
+<a href="<?=$url; ?>" target="_blank" class="btn btn-success" style="width: 98%">请 点 此 手 动 跳 转</a>
 <br><br>
 <a onclick="history.go(-1);" class="btn btn-primary" style="width: 98%">返 回 上 一 页</a>
 

@@ -3,7 +3,7 @@
  * @name V-主页
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-06
- * @version V1.0 2018-03-28
+ * @version 2018-10-24
  */ 
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
   <?php $this->load->view('include/header'); ?>
-  <title><?php echo $this->Setting_model->get('systemName'); ?></title>
+  <title><?=$this->Setting_model->get('systemName'); ?></title>
 </head>
 
 <body>
@@ -60,7 +60,7 @@
 	<li class="list-group-item">
 		<div class="row">
 			<div class="col-xs-8">
-				<a href="<?php echo site_url('notice/detail/').$info['id']; ?>" target="_blank">
+				<a href="<?php echo base_url('notice/detail/').$info['id']; ?>" target="_blank">
 					<i class="fa fa-bullhorn"></i> <?php echo $info['title']; ?>
 				</a>
 			</div>

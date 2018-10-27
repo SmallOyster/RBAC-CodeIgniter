@@ -3,7 +3,7 @@
  * @name V-系统设置列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-03
- * @version V1.0 2018-03-05
+ * @version 2018-10-24
  */
  
 ?>
@@ -13,7 +13,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>系统设置列表 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>系统设置列表 / <?=$this->Setting_model->get('systemName'); ?></title>
 </head>
 
 <body>
@@ -85,10 +85,10 @@ function save(name){
 	value=$("#"+name+"_input").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/sys/setting/toSave'); ?>",
+		url:"<?=base_url('admin/sys/setting/toSave');?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"name":name,"value":value},
+		data:{<?=$this->ajax->showAjaxToken();?>,"name":name,"value":value},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
