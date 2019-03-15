@@ -3,7 +3,7 @@
  * @name V-角色列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-04-01
+ * @version V1.0 2018-08-08
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>角色列表 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>角色列表 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">角色列表</h1>
-		<a href="<?php echo site_url('admin/role/add'); ?>" class="btn btn-primary btn-block">新 增 角 色</a>
+		<a href="<?=site_url('admin/role/add'); ?>" class="btn btn-primary btn-block">新 增 角 色</a>
 		<hr>
 	</div>
 </div>
@@ -43,14 +43,14 @@
 	<tbody>
 		<?php foreach($list as $info){ ?>
 		<tr>
-			<td><?php echo $info['name']; ?></td>
+			<td><?=$info['name']; ?></td>
 			<td>
-				<a href="<?php echo site_url('admin/role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a>
-				<a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</a>
-				<a href="<?php echo site_url('admin/role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a>
+				<a href="<?=site_url('admin/role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a>
+				<a onclick='del_ready("<?=$info['id']; ?>","<?=$info['name']; ?>")' class="btn btn-danger">删除</a>
+				<a href="<?=site_url('admin/role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a>
 				
 				<?php if($info['is_default']==0){ ?>
-				<a onclick='setDefaultRole("<?php echo $info['id']; ?>")' class="btn btn-primary">设为默认角色</a>
+				<a onclick='setDefaultRole("<?=$info['id']; ?>")' class="btn btn-primary">设为默认角色</a>
 				<?php } ?>
 			</td>
 		</tr>
@@ -89,10 +89,10 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/role/toDelete'); ?>",
+		url:"<?=site_url('admin/role/toDelete'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
@@ -134,10 +134,10 @@ function setDefaultRole(id){
 	lockScreen();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/role/toSetDefaultRole'); ?>",
+		url:"<?=site_url('admin/role/toSetDefaultRole'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
 		error:function(e){
 			console.log(e);
 			unlockScreen();

@@ -3,7 +3,7 @@
  * @name V-通知管理
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-28
- * @version V1.0 2018-04-01
+ * @version V1.0 2018-08-08
  */ 
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>通知管理 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>通知管理 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -31,7 +31,7 @@
 </div>
 <!-- ./Page Name-->
 
-<a href="<?php echo site_url('admin/notice/pub'); ?>" class="btn btn-primary btn-block">发 布 新 通 知 &gt;</a>
+<a href="<?=site_url('admin/notice/pub'); ?>" class="btn btn-primary btn-block">发 布 新 通 知 &gt;</a>
 <hr>
 
 <table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
@@ -47,13 +47,13 @@
 	<tbody>
 	<?php foreach($list as $info){ ?>
 		<tr>
-			<td><?php echo $info['title']; ?></td>
-			<td><?php echo $info['create_user']; ?></td>
-			<td><?php echo $info['create_time']; ?></td>
+			<td><?=$info['title']; ?></td>
+			<td><?=$info['create_user']; ?></td>
+			<td><?=$info['create_time']; ?></td>
 			<td>
-				<a href="<?php echo site_url('notice/detail/').$info['id']; ?>" class="btn btn-primary">详细</a>
-				<a href="<?php echo site_url('admin/notice/edit/').$info['id']; ?>" class="btn btn-info">编辑</a>
-				<a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['title']; ?>")' class="btn btn-danger">删除</a>
+				<a href="<?=site_url('notice/detail/').$info['id']; ?>" class="btn btn-primary">详细</a>
+				<a href="<?=site_url('admin/notice/edit/').$info['id']; ?>" class="btn btn-info">编辑</a>
+				<a onclick='del_ready("<?=$info['id']; ?>","<?=$info['title']; ?>")' class="btn btn-danger">删除</a>
 			</td>
 		</tr>
 	<?php } ?>
@@ -91,10 +91,10 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/notice/toDelete'); ?>",
+		url:"<?=site_url('admin/notice/toDelete'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
 		error:function(e){
 			console.log(e);
 			unlockScreen();

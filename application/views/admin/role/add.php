@@ -3,7 +3,7 @@
  * @name V-新增角色
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-08-08
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>新增角色 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>新增角色 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -77,9 +77,9 @@ function add(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('admin/role/toAdd'); ?>",
+		url:"<?=site_url('admin/role/toAdd'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));

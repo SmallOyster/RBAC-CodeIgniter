@@ -3,7 +3,7 @@
  * @name V-用户注册
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-22
- * @version 2018-03-31
+ * @version V1.0 2018-08-07
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>注册 / <?=$this->Setting_model->get('systemName'); ?></title>
+	<title>注册 / <?=$this->Setting_model->get('systemName');?></title>
 	<style>
 	body{
 		padding-top: 40px;
@@ -25,7 +25,7 @@
 	<div class="col-md-6 col-md-offset-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">欢迎注册<?php echo $this->config->item('systemName'); ?></h3>
+				<h3 class="panel-title">欢迎注册<?=$this->config->item('systemName'); ?></h3>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
@@ -147,9 +147,9 @@ function reg(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('user/toReg'); ?>",
+		url:"<?=site_url('user/toReg'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"pwd":pwd},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"pwd":pwd},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
@@ -163,7 +163,7 @@ function reg(){
 			
 			if(ret.code=="200"){
 				alert("注册成功！即将跳转至登录页面！");
-				window.location.href="<?php echo site_url('user/login'); ?>";
+				window.location.href="<?=site_url('user/login'); ?>";
 				return true;
 			}else if(ret.message=="regFailed"){
 				$("#tips").html("注册失败！！！");

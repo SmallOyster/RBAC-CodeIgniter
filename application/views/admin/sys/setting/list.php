@@ -3,7 +3,7 @@
  * @name V-系统设置列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-03
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-08-08
  */
  
 ?>
@@ -13,7 +13,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>系统设置列表 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>系统设置列表 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -46,17 +46,17 @@
 	foreach($list as $info){
 	?>
 	<tr>
-		<td><?php echo $info['chinese_name']; ?></td>
+		<td><?=$info['chinese_name']; ?></td>
 		<td>
 			<!-- 显示 -->
-			<p id="<?php echo $info['name']; ?>_show"><?php echo $info['value']; ?></p>
+			<p id="<?=$info['name']; ?>_show"><?=$info['value']; ?></p>
 
 			<!-- 输入框 -->
-			<input type="hidden" id="<?php echo $info['name']; ?>_input" class="form-control" value="<?php echo $info['value']; ?>">
+			<input type="hidden" id="<?=$info['name']; ?>_input" class="form-control" value="<?=$info['value']; ?>">
 		</td>
 		<td>
-			<button class="btn btn-primary" id="<?php echo $info['name']; ?>_btn1" onclick='edit("<?php echo $info['name']; ?>")'>修改</button>
-			<button class="btn btn-success" id="<?php echo $info['name']; ?>_btn2" onclick='save("<?php echo $info['name']; ?>")' style="display:none">保存</button>
+			<button class="btn btn-primary" id="<?=$info['name']; ?>_btn1" onclick='edit("<?=$info['name']; ?>")'>修改</button>
+			<button class="btn btn-success" id="<?=$info['name']; ?>_btn2" onclick='save("<?=$info['name']; ?>")' style="display:none">保存</button>
 		</td>
 	</tr>
 	<?php } ?>
@@ -83,10 +83,10 @@ function save(name){
 	value=$("#"+name+"_input").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/sys/setting/toSave'); ?>",
+		url:"<?=site_url('admin/sys/setting/toSave'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"name":name,"value":value},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"value":value},
 		error:function(e){
 			console.log(e);
 			unlockScreen();

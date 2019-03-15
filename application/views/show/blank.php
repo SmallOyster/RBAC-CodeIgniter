@@ -1,9 +1,9 @@
 <?php 
 /**
  * @name V-空白页
- * @author SmallOysyer <master@xshgzs.com>
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-15
- * @version V1.0 2018-03-30
+ * @version V1.0 2018-08-07
  */ 
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
   <?php $this->load->view('include/header'); ?>
-  <title>空白页 / <?php echo $this->config->item('systemName'); ?></title>
+  <title>空白页 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>

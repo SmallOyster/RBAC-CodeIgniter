@@ -3,7 +3,7 @@
  * @name V-新增用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-02-24
+ * @version V1.0 2018-08-08
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>新增用户 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>新增用户 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -86,9 +86,9 @@ function getAllRole(){
 	lockScreen();
 
 	$.ajax({
-		url:"<?php echo site_url('api/getAllRole'); ?>",
+		url:"<?=site_url('api/getAllRole'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>},
+		data:{<?=$this->ajax->showAjaxToken(); ?>},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -174,9 +174,9 @@ function add(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('admin/user/toAdd'); ?>",
+		url:"<?=site_url('admin/user/toAdd'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
 		dataType:'json',
 		error:function(e){
 			console.log(e);

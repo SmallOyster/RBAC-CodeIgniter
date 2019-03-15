@@ -3,7 +3,7 @@
  * @name V-修改角色
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-08-08
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>修改角色 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>修改角色 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
 <div id="page-wrapper">
 <!-- Page Main Content -->
 
-<input type="hidden" id="roleID" value="<?php echo $roleID; ?>">
+<input type="hidden" id="roleID" value="<?=$roleID; ?>">
 
 <!-- Page Name-->
 <div class="row">
@@ -38,13 +38,13 @@
 	<div class="panel-body">
 		<div class="form-group">
 			<label for="name">角色名称</label>
-			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' value="<?php echo $info['name']; ?>">
+			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' value="<?=$info['name']; ?>">
 			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
 		</div>
 		<br>
 		<div class="form-group">
 			<label for="remark">备注</label>
-			<textarea class="form-control" id="remark"><?php echo $info['remark']; ?></textarea>
+			<textarea class="form-control" id="remark"><?=$info['remark']; ?></textarea>
 			<p class="help-block">选填</p>
 		</div>
 
@@ -52,12 +52,12 @@
 
 		<div class="form-group">
 			<label>创建时间</label>
-			<input class="form-control" value="<?php echo $info['create_time']; ?>" disabled>
+			<input class="form-control" value="<?=$info['create_time']; ?>" disabled>
 		</div>
 		<br>
 		<div class="form-group">
 			<label>最后修改时间</label>
-			<input class="form-control" value="<?php echo $info['update_time']; ?>" disabled>
+			<input class="form-control" value="<?=$info['update_time']; ?>" disabled>
 		</div>
 
 		<hr>
@@ -94,9 +94,9 @@ function edit(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('admin/role/toEdit'); ?>",
+		url:"<?=site_url('admin/role/toEdit'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark,'roleID':roleID},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark,'roleID':roleID},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));

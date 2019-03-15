@@ -3,7 +3,7 @@
  * @name V-发布新通知
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-29
- * @version V1.0 2018-04-01
+ * @version V1.0 2018-08-08
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>发布新通知 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>发布新通知 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -92,9 +92,9 @@ function publish(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('admin/notice/toPublish'); ?>",
+		url:"<?=site_url('admin/notice/toPublish'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"title":title,"content":content},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"title":title,"content":content},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));

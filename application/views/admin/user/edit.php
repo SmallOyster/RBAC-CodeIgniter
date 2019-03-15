@@ -1,87 +1,92 @@
 <?php 
 /**
- * @name V-修改用户
+ * @name 生蚝科技RBAC开发框架-V-修改用户
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-24
+ * @version 2019-03-15
  */
 ?>
-
 <!DOCTYPE html>
 <html>
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>修改用户 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>用户列表 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<!-- 头部(显示页面名称和路径) -->
+	<section class="content-header">
+		<h1><?=$this->setting->get('systemName'); ?><small>首页</small></h1>
+		<ol class="breadcrumb">
+			<li><a href="<?=base_url('dashborad');?>"><i class="fa fa-dashboard"></i> <?=$this->setting->get('systemName'); ?></a></li>
+			<li class="active">修改用户</li>
+		</ol>
+	</section>
 
-<input type="hidden" id="userID" value="<?php echo $userID; ?>">
+	<!-- 页面主要内容 -->
+	<section class="content">
+		<input type="hidden" id="userID" value="<?=$userID; ?>">
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">修改用户</h1>
-	</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">修改用户</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label for="userName">用户名</label>
+					<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();' value="<?=$info['user_name']; ?>">
+					<p class="help-block">请输入<font color="green">4</font>-<font color="green">20</font>字的用户名</p>
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="nickName">昵称</label>
+					<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();' value="<?=$info['nick_name']; ?>">
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="phone">手机号</label>
+					<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();' value="<?=$info['phone']; ?>">
+					<p class="help-block">目前仅支持中国大陆的手机号码</p>
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="email">邮箱</label>
+					<input type="email" class="form-control" id="email" value="<?=$info['email']; ?>">
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="roleID">角色</label>
+					<select class="form-control" id="roleID">
+						<option value="-1" selected disabled>--- 请选择角色 ---</option>
+					</select>
+				</div>
+
+				<hr>
+
+				<div class="form-group">
+					<label>注册时间</label>
+					<input class="form-control" value="<?=$info['create_time']; ?>" disabled>
+				</div>
+				<br>
+				<div class="form-group">
+					<label>最后修改时间</label>
+					<input class="form-control" value="<?=$info['update_time']; ?>" disabled>
+				</div>
+
+				<hr>
+
+				<button class="btn btn-success btn-block" onclick='edit()'>确 认 修 改 用 户 &gt;</button>
+			</div>
+		</div>
+	</section>
+	<!-- ./页面主要内容 -->
 </div>
-<!-- ./Page Name-->
-
-<div class="panel panel-default">
-	<div class="panel-heading">修改用户</div>
-	<div class="panel-body">
-		<div class="form-group">
-			<label for="userName">用户名</label>
-			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();' value="<?php echo $info['user_name']; ?>">
-			<p class="help-block">请输入<font color="green">4</font>-<font color="green">20</font>字的用户名</p>
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="nickName">昵称</label>
-			<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();' value="<?php echo $info['nick_name']; ?>">
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="phone">手机号</label>
-			<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();' value="<?php echo $info['phone']; ?>">
-			<p class="help-block">目前仅支持中国大陆的手机号码</p>
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="email">邮箱</label>
-			<input type="email" class="form-control" id="email" value="<?php echo $info['email']; ?>">
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="roleID">角色</label>
-			<select class="form-control" id="roleID">
-				<option value="-1" selected disabled>--- 请选择角色 ---</option>
-			</select>
-		</div>
-
-		<hr>
-
-		<div class="form-group">
-			<label>注册时间</label>
-			<input class="form-control" value="<?php echo $info['create_time']; ?>" disabled>
-		</div>
-		<br>
-		<div class="form-group">
-			<label>最后修改时间</label>
-			<input class="form-control" value="<?php echo $info['update_time']; ?>" disabled>
-		</div>
-
-		<hr>
-
-		<button class="btn btn-success btn-block" onclick='edit()'>确 认 修 改 用 户 &gt;</button>
-	</div>
-</div>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -91,7 +96,7 @@
 </div>
 
 <script>
-var nowRoleID="<?php echo $info['role_id']; ?>";
+var nowRoleID="<?=$info['role_id']; ?>";
 
 window.onload=function(){
 	getAllRole();
@@ -103,9 +108,9 @@ function getAllRole(){
 	lockScreen();
 
 	$.ajax({
-		url:"<?php echo site_url('api/getAllRole'); ?>",
+		url:"<?=site_url('api/getAllRole'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>},
+		data:{<?=$this->ajax->showAjaxToken(); ?>},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -191,9 +196,9 @@ function edit(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('admin/user/toEdit'); ?>",
+		url:"<?=site_url('admin/user/toEdit'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,'userID':userID,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,'userID':userID,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -226,8 +231,6 @@ function edit(){
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 </body>
 </html>

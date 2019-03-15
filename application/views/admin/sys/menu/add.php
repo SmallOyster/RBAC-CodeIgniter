@@ -3,7 +3,7 @@
  * @name V-新增菜单
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-03-02
+ * @version 2018-08-17
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>新增菜单 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>新增菜单 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
 <div id="page-wrapper">
 <!-- Page Main Content -->
 
-<input type="hidden" id="fatherID" value="<?php echo $fatherID; ?>">
+<input type="hidden" id="fatherID" value="<?=$fatherID; ?>">
 
 <!-- Page Name-->
 <div class="row">
@@ -34,7 +34,7 @@
 <!-- ./Page Name-->
 
 <div class="panel panel-default">
-	<div class="panel-heading">新增菜单（父菜单：<i class="fa fa-<?php echo $fatherIcon; ?>" aria-hidden="true"></i> <?php echo $fatherName; ?>）</div>
+	<div class="panel-heading">新增菜单（父菜单：<i class="fa fa-<?=$fatherIcon; ?>" aria-hidden="true"></i> <?=$fatherName; ?>）</div>
 	
 	<div class="panel-body">
 		<div class="form-group">
@@ -115,9 +115,9 @@ function add(){
 	}
 	
 	$.ajax({
-		url:"<?php echo site_url('admin/sys/menu/toAdd'); ?>",
+		url:"<?=base_url('admin/sys/menu/toAdd'); ?>",
 		type:"POST",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"fatherID":fatherID,"name":name,"icon":icon,"uri":uri},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"fatherID":fatherID,"name":name,"icon":icon,"uri":uri},
 		dataType:"JSON",
 		error:function(e){
 			console.log(e);

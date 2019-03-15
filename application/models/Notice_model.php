@@ -1,9 +1,9 @@
 <?php
 /**
-* @name M-通知
-* @author SmallOysyer <master@xshgzs.com>
+* @name 生蚝科技RBAC开发框架-M-通知
+* @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-03-25
-* @version V1.0 2018-03-30
+* @version 2018-03-30
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');

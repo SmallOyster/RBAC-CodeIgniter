@@ -62,8 +62,8 @@ function timer(){
 		$("#sendCode_btn").attr("class","btn btn-default");
 		$("#sendCode_btn").html("重新发送 ("+countdown+")");
 		countdown--;
+		setTimeout(function(){timer()},1000);
 	}
-	setTimeout(function(){timer()},1000);
 }
 
 function sendCode(){

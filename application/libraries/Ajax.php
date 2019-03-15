@@ -1,9 +1,9 @@
 <?php
 /**
-* @name L-Ajax
-* @author SmallOysyer <master@xshgzs.com>
+* @name 生蚝科技RBAC开发框架-L-Ajax
+* @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-10
-* @version V1.0.1 2018-03-05
+* @version 2019-03-04
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -16,20 +16,9 @@ class Ajax {
 	public function __construct()
 	{
 		$this->_CI =& get_instance();
+		$this->_CI->load->model(array('Setting_model'));
 
 		$this->sessPrefix=$this->_CI->Setting_model->get('sessionPrefix');
-	}
-
-
-	/**
-	 * 返回JSON数据
-	 * @param  string 状态码
-	 * @param  string 待返回的数据
-	 * @return JSON   已处理好的JSON数据
-	 */
-	public function returnData($code,$msg,$data=""){
-		$ret=array('code'=>$code,'message'=>$msg,'data'=>$data);
-		return json_encode($ret);
 	}
 
 
@@ -37,8 +26,9 @@ class Ajax {
 	 * 显示AJAX-Token
 	 * @return string Token名+值
 	 */
-	public function showAjaxToken(){
-		return '"token":"'.$this->_CI->session->userdata($this->sessPrefix.'AJAX_token').'"';
+	public function showAjaxToken($isAjax=1){
+		$token=$this->_CI->session->userdata($this->sessPrefix.'AJAX_token');
+		return $isAjax!==1?$token:'"token":"'.$token.'"';
 	}
 
 
@@ -66,7 +56,7 @@ class Ajax {
 	public function checkAjaxToken($token)
 	{
 		if($token!=$this->_CI->session->userdata($this->sessPrefix.'AJAX_token')){
-			die(self::returnData("403","invaildToken"));
+			returnAjaxData(403001,"invaild Token");
 		}
 	}
 }

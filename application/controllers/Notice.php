@@ -1,31 +1,28 @@
 <?php
 /**
- * @name C-通知
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-C-通知
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-28
- * @version V1.0 2018-03-31
+ * @version 2019-02-23
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Notice extends CI_Controller {
 
-	public $allMenu;
 	public $sessPrefix;
 	public $nowUserID;
 	public $nowUserName;
+	public $API_PATH;
 
 	function __construct()
 	{
 		parent::__construct();
 		
-		$this->load->library(array('Ajax'));
 		$this->safe->checkPermission();
-		
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$roleID=$this->session->userdata($this->sessPrefix."roleID");
-		$this->allMenu=$this->RBAC_model->getAllMenuByRole($roleID);
 
+		$this->API_PATH=$this->setting->get('apiPath');
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
@@ -40,6 +37,14 @@ class Notice extends CI_Controller {
 	}
 	
 	
+	public function list()
+	{
+		$list=$this->Notice_model->get();
+		
+		$this->load->view('notice/list',['list'=>$list]);
+	}
+
+
 	public function publish()
 	{
 		$this->ajax->makeAjaxToken();
@@ -95,7 +100,7 @@ class Notice extends CI_Controller {
 		$info=$this->Notice_model->get($id);
 	 
 		if($info==array()){
-	 		header("Location:".site_url('/'));
+	 		header("Location:".base_url('/'));
 	 	}
 	 
 		$this->load->view('notice/detail',['info'=>$info[0]]);
@@ -107,7 +112,7 @@ class Notice extends CI_Controller {
 		$info=$this->Notice_model->get($id);
 	 
 		if($info==array()){
-	 		header("Location:".site_url('/'));
+	 		header("Location:".base_url('/'));
 	 	}
 	 
 		$this->load->view('admin/notice/edit',['info'=>$info[0]]);

@@ -1,66 +1,72 @@
 <?php 
 /**
- * @name V-用户列表
+ * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-04-01
+ * @version 2019-03-15
  */
 ?>
-
 <!DOCTYPE html>
 <html>
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>用户列表 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>用户列表 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<!-- 头部(显示页面名称和路径) -->
+	<section class="content-header">
+		<h1><?=$this->setting->get('systemName'); ?><small>首页</small></h1>
+		<ol class="breadcrumb">
+			<li><a href="<?=base_url('dashborad');?>"><i class="fa fa-dashboard"></i> <?=$this->setting->get('systemName'); ?></a></li>
+			<li class="active">用户列表</li>
+		</ol>
+	</section>
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">用户列表</h1>
-		<a href="<?php echo site_url('admin/user/add'); ?>" class="btn btn-primary btn-block">新 增 用 户</a>
+	<!-- 页面主要内容 -->
+	<section class="content">
+		<a href="<?=base_url('admin/user/add'); ?>" class="btn btn-primary btn-block">新 增 用 户</a>
 		<hr>
-	</div>
-</div>
-<!-- ./Page Name-->
 
-<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
-	<thead>
-		<tr>
-			<th>用户名</th>
-			<th>昵称</th>
-			<th>状态</th>
-			<th>操作</th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach($list as $info){ ?>
-		<tr>
-			<td><?php echo $info['user_name']; ?></td>
-			<td><?php echo $info['nick_name']; ?></td>
-			<td>
-				<?php if($info['status']==0){ ?>
-				<a onclick='updateStatus_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>",1);'><font color="red">已禁用</font></a>
-				<?php }elseif($info['status']==1){ ?>
-				<a onclick='updateStatus_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>",0);'><font color="green">正常</font></a>
-				<?php }elseif($info['status']==2){ ?>
-				<font color="blue">未激活</font>
-				<?php } ?>
-			</td>
-			<td><a href="<?php echo site_url('admin/user/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
-		</tr>
-	<?php } ?>
-	</tbody>
-</table>
+		<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
+			<thead>
+				<tr>
+					<th>用户名</th>
+					<th>昵称</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach($list as $info){ ?>
+				<tr>
+					<td><?=$info['user_name']; ?></td>
+					<td><?=$info['nick_name']; ?></td>
+					<td>
+						<?php if($info['status']==0){ ?>
+							<a onclick='updateStatus_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>",1);'><font color="red">已禁用</font></a>
+						<?php }elseif($info['status']==1){ ?>
+							<a onclick='updateStatus_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>",0);'><font color="green">正常</font></a>
+						<?php }elseif($info['status']==2){ ?>
+							<font color="blue">未激活</font>
+						<?php } ?>
+					</td>
+					<td><a href="<?=base_url('admin/user/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+		</table>
+	</section>
+	<!-- ./页面主要内容 -->
+</div>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -94,8 +100,7 @@ function updateStatus_ready(id,nickName,status){
 	}else if(status==1){
 		statusTips+="<font color=green>启用</font>";
 	}else{
-		$("#tips").html("错误的状态码！");
-		$("#tipsModal").modal('show');
+		showModalTips("错误的状态码！");
 		return false;
 	}
 	
@@ -109,41 +114,39 @@ function updateStatus_sure(){
 	lockScreen();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/user/toUpdateStatus'); ?>",
+		url:"<?=base_url('admin/user/toUpdateStatus'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":statusID,"status":statusNum},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":statusID,"status":statusNum},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
 			$("#statusModal").modal('hide');
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			$("#statusModal").modal('hide');
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				alert("更新成功！");
 				location.reload();
 				return true;
-			}else if(ret.message=="nowUser"){
-				$("#tips").html("禁止操作当前用户！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==400){
+				showModalTips("禁止操作当前用户！");
 				return false;
-			}else if(ret.message=="updateFailed"){
-				$("#tips").html("更新失败！！！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==1){
+				showModalTips("更新失败！！！");
 				return false;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==0){
+				showModalTips("参数缺失！<hr>请从正确途径访问本功能！");
+				return false;
+			}else if(ret.code==403001){
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
@@ -163,47 +166,44 @@ function resetPwd_sure(){
 	id=$("#resetID").val();
 	
 	$.ajax({
-		url:"<?php echo site_url('admin/user/toResetPwd'); ?>",
+		url:"<?=base_url('admin/user/toResetPwd'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},
+		data:{<?=$this->ajax->showAjaxToken();?>,"id":id},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
 			$("#resetModal").modal('hide');
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			$("#resetModal").modal('hide');
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				$("#info_userName_show").html(ret.data['userName']);
 				$("#info_nickName_show").html(ret.data['nickName']);
 				$("#info_originPwd_show").html(ret.data['originPwd']);
 				$("#infoModal").modal('show');
 				return true;
-			}else if(ret.message=="nowUser"){
-				$("#tips").html("禁止操作当前用户！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==400){
+				showModalTips("禁止操作当前用户！");
 				return false;
-			}else if(ret.message=="resetFailed"){
-				$("#tips").html("重置失败！！！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==1){
+				showModalTips("无此用户！！！");
 				return false;
-			}else if(ret.message=="noUser"){
-				$("#tips").html("无此用户！！！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==2){
+				showModalTips("重置失败！！！");
 				return false;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==0){
+				showModalTips("参数缺失！<hr>请从正确途径访问本功能！");
+				return false;
+			}else if(ret.code==403001){
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
@@ -223,49 +223,45 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/user/toDelete'); ?>",
+		url:"<?=base_url('admin/user/toDelete'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},
+		data:{<?=$this->ajax->showAjaxToken();?>,"id":id},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
 			$("#delModal").modal('hide');
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			$("#delModal").modal('hide');
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				alert("删除成功！");
 				location.reload();
 				return true;
-			}else if(ret.message=="nowUser"){
-				$("#tips").html("禁止操作当前用户！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==400){
+				showModalTips("禁止操作当前用户！");
 				return false;
-			}else if(ret.message=="deleteFailed"){
-				$("#tips").html("删除失败！！！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==1){
+				showModalTips("删除失败！！！");
 				return false;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==0){
+				showModalTips("参数缺失！<hr>请从正确途径访问本功能！");
+				return false;
+			}else if(ret.code==403001){
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 <div class="modal fade" id="delModal">
 	<div class="modal-dialog">

@@ -3,7 +3,7 @@
  * @name V-通知详情
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-30
- * @version 2018-10-24
+ * @version V1.0 2018-08-08
  */ 
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
   <?php $this->load->view('include/header'); ?>
-  <title>通知详情 / <?=$this->Setting_model->get('systemName'); ?></title>
+  <title>通知详情 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -26,12 +26,12 @@
 <!-- Page Name-->
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header"><?php echo $info['title']; ?></h1>
+		<h1 class="page-header"><?=$info['title']; ?></h1>
 	</div>
 </div>
 <!-- ./Page Name-->
 
-<?php echo $info['content']; ?> 
+<?=$info['content']; ?> 
 
 <?php $this->load->view('include/footer'); ?>
 

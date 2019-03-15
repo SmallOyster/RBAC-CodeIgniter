@@ -1,16 +1,15 @@
 <?php
 /**
-* @name C-显示
-* @author SmallOysyer <master@xshgzs.com>
+* @name 生蚝科技RBAC开发框架-C-显示
+* @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-06
-* @version V1.0 2018-02-25
+* @version 2018-08-17
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Show extends CI_Controller {
 
-	public $allMenu; 
 	public $sessPrefix;
 	public $nowUserID;
 	public $nowUserName;
@@ -20,8 +19,6 @@ class Show extends CI_Controller {
 		parent::__construct();
 		
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$roleID=$this->session->userdata($this->sessPrefix."roleID");
-		$this->allMenu=$this->RBAC_model->getAllMenuByRole($roleID);
 		
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
@@ -32,6 +29,15 @@ class Show extends CI_Controller {
 	{
 		$this->load->view('show/blank',[]);
 	}
+	
+	
+	public function list()
+	{
+		$query=$this->db->query("SELECT * FROM notice");
+		$list=$query->result_array();
+		
+		$this->load->view('show/list',['list'=>$list]);
+	}
 
 
 	public function login()
@@ -40,8 +46,8 @@ class Show extends CI_Controller {
 	}
 	
 
-	public function jumpOut($url){
+	public function jumpOut($url,$name=""){
 		$url=urldecode($url);
-		$this->load->view('show/jumpOut',['url'=>$url]);
+		$this->load->view('show/jumpOut',['url'=>$url,'name'=>$name]);
 	}
 }

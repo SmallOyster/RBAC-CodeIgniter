@@ -1,9 +1,9 @@
 <?php
 /**
- * @name M-RBAC
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-M-RBAC
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-06
- * @version V1.0 2018-03-14
+ * @version 2018-04-01
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -15,13 +15,18 @@ class RBAC_model extends CI_Model {
 	}
 
 
+	/**
+	 * 根据URI获取菜单ID
+	 * @param String URI
+	 * @return INT 菜单ID
+	 */
 	public function getMenuID($uri)
 	{
 		$sql="SELECT id FROM menu WHERE uri=?";
 		$query=$this->db->query($sql,[$uri]);
 		
 		if($query->num_rows()!=1){
-			return NULL;
+			return null;
 		}
 		
 		$list=$query->result_array();
@@ -31,6 +36,11 @@ class RBAC_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * 根据角色获取所有权限的菜单ID
+	 * @param String 角色ID
+	 * @return Array 菜单ID
+	 */
 	public function getAllPermissionByRole($roleID)
 	{
 		$rtn=array();
@@ -47,6 +57,10 @@ class RBAC_model extends CI_Model {
 	}
 
 
+	/**
+	 * 获取所有角色
+	 * @return Array 所有角色信息
+	 */
 	public function getAllRole()
 	{
 		$query=$this->db->query("SELECT * FROM role");
@@ -55,6 +69,11 @@ class RBAC_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * 根据角色获取所有父菜单
+	 * @param String 角色ID
+	 * @return Array 父菜单信息
+	 */
 	public function getFatherMenuByRole($roleID)
 	{
 		$sql='SELECT a.*,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id="0"';
@@ -65,6 +84,12 @@ class RBAC_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * 根据角色和父菜单ID获取子菜单信息
+	 * @param String 角色ID
+	 * @param String 父菜单ID
+	 * @return Array 子菜单信息
+	 */
 	public function getChildMenuByRole($roleID,$fatherID)
 	{
 		$sql="SELECT a.*,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id=?";
@@ -75,6 +100,11 @@ class RBAC_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * 根据角色获取所有菜单详细信息
+	 * @param String 角色ID
+	 * @return Array 菜单详细信息
+	 */
 	public function getAllMenuByRole($roleID)
 	{
 		$allMenu=array();
@@ -122,6 +152,10 @@ class RBAC_model extends CI_Model {
 	}
 	
 
+	/**
+	 * 获取所有父菜单
+	 * @return Array 父菜单信息
+	 */
 	public function getFatherMenu()
 	{
 		$sql='SELECT * FROM menu WHERE father_id="0"';
@@ -132,6 +166,11 @@ class RBAC_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * 根据父菜单ID获取子菜单
+	 * @param String 父菜单ID
+	 * @return Array 子菜单信息
+	 */
 	public function getChildMenu($fatherID)
 	{
 		$sql="SELECT * FROM menu WHERE father_id=?";
@@ -142,6 +181,10 @@ class RBAC_model extends CI_Model {
 	}
 	
 	
+	/**
+	 * 获取所有菜单
+	 * @return Array 菜单详细信息
+	 */
 	public function getAllMenu()
 	{
 		$allMenu=array();

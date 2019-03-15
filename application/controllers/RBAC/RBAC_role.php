@@ -1,9 +1,9 @@
 <?php
 /**
-* @name C-RBAC-角色
-* @author SmallOysyer <master@xshgzs.com>
+* @name 生蚝科技RBAC开发框架-C-RBAC-角色
+* @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version V1.0 2018-03-29
+* @version 2019-03-15
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -18,8 +18,9 @@ class RBAC_role extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library(array('Ajax'));
 		$this->load->helper('string');
+
+		$this->safe->checkPermission();
 
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$roleID=$this->session->userdata($this->sessPrefix."roleID");
@@ -62,11 +63,9 @@ class RBAC_role extends CI_Controller {
 		$query=$this->db->query($sql,[$name,$remark]);
 
 		if($this->db->affected_rows()==1){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","insertFailed");
-			die($ret);
+			returnAjaxData(0,"insertFailed");
 		}
 	}
 
@@ -78,7 +77,7 @@ class RBAC_role extends CI_Controller {
 		$query=$this->db->query("SELECT * FROM role WHERE id=?",[$roleID]);
 		
 		if($query->num_rows()!=1){
-			header("Location: ".site_url('/'));
+			header("Location: ".base_url('/'));
 		}
 
 		$list=$query->result_array();
@@ -102,11 +101,9 @@ class RBAC_role extends CI_Controller {
 		$query=$this->db->query($sql,[$name,$remark,$nowTime,$roleID]);
 
 		if($this->db->affected_rows()==1){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","updateFailed");
-			die($ret);
+			returnAjaxData(0,"updateFailed");
 		}
 	}
 
@@ -124,11 +121,9 @@ class RBAC_role extends CI_Controller {
 		if($this->db->affected_rows()==1){
 			$logContent='删除角色|'.$id;
 			$this->Log_model->create('角色',$logContent);
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","deleteFailed");
-			die($ret);
+			returnAjaxData(0,"deleteFailed");
 		}
 	}
 	
@@ -158,8 +153,7 @@ class RBAC_role extends CI_Controller {
 		$sql1="DELETE FROM role_permission WHERE role_id='".$roleID."'";
 		$query1=$this->db->simple_query($sql1);
 		if($query1!==TRUE){
-			$ret=$this->ajax->returnData("0","truncateFailed");
-			die($ret);
+			returnAjaxData(0,"truncateFailed");
 		}
 
 		$totalMenu=count($menuIDs);
@@ -176,11 +170,9 @@ class RBAC_role extends CI_Controller {
 		$query2=$this->db->query($sql2,$data);
 
 		if($this->db->affected_rows()==$totalMenu){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("1","quantityMismatch");
-			die($ret);
+			returnAjaxData(1,"quantityMismatch");
 		}
 	}
 
@@ -198,11 +190,9 @@ class RBAC_role extends CI_Controller {
 			$sql2="UPDATE role SET is_default=0 WHERE id<>?";
 			$query2=$this->db->query($sql2,[$id]);
 			
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","setFailed");
-			die($ret);
+			returnAjaxData(0,"setFailed");
 		}
 	}
 }

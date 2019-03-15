@@ -3,7 +3,7 @@
  * @name V-编辑通知
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-03-31
- * @version V1.0 2018-04-01
+ * @version V1.0 2018-08-08
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>通知编辑 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>通知编辑 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
 <div id="page-wrapper">
 <!-- Page Main Content -->
 
-<input type="hidden" id="noticeID" value="<?php echo $info['id']; ?>">
+<input type="hidden" id="noticeID" value="<?=$info['id']; ?>">
 
 <!-- Page Name-->
 <div class="row">
@@ -38,7 +38,7 @@
 	<div class="panel-body">
 		<div class="form-group">
 			<label for="title">通知标题</label>
-			<input class="form-control" id="title" onkeyup='if(event.keyCode==13)$("#content").focus();' value="<?php echo $info['title']; ?>">
+			<input class="form-control" id="title" onkeyup='if(event.keyCode==13)$("#content").focus();' value="<?=$info['title']; ?>">
 			<p class="help-block">请输入<font color="green">1</font>-<font color="green">50</font>字的通知标题</p>
 		</div>
 		<br>
@@ -62,7 +62,7 @@
 var E = window.wangEditor;
 var editor = new E('#wangEditor_div');
 editor.create();
-editor.txt.html("<?php echo $info['content']; ?>");
+editor.txt.html("<?=$info['content']; ?>");
 
 $(function(){
 	$('#tipsModal').on('hidden.bs.modal',function (){
@@ -98,9 +98,9 @@ function edit(){
 	}
 
 	$.ajax({
-		url:"<?php echo site_url('admin/notice/toEdit'); ?>",
+		url:"<?=site_url('admin/notice/toEdit'); ?>",
 		type:"post",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id,"title":title,"content":content},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id,"title":title,"content":content},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));

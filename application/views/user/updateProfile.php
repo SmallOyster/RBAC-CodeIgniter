@@ -3,7 +3,7 @@
  * @name V-修改个人资料
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2018-10-24
+ * @version V1.0 2018-08-07
  */
 ?>
 
@@ -162,7 +162,7 @@ function updateProfile(){
 	}
 
 	$.ajax({
-		url:"<?=base_url('user/toUpdateProfile'); ?>",
+		url:"<?=site_url('user/toUpdateProfile'); ?>",
 		type:"post",
 		data:{<?=$this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,'oldPwd':oldPwd,'newPwd':newPwd,"phone":phone,"email":email},
 		dataType:'json',
@@ -179,7 +179,7 @@ function updateProfile(){
 			if(ret.code=="200"){
 				if(oldPwd!=""){
 					alert("修改成功！请使用新密码重新登录！");
-					window.location.href="<?=base_url('user/login'); ?>";
+					window.location.href="<?=site_url('user/login'); ?>";
 					return true;
 				}else{
 					alert("修改成功！");

@@ -3,7 +3,7 @@
  * @name V-给角色设置权限
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-02-24
+ * @version V1.0 2018-08-08
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>设置角色权限 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>设置角色权限 / <?=$this->Setting_model->get('systemName');?></title>
 	<style>
 	.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
 	ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;height:360px;overflow-y:scroll;overflow-x:auto;}
@@ -27,7 +27,7 @@
 <div id="page-wrapper">
 <!-- Page Main Content -->
 
-<input type="hidden" id="roleID" value="<?php echo $roleID; ?>">
+<input type="hidden" id="roleID" value="<?=$roleID; ?>">
 <input type="hidden" id="menuIDs">
 
 <!-- Page Name-->
@@ -35,7 +35,7 @@
 	<div class="col-lg-12">
 		<h1 class="page-header">
 			设置角色权限
-			<font style="font-size: 28px;">（角色名：<font color="blue"><b><?php echo urldecode($roleName); ?></b></font>）</font>
+			<font style="font-size: 28px;">（角色名：<font color="blue"><b><?=urldecode($roleName); ?></b></font>）</font>
 		</h1>
 	</div>
 </div>
@@ -94,11 +94,11 @@ function getAllMenu(){
 	roleID=$("#roleID").val();
 	
 	$.ajax({
-		url:"<?php echo site_url('api/getAllMenuForZtree'); ?>",
+		url:"<?=site_url('api/getAllMenuForZtree'); ?>",
 		type:"post",
 		dataType:"json",
 		async:false,
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,'roleID':roleID},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleID':roleID},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
@@ -119,10 +119,10 @@ function toSetPermission(){
 	menuIDs=$("#menuIDs").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/role/toSetPermission'); ?>",
+		url:"<?=site_url('admin/role/toSetPermission'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,'roleID':roleID,'menuIDs':menuIDs},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleID':roleID,'menuIDs':menuIDs},
 		error:function(e){
 			console.log(e);
 			unlockScreen();

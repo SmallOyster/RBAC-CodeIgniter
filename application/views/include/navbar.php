@@ -1,176 +1,344 @@
 <?php
-function getGreeting(){
-	$nowHour=date("H");
-	if($nowHour>=0 && $nowHour<6) $ret="凌晨好！";
-	elseif($nowHour>=6 && $nowHour<10) $ret="早安！";
-	elseif($nowHour>=10 && $nowHour<12) $ret="上午好！";
-	elseif($nowHour>=12 && $nowHour<15) $ret="中午好！";
-	elseif($nowHour>=15 && $nowHour<17) $ret="下午好！";
-	elseif($nowHour>=17 && $nowHour<20) $ret="傍晚好！";
-	elseif($nowHour>=20 && $nowHour<24) $ret="晚上好！";
-
-	return $ret;
-}
-
-$navData=$this->allMenu;
-$allNotice=$this->Notice_model->get(0,"nav");
+/**
+ * @name 生蚝科技RBAC开发框架-导航栏
+ * @author Jerry Cheung <master@smhgzs.com>
+ * @since 2018-12-31
+ * @version 2019-03-15
+ */
 ?>
 
-<!-- Navigation -->
-<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-	<div class="navbar-header">
-		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-			<span class="sr-only">Toggle navigation</span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-		</button>
-		<a class="navbar-brand" href="<?php echo base_url(); ?>"><?php echo $this->Setting_model->get('systemName'); ?></a>
-	</div>
-	<!-- dropdown-head-right -->
-	<ul class="nav navbar-top-links navbar-right">
-		<li class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-				<i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
-			</a>
-			<ul class="dropdown-menu dropdown-messages">
-				<?php if(count($allNotice)!=0){ ?>
-				<?php foreach($allNotice as $info){ ?>
-				<li>
-					<a href="<?php echo base_url('notice/detail/').$info['id']; ?>" target="_blank">
-						<div>
-							<b><font color="#FF9800"><?php echo $info['create_user']; ?></font></b>
-							<span class="pull-right text-muted">
-								<em><?php echo $info['create_time']; ?></em>
-							</span>
-						</div>
-						<div><?php echo $info['title']; ?></div>
-					</a>
-				</li>
-				<li class="divider"></li>
-				<?php } ?>
-				<?php }else{ ?>
-				<li>
-					<p class="text-center" style="color:red;font-weight:bold;">7天内暂无新公告</p>
-				</li>
-				<li class="divider"></li>
-				<?php } ?>
-				<li>
-					<a class="text-center" href="<?php echo base_url('notice/list'); ?>">
-						<b>阅 读 所 有 公 告</b>
-						<i class="fa fa-angle-right"></i>
-					</a>
-				</li>
-			</ul>
-		</li>
-		<!-- /.dropdown-messages -->
-		
-		<li class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-				<i class="fa fa-user fa-lg"></i>
-				<i class="fa fa-caret-down"></i>
-			</a>
-			<ul class="dropdown-menu">
-				<li>
-					<a href="javascript:void(0)"><b><font color="green"><?php echo $this->session->userdata($this->sessPrefix.'nickName'); ?></font></b>，<?php echo getGreeting(); ?></a>
-				</li>
-				<li>
-					<a href="javascript:void(0)">角色：<b><font color="#F57C00"><?php echo $this->session->userdata($this->sessPrefix.'roleName'); ?></font></b></a>
-				</li>
-				<li class="divider"></li>
-				<li>
-					<a href="<?php echo base_url('user/updateProfile'); ?>">
-						<i class="fa fa-user fa-fw"></i>修改个人资料</a>
-				</li>
-				<li>
-					<a href="<?php echo base_url('user/logout'); ?>">
-						<i class="fa fa-sign-out fa-fw"></i>登出系统</a>
-				</li>
-			</ul>
-		</li>
-		<!-- /.dropdown-user -->
-	</ul>
-	<!-- /.dropdown-head-right -->
+<input type="hidden" id="<?=$this->sessPrefix;?>userId" name="<?=$this->sessPrefix;?>userId" value="<?=$this->session->userdata($this->sessPrefix.'userID');?>">
 
-	<!-- navbar-main -->
-	<div class="navbar-default sidebar" role="navigation">
-		<div class="sidebar-nav navbar-collapse">
-			<ul class="nav" id="side-menu">
-				<li>
-					<a href="<?php echo base_url(); ?>">
-						<i class="fa fa-home"></i> 主页面</a>
-				</li>
-				
-				<?php
-				// 显示父菜单
-				foreach($navData as $info){
-					if($info['hasChild']!="1"){
-					// 没有二级菜单
-				?>
-					<li>
-						<a href="<?php echo base_url($info['uri']); ?>">
-							<i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i>
-							<?php echo $info['name']; ?>
-						</a>
-					</li>
-					<!-- ./父菜单 -->
-				<?php
-					}else{
-					// 有二级菜单
-				?>
-					<li>
-						<a href="#">
-							<i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i>
-							<?php echo $info['name']; ?>
-							<span class="fa arrow"></span>
-						</a>
-						<ul class="nav nav-second-level">
-						<?php 
-						// 显示二级菜单
-						foreach($info['child'] as $child_info){
-							if($child_info['hasChild']!="1"){
-							// 没有三级菜单
-						?>
-							<li>
-								<a href="<?php echo base_url($child_info['uri']); ?>">
-									<i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i>
-									<?php echo $child_info['name']; ?>
-								</a>
-							</li>
-							<!-- ./二级菜单 -->
-						<?php
-							}else{
-							// 有三级菜单
-						?>
-							<li>
-								<a href="#">
-									<i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i>
-									<?php echo $child_info['name']; ?>
-									<span class="fa arrow"></span>
-								</a>
-								<ul class="nav nav-third-level">
-									<?php
-									// 显示三级菜单
-									foreach($child_info['child'] as $child2_info){
-									?>
-									<li>
-										<a href="<?php echo base_url($child2_info['uri']); ?>">
-											<i class="fa fa-<?php echo $child2_info['icon']; ?>" aria-hidden="true"></i>
-											<?php echo $child2_info[ 'name']; ?>
-										</a>
-									</li>
-									<!-- ./三级菜单 -->
-									<?php } ?>
-								</ul>
-							</li>
-							<!-- ./二级菜单 -->
-						<?php } } ?>
+<div id="header">
+<header class="main-header">
+	<a v-bind:href="[rootUrl+'dashborad']" class="logo">
+		<span class="logo-mini"><img src="https://www.xshgzs.com/resource/index/images/logo2.png" style="width:85%"></span>
+		<span class="logo-lg"><img src="https://www.xshgzs.com/resource/index/images/logo2.png" style="width:20%"> <b>生蚝科技</b></span>
+	</a>
+	<nav class="navbar navbar-static-top">
+		<a class="sidebar-toggle" data-toggle="push-menu" role="button"><span class="sr-only">Toggle navigation</span></a>
+
+		<div class="navbar-custom-menu">
+			<ul class="nav navbar-nav">
+				<!-- 导航栏通知列表 -->
+				<li class="dropdown notifications-menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<i class="fa fa-bell-o"></i>
+						<span v-if="navNoticeTotal>0" class="label label-warning">{{navNoticeTotal}}</span>
+					</a>
+					<ul class="dropdown-menu">
+						<li class="header">最近一个月的通知公告</li>
+						<li>
+							<ul class="menu">
+								<li v-if="navNoticeList!={}" v-for="navNoticeInfo in navNoticeList"><a v-bind:href="[rootUrl+'notice/detail/?id='+navNoticeInfo['id']]"><i class="fa fa-bullhorn"></i> {{navNoticeInfo['title']}}</a></li>
+								<li v-else><a><font color='blue'><b>暂无公告！</b></font></a></li>
+							</ul>
+						</li>
+						<li class="footer"><a v-bind:href="[rootUrl+'notice/list']">查看所有通知 &gt;</a></li>
 					</ul>
 				</li>
-				<!-- ./父菜单 -->
-				<?php } } ?>
+				<!-- ./导航栏通知列表 -->
+
+				<li class="dropdown user user-menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<img src="<?=base_url('resource/images/user.png');?>" class="user-image">
+						<span class="hidden-xs">{{userInfo['nickName']}}</span>
+					</a>
+					<ul class="dropdown-menu">
+						<li class="user-header">
+							<img src="<?=base_url('resource/images/user.png');?>" class="img-circle">
+							<p>{{userInfo['userName']}} - {{userInfo['nickName']}}<!--small>Member since ?</small--></p>
+						</li>
+						<!-- Menu Footer-->
+						<li class="user-footer">
+							<div class="pull-left">
+								<!--a v-bind:href="[rootUrl+'profile/index']" class="btn btn-default btn-flat">个人中心</a-->
+								<!--a data-toggle="modal" data-target="#changePasswordModal" class="btn btn-default btn-flat">修改密码</a-->
+								<a class="btn btn-default btn-flat" onclick='showModalTips("很抱歉，修改密码功能因业务调整暂时关闭！敬请谅解！<br><br>如有疑问，请咨询管理员")'>修改密码</a>
+							</div>
+							<div class="pull-right">
+								<button data-toggle="modal" data-target="#logoutModal" class="btn btn-default btn-flat">登出</button>
+							</div>
+						</li>
+					</ul>
+				</li>
 			</ul>
 		</div>
+	</nav>
+</header>
+
+<div class="modal fade" id="changePasswordModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span><span class="sr-only">Close</span></button>
+				<h3 class="modal-title" id="ModalTitle">修改密码</h3>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-info">
+					<center>
+						<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> 新密码需包含6~20位的字符！
+					</center>
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon"><i class="fa fa-unlock" aria-hidden="true"></i></span>
+					<input id="oldPwd" type="password" class="form-control" onkeyup='if(event.keyCode==13)$("#newPwd").focus();' placeholder="请输入原密码">
+				</div>
+				<br>
+				<div class="input-group">
+					<span class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></span>
+					<input id="newPwd" type="password" class="form-control" onkeyup='if(event.keyCode==13)$("#surePwd").focus();' placeholder="请输入新密码">
+				</div>
+				<br>
+				<div class="input-group">
+					<span class="input-group-addon"><i class="fa fa-shield" aria-hidden="true"></i></span>
+					<input id="surePwd" type="password" class="form-control" placeholder="请再次输入新密码">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-warning" data-dismiss="modal">&lt; 取消</button> <button type="button" class="btn btn-success" onclick="toChangePassword();">确认修改 &gt;</button>
+			</div>
+		</div>
 	</div>
-	<!-- /.navbar-main -->
-</nav>
+</div>
+
+<div class="modal modal-warning fade" id="logoutModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">登出提示</h4>
+			</div>
+			<div class="modal-body">
+				<h3 style="line-height:38px;">确认要退出吗？</h3>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">&lt; 取消</button>
+				<a v-bind:href="[rootUrl+'user/logout']" class="btn btn-outline">确认登出 &gt;</a>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<!-- 侧边导航栏 -->
+<aside class="main-sidebar">
+	<section class="sidebar">
+		<div class="user-panel">
+			<div class="pull-left image">
+				<img src="<?=base_url('resource/images/user.png');?>" class="img-circle">
+			</div>
+			<div class="pull-left info">
+				<p>{{userInfo['nickName']}}</p>
+				<small>{{userInfo['roleName']}}</small>
+			</div>
+		</div>
+		<!-- 菜单树 -->
+		<!-- 父菜单 -->
+		<ul class="sidebar-menu" data-widget="tree">
+			<li>
+				<a href="<?=base_url('dashborad');?>">
+					<i class="fa fa-home"></i> 系统主页面
+				</a>
+			</li>
+			<li v-for="fatherInfo in treeData" v-if="fatherInfo['hasChild']!=1"><a v-bind:href="[rootUrl+fatherInfo['uri']]"><i v-bind:class="['fa fa-'+fatherInfo['icon']]"></i> {{fatherInfo['name']}}</a></li>
+			<!-- 二级菜单 -->
+			<li v-else class="treeview">
+				<a href="#">
+					<i v-bind:class="['fa fa-'+fatherInfo['icon']]"></i> <span>{{fatherInfo['name']}}</span>
+					<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+				</a>
+				<ul class="treeview-menu">
+					<li v-for="childInfo in fatherInfo['child']" v-if="childInfo['hasChild']!=1"><a v-bind:href="[rootUrl+childInfo['uri']]"><i v-bind:class="['fa fa-'+childInfo['icon']]"></i> {{childInfo['name']}}</a></li>
+					<!-- 三级菜单 -->
+					<li v-else class="treeview">
+						<a href="#">
+							<i v-bind:class="['fa fa-'+childInfo['icon']]"></i> <span>{{childInfo['name']}}</span>
+							<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+						</a>
+						<ul class="treeview-menu">
+							<li v-for="grandsonInfo in childInfo['child']"><a v-bind:href="[rootUrl+grandsonInfo['uri']]"><i v-bind:class="['fa fa-'+grandsonInfo['icon']]"></i> {{grandsonInfo['name']}}</a></li>
+						</ul>
+					</li>
+					<!-- ./三级菜单 -->
+				</ul>
+			</li>
+			<!-- ./二级菜单 -->
+		</ul>
+		<!-- ./父菜单 -->
+		<!-- ./菜单树 -->
+	</section>
+</aside>
+<!-- ./侧边导航栏 -->
+
+</div>
+
+<script>
+function toChangePassword(){
+	lockScreen();
+	oldPwd=$("#oldPwd").val();
+	newPwd=$("#newPwd").val();
+	surePwd=$("#surePwd").val();
+
+	if(oldPwd==""){
+	 unlockScreen();
+	 showModalTips("请正确输入旧密码！");
+	 return false;
+	}
+	if(newPwd.length<6 || newPwd.length>20){
+	 unlockScreen();
+	 showModalTips("请输入6~20位的新密码！");
+	 return false;
+	}
+	if(surePwd!=newPwd){
+	 unlockScreen();
+	 showModalTips("两次输入的新密码不相符！");
+	 return false;
+	}
+	if(oldPwd==newPwd){
+	 unlockScreen();
+	 showModalTips("新密码与旧密码相同！");
+	 return false;
+	}
+	
+	$.ajax({
+		url:"<?=base_url('profile/toChangePassword');?>",
+		type:"post",
+		dataType:"json",
+		data:{"oldPwd":oldPwd,"newPwd":newPwd},
+		error:function(e){
+			unlockScreen();
+			console.log(JSON.stringify(e));
+			showModalTips("服务器错误！<br>请将错误码["+e.readyState+"."+e.status+"]至技术支持");
+			return false;
+		},
+		success:function(ret){
+			unlockScreen();
+		
+			if(ret.code==200){
+				$("#changePasswordModal").modal("hide");
+				$("#oldPwd").val("");
+				$("#newPwd").val("");
+				$("#surePwd").val("");
+				showModalTips("修改密码成功！<br>下次登录请使用新密码登录！");
+				return true;
+			}else if(ret.code==403){
+				showModalTips("旧密码错误！");
+				return true;
+			}else if(ret.code==500){
+				showModalTips("修改失败！<br>请联系技术支持！");
+				return true;
+			}else{
+				console.log(JSON.stringify(ret));
+				showModalTips("系统错误！<br>请将错误码["+ret.code+"]至技术支持");
+				return false;
+			}
+		}
+	});
+}
+</script>
+
+<script>
+var headerVm = new Vue({
+	el:'#header',
+	data:{
+		rootUrl:"<?=base_url();?>",
+		apiPath:"<?=$this->API_PATH;?>",
+		userId:$("#<?=$this->sessPrefix;?>userId").val(),
+		token:"<?=$this->ajax->showAjaxToken(0);?>",
+		userInfo:{},
+		treeData:{},
+		navNoticeList:{},
+		navNoticeTotal:0
+	},
+	methods:{
+		getUserInfo:function(){
+			lockScreen();
+
+			$.ajax({
+				url:headerVm.apiPath+"user/getUserInfo",
+				type:"post",
+				data:{"method":"id","id":headerVm.userId},
+				dataType:"json",
+				error:function(e){
+					unlockScreen();
+					showModalTips("服务器错误！"+e.status);
+					console.log(e);
+					return false;
+				},
+				success:function(ret){
+					if(ret.code==200){
+						unlockScreen();
+						info=ret.data['userInfo'];
+						headerVm.userInfo=info;
+						return true;
+					}else{
+						unlockScreen();
+						showModalTips("系统错误！<br>请联系技术支持并提供错误码【USIF"+ret.code+"】");
+						return false;
+					}
+				}
+			});
+		},
+		getMenuTree:function(){
+			lockScreen();
+
+			$.ajax({
+				url:headerVm.apiPath+"role/getUserMenu",
+				dataType:"json",
+				error:function(e){
+					unlockScreen();
+					showModalTips("服务器错误！"+e.status);
+					console.log(e);
+					return false;
+				},
+				success:function(ret){
+					if(ret.code==200){
+						treeData=ret.data['treeData'];
+						headerVm.treeData=treeData;
+						if(treeData==""){
+							showModalTips("用户菜单获取失败 或 用户暂无权限！");
+						}
+						unlockScreen();
+						return true;
+					}else if(ret.code==403){
+						unlockScreen();
+						showModalTips("用户菜单获取失败！");
+						return false;
+					}else{
+						unlockScreen();
+						showModalTips("系统错误！<br>请联系技术支持并提供错误码【MN"+ret.code+"】");
+						return false;
+					}
+				}
+			});
+		},
+		getNavbarNotice:function(){
+			$.ajax({
+				url:headerVm.apiPath+"notice/get",
+				data:{"type":"navbar"},
+				dataType:"json",
+				error:function(e){
+					showModalTips("服务器错误！"+e.status);
+					console.log(e);
+					return false;
+				},
+				success:function(ret){
+					if(ret.code==200){
+						list=ret.data['list'];
+						headerVm.navNoticeList=list;
+						headerVm.navNoticeTotal=list.length;
+						return false;
+					}
+				}
+			});
+		}
+	}
+});
+
+headerVm.getUserInfo();
+headerVm.getMenuTree();
+headerVm.getNavbarNotice();
+</script>

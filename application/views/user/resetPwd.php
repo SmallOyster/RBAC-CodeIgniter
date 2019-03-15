@@ -3,7 +3,7 @@
  * @name V-用户重置密码
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-24
- * @version 2018-10-24
+ * @version V1.0 2018-08-07
  */
 ?>
 
@@ -94,7 +94,7 @@ function resetPwd(){
 	}
 
 	$.ajax({
-		url:"<?=base_url('user/toResetPwd'); ?>",
+		url:"<?=site_url('user/toResetPwd'); ?>",
 		type:"post",
 		data:{<?=$this->ajax->showAjaxToken(); ?>,"pwd":newPwd},
 		dataType:'json',
@@ -110,7 +110,7 @@ function resetPwd(){
 			
 			if(ret.code=="200"){
 				alert("成功重置密码！\n请牢记您的新密码！\n\n即将跳转至登录页面！");
-				window.location.href="<?=base_url('user/login'); ?>";
+				window.location.href="<?=site_url('user/login'); ?>";
 				return true;
 			}else if(ret.message=="resetFailed"){
 				$("#tips").html("重置密码失败！！！");

@@ -1,30 +1,28 @@
 <?php
 /**
- * @name C-Log日志
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-C-Log日志
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-26
- * @version V1.0 2018-03-15
+ * @version 2019-02-23
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Log extends CI_Controller {
 
-	public $allMenu;
 	public $sessPrefix;
 	public $nowUserID;
 	public $nowUserName;
+	public $API_PATH;
 
 	function __construct()
 	{
 		parent::__construct();
-		
-		$this->load->library(array('Ajax'));
-		
-		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$roleID=$this->session->userdata($this->sessPrefix."roleID");
-		$this->allMenu=$this->RBAC_model->getAllMenuByRole($roleID);
 
+		$this->safe->checkPermission();
+		$this->sessPrefix=$this->safe->getSessionPrefix();
+
+		$this->API_PATH=$this->setting->get('apiPath');
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}

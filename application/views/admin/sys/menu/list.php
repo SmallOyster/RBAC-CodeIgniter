@@ -3,7 +3,7 @@
  * @name V-菜单管理
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-03-29
+ * @version V1.0 2018-08-08
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>菜单管理 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>菜单管理 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -27,7 +27,7 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h1 class="page-header">菜单管理</h1>
-		<a href="<?php echo site_url('admin/sys/menu/add/0'); ?>" class="btn btn-primary btn-block">新 增 主 菜 单</a>
+		<a href="<?=site_url('admin/sys/menu/add/0'); ?>" class="btn btn-primary btn-block">新 增 主 菜 单</a>
 	</div>
 </div>
 <!-- ./Page Name-->
@@ -43,22 +43,22 @@
 	<tbody>
 	<?php foreach($list as $info){ ?>
 	<tr>
-		<td><i class="fa fa-<?php echo $info['icon']; ?>" aria-hidden="true"></i> <?php echo $info['name']; ?></td>
-		<td><a href="<?php echo site_url('admin/sys/menu/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $info['id']; ?>","<?php echo $info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?php echo site_url('admin/sys/menu/add/').$info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
+		<td><i class="fa fa-<?=$info['icon']; ?>" aria-hidden="true"></i> <?=$info['name']; ?></td>
+		<td><a href="<?=site_url('admin/sys/menu/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?=$info['id']; ?>","<?=$info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?=site_url('admin/sys/menu/add/').$info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
 	</tr>
 	<?php
 	foreach($info['child'] as $child_info){
 	?>
 	<tr>
-		<td>---- <i class="fa fa-<?php echo $child_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child_info['name']; ?></td>
-		<td><a href="<?php echo site_url('admin/sys/menu/edit/').$child_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $child_info['id']; ?>","<?php echo $child_info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?php echo site_url('admin/sys/menu/add/').$child_info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
+		<td>---- <i class="fa fa-<?=$child_info['icon']; ?>" aria-hidden="true"></i> <?=$child_info['name']; ?></td>
+		<td><a href="<?=site_url('admin/sys/menu/edit/').$child_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?=$child_info['id']; ?>","<?=$child_info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?=site_url('admin/sys/menu/add/').$child_info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
 	</tr>
 	<?php
 		foreach($child_info['child'] as $child2_info){
 	?>
 	<tr>
-		<td>-------- <i class="fa fa-<?php echo $child2_info['icon']; ?>" aria-hidden="true"></i> <?php echo $child2_info['name']; ?></td>
-		<td><a href="<?php echo site_url('admin/sys/menu/edit/').$child2_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?php echo $child2_info['id']; ?>","<?php echo $child2_info['name']; ?>")' class="btn btn-danger">删除</button></td>
+		<td>-------- <i class="fa fa-<?=$child2_info['icon']; ?>" aria-hidden="true"></i> <?=$child2_info['name']; ?></td>
+		<td><a href="<?=site_url('admin/sys/menu/edit/').$child2_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?=$child2_info['id']; ?>","<?=$child2_info['name']; ?>")' class="btn btn-danger">删除</button></td>
 	</tr>
 	<?php
 		}
@@ -88,10 +88,10 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/sys/menu/toDelete'); ?>",
+		url:"<?=site_url('admin/sys/menu/toDelete'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"id":id},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
 		error:function(e){
 			console.log(e);
 			unlockScreen();

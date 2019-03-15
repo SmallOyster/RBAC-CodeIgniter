@@ -3,7 +3,7 @@
  * @name V-操作记录管理
  * @author SmallOysyer <master@xshgzs.com>
  * @since 2018-02-27
- * @version V1.0 2018-03-04
+ * @version V1.0 2018-08-08
  */
  
 ?>
@@ -13,7 +13,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>操作记录管理 / <?php echo $this->config->item('systemName'); ?></title>
+	<title>操作记录管理 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body>
@@ -51,11 +51,11 @@
 	foreach($list as $info){
 	?>
 	<tr>
-		<td><?php echo $info['type']; ?></td>
-		<td><?php echo $info['content']; ?></td>
-		<td><?php echo $info['user_name']; ?></td>
-		<td><?php echo $info['create_time']; ?></td>
-		<td><?php echo $info['create_ip']; ?></td>
+		<td><?=$info['type']; ?></td>
+		<td><?=$info['content']; ?></td>
+		<td><?=$info['user_name']; ?></td>
+		<td><?=$info['create_time']; ?></td>
+		<td><?=$info['create_ip']; ?></td>
 	</tr>
 	<?php } ?>
 </tbody>
@@ -80,10 +80,10 @@ function truncate_sure(){
 	pwd=$("#truncatePwd").val();
 
 	$.ajax({
-		url:"<?php echo site_url('admin/sys/log/toTruncate'); ?>",
+		url:"<?=site_url('admin/sys/log/toTruncate'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?php echo $this->ajax->showAjaxToken(); ?>,"pwd":pwd},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"pwd":pwd},
 		error:function(e){
 			console.log(e);
 			unlockScreen();

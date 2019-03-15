@@ -1,9 +1,9 @@
 <?php
 /**
-* @name C-RBAC-菜单
-* @author SmallOysyer <master@xshgzs.com>
+* @name 生蚝科技RBAC开发框架-C-RBAC-菜单
+* @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-17
-* @version V1.0 2018-03-29
+* @version 2019-03-15
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -18,7 +18,8 @@ class RBAC_menu extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library(array('Ajax'));
+
+		$this->safe->checkPermission();
 
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$roleID=$this->session->userdata($this->sessPrefix."roleID");
@@ -54,7 +55,7 @@ class RBAC_menu extends CI_Controller {
 				$fatherName=$info[0]['name'];
 				$fatherIcon=$info[0]['icon'];
 			}else{
-				header('Location:'.site_url('index'));
+				header('Location:'.base_url('index'));
 			}
 		}
 		
@@ -81,11 +82,9 @@ class RBAC_menu extends CI_Controller {
 		$query=$this->db->query($sql,[$fatherID,$name,$icon,$uri]);
 
 		if($this->db->affected_rows()==1){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","insertFailed");
-			die($ret);
+			returnAjaxData(0,"insertFailed");
 		}
 	}
 
@@ -101,7 +100,7 @@ class RBAC_menu extends CI_Controller {
 		$fatherID=$info['father_id'];
 
 		if($query1->num_rows()!=1){
-			header("Location:".site_url());
+			header("Location:".base_url());
 		}
 
 		// 获取父菜单名称和Icon
@@ -132,19 +131,20 @@ class RBAC_menu extends CI_Controller {
 		$nowTime=date("Y-m-d H:i:s");
 	
 		if(substr($uri,0,13)=='show/jumpout/'){
-			$jumpToURL=urlencode(substr($uri,13));
-			$uri='show/jumpout/'.$jumpToURL;
+			$jumpParam=substr($uri,13);
+			$loc=strpos($jumpParam,"/");
+			$jumpToURL=substr($jumpParam,0,$loc);
+			$jumpName=substr($jumpParam,$loc+1);
+			$uri='show/jumpout/'.$jumpToURL.'/'.$jumpName;
 		}
 		
 		$sql="UPDATE menu SET name=?,icon=?,uri=?,update_time=? WHERE id=?";
 		$query=$this->db->query($sql,[$name,$icon,$uri,$nowTime,$menuID]);
 
 		if($this->db->affected_rows()==1){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","updateFailed");
-			die($ret);
+			returnAjaxData(0,"updateFailed");
 		}
 	}
 
@@ -161,12 +161,10 @@ class RBAC_menu extends CI_Controller {
 		
 		if($this->db->affected_rows()==1){
 			$sql2="DELETE FROM role_permission WHERE menu_id=?";
-		$query2=$this->db->query($sql2,[$id]);
-		$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			$query2=$this->db->query($sql2,[$id]);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","deleteFailed");
-			die($ret);
+			returnAjaxData(0,"deleteFailed");
 		}
 	}
 }
