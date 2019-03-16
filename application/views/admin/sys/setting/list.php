@@ -1,13 +1,11 @@
 <?php 
 /**
- * @name V-系统设置列表
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-V-系统设置列表
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-03
- * @version V1.0 2018-08-08
+ * @version 2019-03-16
  */
- 
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -16,52 +14,53 @@
 	<title>系统设置列表 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<?php $this->load->view('include/pagePath',['name'=>'系统设置列表','path'=>[['系统设置列表','',1]]]); ?>
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">系统设置列表</h1>
-	</div>
+	<!-- 页面主要内容 -->
+	<section class="content">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<table class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
+					<thead>
+						<tr>
+							<th>名称</th>
+							<th>内容</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<?php foreach($list as $info){ ?>
+							<tr>
+								<td><?=$info['chinese_name']; ?></td>
+								<td>
+									<!-- 显示 -->
+									<p id="<?=$info['name']; ?>_show"><?=$info['value']; ?></p>
+
+									<!-- 输入框 -->
+									<input type="hidden" id="<?=$info['name']; ?>_input" class="form-control" value="<?=$info['value']; ?>">
+								</td>
+								<td>
+									<button class="btn btn-primary" id="<?=$info['name']; ?>_btn1" onclick='edit("<?=$info['name']; ?>")'>修改</button>
+									<button class="btn btn-success" id="<?=$info['name']; ?>_btn2" onclick='save("<?=$info['name']; ?>")' style="display:none">保存</button>
+								</td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+	<!-- ./页面主要内容 -->
 </div>
-<!-- ./Page Name-->
-
-<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
-	<thead>
-		<tr>
-			<th>名称</th>
-			<th>内容</th>
-			<th>操作</th>
-		</tr>
-	</thead>
-	
-	<tbody>
-	<?php
-	foreach($list as $info){
-	?>
-	<tr>
-		<td><?=$info['chinese_name']; ?></td>
-		<td>
-			<!-- 显示 -->
-			<p id="<?=$info['name']; ?>_show"><?=$info['value']; ?></p>
-
-			<!-- 输入框 -->
-			<input type="hidden" id="<?=$info['name']; ?>_input" class="form-control" value="<?=$info['value']; ?>">
-		</td>
-		<td>
-			<button class="btn btn-primary" id="<?=$info['name']; ?>_btn1" onclick='edit("<?=$info['name']; ?>")'>修改</button>
-			<button class="btn btn-success" id="<?=$info['name']; ?>_btn2" onclick='save("<?=$info['name']; ?>")' style="display:none">保存</button>
-		</td>
-	</tr>
-	<?php } ?>
-</tbody>
-</table>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -83,7 +82,7 @@ function save(name){
 	value=$("#"+name+"_input").val();
 
 	$.ajax({
-		url:"<?=site_url('admin/sys/setting/toSave'); ?>",
+		url:"<?=base_url('admin/sys/setting/toSave'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"value":value},
@@ -91,14 +90,13 @@ function save(name){
 			console.log(e);
 			unlockScreen();
 			$("#truncateModal").modal('hide');
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.responseText+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.responseText+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				alert("设置成功！");
 				$("#"+name+"_show").attr("style","");
 				$("#"+name+"_show").html(value);
@@ -107,30 +105,24 @@ function save(name){
 				$("#"+name+"_btn2").attr("style","display:none");
 				return true;
 			}else if(ret.message=="noSetting"){
-				$("#tips").html("无此配置项！");
-				$("#tipsModal").modal('show');
+				showModalTips("无此配置项！");
 				return false;
-			}else if(ret.message=="saveFailed"){
-				$("#tips").html("保存失败！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==1){
+				showModalTips("保存失败！");
 				return false;
-			}else if(ret.code=="403"){
+			}else if(ret.code==403001){
 				$("#truncateModal").modal('hide');
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
 				$("#truncateModal").modal('hide');
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 </body>
 </html>
