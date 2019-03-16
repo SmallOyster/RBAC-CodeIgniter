@@ -1,12 +1,11 @@
 <?php 
 /**
- * @name V-新增用户
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-V-新增用户
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version V1.0 2018-08-08
+ * @version 2019-03-16
  */
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -15,59 +14,59 @@
 	<title>新增用户 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<?php $this->load->view('include/pagePath',['name'=>'新增用户','path'=>[['用户列表',base_url('admin/user/list')],['新增用户','',1]]]); ?>
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">新增用户</h1>
-	</div>
+	<!-- 页面主要内容 -->
+	<section class="content">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">新增用户</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label for="userName">用户名</label>
+					<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();'>
+					<p class="help-block">请输入<font color="green">4</font>-<font color="green">20</font>字的用户名</p>
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="nickName">昵称</label>
+					<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="phone">手机号</label>
+					<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();'>
+					<p class="help-block">目前仅支持中国大陆的手机号码</p>
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="email">邮箱</label>
+					<input type="email" class="form-control" id="email">
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="roleID">角色</label>
+					<select class="form-control" id="roleID">
+						<option value="-1" selected disabled>--- 请选择角色 ---</option>
+					</select>
+				</div>
+
+				<hr>
+
+				<button class="btn btn-success btn-block" onclick='add()'>确 认 新 增 用 户 &gt;</button>
+			</div>
+		</div>
+	</section>
+	<!-- ./页面主要内容 -->
 </div>
-<!-- ./Page Name-->
-
-<div class="panel panel-default">
-	<div class="panel-heading">新增用户</div>
-	<div class="panel-body">
-		<div class="form-group">
-			<label for="userName">用户名</label>
-			<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();'>
-			<p class="help-block">请输入<font color="green">4</font>-<font color="green">20</font>字的用户名</p>
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="nickName">昵称</label>
-			<input class="form-control" id="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="phone">手机号</label>
-			<input type="number" class="form-control" id="phone" onkeyup='if(event.keyCode==13)$("#email").focus();'>
-			<p class="help-block">目前仅支持中国大陆的手机号码</p>
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="email">邮箱</label>
-			<input type="email" class="form-control" id="email">
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="roleID">角色</label>
-			<select class="form-control" id="roleID">
-				<option value="-1" selected disabled>--- 请选择角色 ---</option>
-			</select>
-		</div>
-
-		<hr>
-
-		<button class="btn btn-success btn-block" onclick='add()'>确 认 新 增 用 户 &gt;</button>
-	</div>
-</div>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -86,35 +85,31 @@ function getAllRole(){
 	lockScreen();
 
 	$.ajax({
-		url:"<?=site_url('api/getAllRole'); ?>",
+		url:"<?=base_url('api/getAllRole'); ?>",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken(); ?>},
+		data:{<?=$this->ajax->showAjaxToken();?>},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
 			unlockScreen();
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				for(i in ret.data['list']){
 					roleID=ret.data['list'][i]['id']
 					roleName=ret.data['list'][i]['name'];
 					$("#roleID").append('<option value="'+roleID+'">'+roleID+'. '+roleName+'</option>');
 				}
 				return true;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==403001){
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
@@ -132,57 +127,49 @@ function add(){
 
 	if(userName==""){
 		unlockScreen();
-		$("#tips").html("请输入用户名！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入用户名！");
 		return false;
 	}
 	if(userName.length<4 || userName.length>20){
 		unlockScreen();
-		$("#tips").html("请输入 4-20字 的用户名！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入 4-20字 的用户名！");
 		return false;
 	}
 	if(nickName==""){
 		unlockScreen();
-		$("#tips").html("请输入昵称！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入昵称！");
 		return false;
 	}
 	if(phone==""){
 		unlockScreen();
-		$("#tips").html("请输入手机号！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入手机号！");
 		return false;
 	}
 	if(phone.length!=11){
 		unlockScreen();
-		$("#tips").html("请正确输入手机号！");
-		$("#tipsModal").modal('show');
+		showModalTips("请正确输入手机号！");
 		return false;
 	}
 	if(email==""){
 		unlockScreen();
-		$("#tips").html("请输入邮箱！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入邮箱！");
 		return false;
 	}
 	if(roleID=="-1"){
 		unlockScreen();
-		$("#tips").html("请选择角色！");
-		$("#tipsModal").modal('show');
+		showModalTips("请选择角色！");
 		return false;
 	}
 
 	$.ajax({
-		url:"<?=site_url('admin/user/toAdd'); ?>",
+		url:"<?=base_url('admin/user/toAdd');?>",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
+		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
 			unlockScreen();
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
@@ -197,36 +184,28 @@ function add(){
 				$("#infoModal").modal('show');
 				return true;
 			}else if(ret.message=="insertFailed"){
-				$("#tips").html("新增失败！！！");
-				$("#tipsModal").modal('show');
+				showModalTips("新增失败！！！");
 				return false;
 			}else if(ret.message=="haveUserName"){
-				$("#tips").html("此用户名已存在！<br>请输入其他用户名！");
-				$("#tipsModal").modal('show');
+				showModalTips("此用户名已存在！<br>请输入其他用户名！");
 				return false;
 			}else if(ret.message=="havePhone"){
-				$("#tips").html("此手机号已存在！<br>请输入其他手机号！");
-				$("#tipsModal").modal('show');
+				showModalTips("此手机号已存在！<br>请输入其他手机号！");
 				return false;
 			}else if(ret.message=="haveEmail"){
-				$("#tips").html("此邮箱已存在！<br>请输入其他邮箱！");
-				$("#tipsModal").modal('show');
+				showModalTips("此邮箱已存在！<br>请输入其他邮箱！");
 				return false;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==403001){
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 <div class="modal fade" id="infoModal">
   <div class="modal-dialog">

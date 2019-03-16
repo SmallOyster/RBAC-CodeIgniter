@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-用户
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-03-15
+* @version 2019-03-16
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -22,9 +22,10 @@ class RBAC_user extends CI_Controller {
 		$this->safe->checkPermission();
 
 		$this->API_PATH=$this->setting->get('apiPath');
-		$this->sessPrefix=$this->safe->getSessionPrefix();		
+		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
+		$this->load->helper('string');
 	}
 
 

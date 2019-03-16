@@ -1,12 +1,11 @@
 <?php 
 /**
- * @name V-给角色设置权限
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-V-设置角色权限
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-08-08
+ * @version 2019-03-16
  */
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -14,38 +13,35 @@
 	<?php $this->load->view('include/header'); ?>
 	<title>设置角色权限 / <?=$this->Setting_model->get('systemName');?></title>
 	<style>
-	.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
-	ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;height:360px;overflow-y:scroll;overflow-x:auto;}
-</style>
+		.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
+		ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;height:360px;overflow-y:scroll;overflow-x:auto;}
+	</style>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<?php $this->load->view('include/pagePath',['name'=>'设置角色权限<font style="font-size: 22px;">（角色名：<font color="blue"><b>'.urldecode($roleName).'</b></font>）</font>','path'=>[['角色列表',base_url('admin/role/list')],['设置角色权限','',1]]]); ?>
 
-<input type="hidden" id="roleID" value="<?=$roleID; ?>">
-<input type="hidden" id="menuIDs">
+	<!-- 页面主要内容 -->
+	<section class="content">
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">
-			设置角色权限
-			<font style="font-size: 28px;">（角色名：<font color="blue"><b><?=urldecode($roleName); ?></b></font>）</font>
-		</h1>
-	</div>
+		<input type="hidden" id="roleID" value="<?=$roleID; ?>">
+		<input type="hidden" id="menuIDs">
+
+		<ul id="treeDemo" class="ztree"></ul>
+
+		<hr>
+
+		<button onclick='getCheckedNodes();toSetPermission();' class="btn btn-success btn-block">确 认 分 配 权 限</button>
+	</section>
+	<!-- ./页面主要内容 -->
 </div>
-<!-- ./Page Name-->
-
-<ul id="treeDemo" class="ztree"></ul>
-
-<hr>
-
-<button onclick='getCheckedNodes();toSetPermission();' class="btn btn-success btn-block">确 认 分 配 权 限</button>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -158,8 +154,6 @@ function toSetPermission(){
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 <div class="modal fade" id="ztreeModal">
   <div class="modal-dialog">

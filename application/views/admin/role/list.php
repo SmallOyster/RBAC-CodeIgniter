@@ -1,12 +1,11 @@
 <?php 
 /**
- * @name V-角色列表
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-V-角色列表
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-08-08
+ * @version 2019-03-16
  */
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -15,48 +14,53 @@
 	<title>角色列表 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<?php $this->load->view('include/pagePath',['name'=>'角色列表','path'=>[['角色列表','',1]]]); ?>
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">角色列表</h1>
-		<a href="<?=site_url('admin/role/add'); ?>" class="btn btn-primary btn-block">新 增 角 色</a>
+	<!-- 页面主要内容 -->
+	<section class="content">
+		<a href="<?=base_url('admin/role/add');?>" class="btn btn-primary btn-block">新 增 角 色</a>
+
 		<hr>
-	</div>
-</div>
-<!-- ./Page Name-->
 
-<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
-	<thead>
-		<tr>
-			<th>角色名称</th>
-			<th>操作</th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach($list as $info){ ?>
-		<tr>
-			<td><?=$info['name']; ?></td>
-			<td>
-				<a href="<?=site_url('admin/role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a>
-				<a onclick='del_ready("<?=$info['id']; ?>","<?=$info['name']; ?>")' class="btn btn-danger">删除</a>
-				<a href="<?=site_url('admin/role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a>
-				
-				<?php if($info['is_default']==0){ ?>
-				<a onclick='setDefaultRole("<?=$info['id']; ?>")' class="btn btn-primary">设为默认角色</a>
-				<?php } ?>
-			</td>
-		</tr>
-	<?php } ?>
-	</tbody>
-</table>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
+					<thead>
+						<tr>
+							<th>角色名称</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach($list as $info){ ?>
+							<tr>
+								<td><?=$info['name']; ?></td>
+								<td>
+									<a href="<?=base_url('admin/role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a>
+									<a onclick='del_ready("<?=$info['id']; ?>","<?=$info['name']; ?>")' class="btn btn-danger">删除</a>
+									<a href="<?=base_url('admin/role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a>
+
+									<?php if($info['is_default']==0){ ?>
+										<a onclick='setDefaultRole("<?=$info['id']; ?>")' class="btn btn-primary">设为默认角色</a>
+									<?php } ?>
+								</td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+	<!-- ./页面主要内容 -->
+</div>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -89,7 +93,7 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?=site_url('admin/role/toDelete'); ?>",
+		url:"<?=base_url('admin/role/toDelete'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
@@ -134,7 +138,7 @@ function setDefaultRole(id){
 	lockScreen();
 
 	$.ajax({
-		url:"<?=site_url('admin/role/toSetDefaultRole'); ?>",
+		url:"<?=base_url('admin/role/toSetDefaultRole'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
@@ -170,8 +174,6 @@ function setDefaultRole(id){
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 <div class="modal fade" id="delModal">
 	<div class="modal-dialog">

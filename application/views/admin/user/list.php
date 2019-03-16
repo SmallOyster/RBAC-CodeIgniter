@@ -1,9 +1,9 @@
 <?php 
 /**
  * @name 生蚝科技RBAC开发框架-V-用户列表
- * @author SmallOysyer <master@xshgzs.com>
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-03-15
+ * @version 2019-03-16
  */
 ?>
 <!DOCTYPE html>
@@ -21,48 +21,45 @@
 
 <!-- 页面内容 -->
 <div id="app" class="content-wrapper">
-	<!-- 头部(显示页面名称和路径) -->
-	<section class="content-header">
-		<h1><?=$this->setting->get('systemName'); ?><small>首页</small></h1>
-		<ol class="breadcrumb">
-			<li><a href="<?=base_url('dashborad');?>"><i class="fa fa-dashboard"></i> <?=$this->setting->get('systemName'); ?></a></li>
-			<li class="active">用户列表</li>
-		</ol>
-	</section>
+	<?php $this->load->view('include/pagePath',['name'=>'用户列表','path'=>[['用户列表','',1]]]); ?>
 
 	<!-- 页面主要内容 -->
 	<section class="content">
 		<a href="<?=base_url('admin/user/add'); ?>" class="btn btn-primary btn-block">新 增 用 户</a>
 		<hr>
 
-		<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
-			<thead>
-				<tr>
-					<th>用户名</th>
-					<th>昵称</th>
-					<th>状态</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-			<tbody>
-			<?php foreach($list as $info){ ?>
-				<tr>
-					<td><?=$info['user_name']; ?></td>
-					<td><?=$info['nick_name']; ?></td>
-					<td>
-						<?php if($info['status']==0){ ?>
-							<a onclick='updateStatus_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>",1);'><font color="red">已禁用</font></a>
-						<?php }elseif($info['status']==1){ ?>
-							<a onclick='updateStatus_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>",0);'><font color="green">正常</font></a>
-						<?php }elseif($info['status']==2){ ?>
-							<font color="blue">未激活</font>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
+					<thead>
+						<tr>
+							<th>用户名</th>
+							<th>昵称</th>
+							<th>状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach($list as $info){ ?>
+							<tr>
+								<td><?=$info['user_name']; ?></td>
+								<td><?=$info['nick_name']; ?></td>
+								<td>
+									<?php if($info['status']==0){ ?>
+										<a onclick='updateStatus_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>",1);'><font color="red">已禁用</font></a>
+									<?php }elseif($info['status']==1){ ?>
+										<a onclick='updateStatus_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>",0);'><font color="green">正常</font></a>
+									<?php }elseif($info['status']==2){ ?>
+										<font color="blue">未激活</font>
+									<?php } ?>
+								</td>
+								<td><a href="<?=base_url('admin/user/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
+							</tr>
 						<?php } ?>
-					</td>
-					<td><a href="<?=base_url('admin/user/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
-				</tr>
-			<?php } ?>
-			</tbody>
-		</table>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</section>
 	<!-- ./页面主要内容 -->
 </div>

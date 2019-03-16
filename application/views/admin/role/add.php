@@ -1,12 +1,11 @@
 <?php 
 /**
- * @name V-新增角色
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-V-新增角色
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version V1.0 2018-08-08
+ * @version 2019-03-16
  */
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -15,40 +14,39 @@
 	<title>新增角色 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<?php $this->load->view('include/pagePath',['name'=>'新增角色','path'=>[['角色列表',base_url('admin/role/list')],['新增角色','',1]]]); ?>
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">新增角色</h1>
-	</div>
-</div>
-<!-- ./Page Name-->
-
-<div class="panel panel-default">
-	<div class="panel-heading">新增角色</div>
-	<div class="panel-body">
-		<div class="form-group">
-			<label for="name">角色名称</label>
-			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();'>
-			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
+	<!-- 页面主要内容 -->
+	<section class="content">
+		<div class="panel panel-default">
+			<div class="panel-heading">新增角色</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label for="name">角色名称</label>
+					<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();'>
+					<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="remark">备注</label>
+					<textarea class="form-control" id="remark"></textarea>
+					<p class="help-block">选填</p>
+				</div>
+				<hr>
+				<button class="btn btn-success btn-block" onclick='add()'>确 认 新 增 角 色 &gt;</button>
+			</div>
 		</div>
-		<br>
-		<div class="form-group">
-			<label for="remark">备注</label>
-			<textarea class="form-control" id="remark"></textarea>
-			<p class="help-block">选填</p>
-		</div>
-		<hr>
-		<button class="btn btn-success btn-block" onclick='add()'>确 认 新 增 角 色 &gt;</button>
-	</div>
+	</section>
+	<!-- ./页面主要内容 -->
 </div>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -112,8 +110,6 @@ function add(){
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 </body>
 </html>

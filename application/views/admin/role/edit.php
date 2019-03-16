@@ -1,12 +1,11 @@
 <?php 
 /**
- * @name V-修改角色
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-V-修改角色
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version V1.0 2018-08-08
+ * @version 2019-03-16
  */
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -15,56 +14,56 @@
 	<title>修改角色 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<?php $this->load->view('include/pagePath',['name'=>'修改角色','path'=>[['角色列表',base_url('admin/role/list')],['修改角色','',1]]]); ?>
 
-<input type="hidden" id="roleID" value="<?=$roleID; ?>">
+	<!-- 页面主要内容 -->
+	<section class="content">
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">修改角色</h1>
-	</div>
+		<input type="hidden" id="roleID" value="<?=$roleID;?>">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">修改角色</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label for="name">角色名称</label>
+					<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' value="<?=$info['name']; ?>">
+					<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="remark">备注</label>
+					<textarea class="form-control" id="remark"><?=$info['remark']; ?></textarea>
+					<p class="help-block">选填</p>
+				</div>
+
+				<hr>
+
+				<div class="form-group">
+					<label>创建时间</label>
+					<input class="form-control" value="<?=$info['create_time']; ?>" disabled>
+				</div>
+				<br>
+				<div class="form-group">
+					<label>最后修改时间</label>
+					<input class="form-control" value="<?=$info['update_time']; ?>" disabled>
+				</div>
+
+				<hr>
+
+				<button class="btn btn-success btn-block" onclick='edit()'>确 认 编 辑 角 色 &gt;</button>
+			</div>
+		</div>
+	</section>
+	<!-- ./页面主要内容 -->
 </div>
-<!-- ./Page Name-->
-
-<div class="panel panel-default">
-	<div class="panel-heading">修改角色</div>
-	<div class="panel-body">
-		<div class="form-group">
-			<label for="name">角色名称</label>
-			<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' value="<?=$info['name']; ?>">
-			<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
-		</div>
-		<br>
-		<div class="form-group">
-			<label for="remark">备注</label>
-			<textarea class="form-control" id="remark"><?=$info['remark']; ?></textarea>
-			<p class="help-block">选填</p>
-		</div>
-
-		<hr>
-
-		<div class="form-group">
-			<label>创建时间</label>
-			<input class="form-control" value="<?=$info['create_time']; ?>" disabled>
-		</div>
-		<br>
-		<div class="form-group">
-			<label>最后修改时间</label>
-			<input class="form-control" value="<?=$info['update_time']; ?>" disabled>
-		</div>
-
-		<hr>
-		
-		<button class="btn btn-success btn-block" onclick='edit()'>确 认 编 辑 角 色 &gt;</button>
-	</div>
-</div>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -129,8 +128,6 @@ function edit(){
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 </body>
 </html>

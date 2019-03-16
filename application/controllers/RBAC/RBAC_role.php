@@ -10,24 +10,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class RBAC_role extends CI_Controller {
 
-	public $allMenu;
 	public $sessPrefix;
 	public $nowUserID;
 	public $nowUserName;
+	public $API_PATH;
 	
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->helper('string');
 
 		$this->safe->checkPermission();
 
+		$this->API_PATH=$this->setting->get('apiPath');
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$roleID=$this->session->userdata($this->sessPrefix."roleID");
-		$this->allMenu=$this->RBAC_model->getAllMenuByRole($roleID);
-		
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
+		$this->load->helper('string');
 	}
 
 

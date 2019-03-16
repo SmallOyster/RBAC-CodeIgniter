@@ -1,9 +1,9 @@
 <?php 
 /**
  * @name 生蚝科技RBAC开发框架-V-修改用户
- * @author SmallOysyer <master@xshgzs.com>
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-03-15
+ * @version 2019-03-16
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>用户列表 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>修改用户 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -21,14 +21,7 @@
 
 <!-- 页面内容 -->
 <div id="app" class="content-wrapper">
-	<!-- 头部(显示页面名称和路径) -->
-	<section class="content-header">
-		<h1><?=$this->setting->get('systemName'); ?><small>首页</small></h1>
-		<ol class="breadcrumb">
-			<li><a href="<?=base_url('dashborad');?>"><i class="fa fa-dashboard"></i> <?=$this->setting->get('systemName'); ?></a></li>
-			<li class="active">修改用户</li>
-		</ol>
-	</section>
+	<?php $this->load->view('include/pagePath',['name'=>'修改用户','path'=>[['用户列表',base_url('admin/user/list')],['修改用户','',1]]]); ?>
 
 	<!-- 页面主要内容 -->
 	<section class="content">
