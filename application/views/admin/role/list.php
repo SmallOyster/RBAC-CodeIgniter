@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-角色列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version 2019-03-16
+ * @version 2019-03-17
  */
 ?>
 <!DOCTYPE html>
@@ -101,32 +101,28 @@ function del_sure(){
 			console.log(e);
 			unlockScreen();
 			$("#delModal").modal('hide');
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				$("#delModal").modal('hide');
 				alert("删除成功！");
 				location.reload();
 				return true;
-			}else if(ret.message=="deleteFailed"){
+			}else if(ret.code==1){
 				$("#delModal").modal('hide');
-				$("#tips").html("删除失败！！！");
-				$("#tipsModal").modal('show');
+				showModalTips("删除失败！！！");
 				return false;
-			}else if(ret.code=="403"){
+			}else if(ret.code==403001){
 				$("#delModal").modal('hide');
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
 				$("#delModal").modal('hide');
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
@@ -146,28 +142,27 @@ function setDefaultRole(id){
 			console.log(e);
 			unlockScreen();
 			$("#delModal").modal('hide');
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				alert("设置成功！");
 				location.reload();
 				return true;
-			}else if(ret.message=="setFailed"){
-				$("#tips").html("设置失败！！！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==1){
+				showModalTips("设置失败！！！");
 				return false;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==403001){
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
+				return false;
+			}else if(ret.code==0){
+				showModalTips("参数缺失！请联系技术支持！");
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}

@@ -22,7 +22,6 @@ class Setting extends CI_Controller {
 		$this->safe->checkPermission();
 		
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-
 		$this->API_PATH=$this->setting->get('apiPath');
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');

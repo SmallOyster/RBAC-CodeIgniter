@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-角色
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-03-15
+* @version 2019-03-17
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -50,11 +50,10 @@ class RBAC_role extends CI_Controller {
 
 	public function toAdd()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$name=$this->input->post('name');
-		$remark=$this->input->post('remark');
+		$name=inputPost('name',0,1);
+		$remark=inputPost('remark',0,1);
 		
 		$sql="INSERT INTO role(name,remark) VALUES (?,?)";
 		$query=$this->db->query($sql,[$name,$remark]);
@@ -62,16 +61,16 @@ class RBAC_role extends CI_Controller {
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(0,"insertFailed");
+			returnAjaxData(1,"failed to Insert");
 		}
 	}
 
 
-	public function edit($roleID)
+	public function edit($roleId)
 	{
 		$this->ajax->makeAjaxToken();
 
-		$query=$this->db->query("SELECT * FROM role WHERE id=?",[$roleID]);
+		$query=$this->db->query("SELECT * FROM role WHERE id=?",[$roleId]);
 		
 		if($query->num_rows()!=1){
 			header("Location: ".base_url('/'));
@@ -80,37 +79,35 @@ class RBAC_role extends CI_Controller {
 		$list=$query->result_array();
 		$info=$list[0];
 		
-		$this->load->view('admin/role/edit',['roleID'=>$roleID,'info'=>$info]);
+		$this->load->view('admin/role/edit',['roleId'=>$roleId,'info'=>$info]);
 	}
 
 
 	public function toEdit()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$name=$this->input->post('name');
-		$remark=$this->input->post('remark');
-		$roleID=$this->input->post('roleID');
+		$name=inputPost('name',0,1);
+		$remark=inputPost('remark',1,1);
+		$roleId=inputPost('roleId',0,1);
 		$nowTime=date("Y-m-d H:i:s");
 
 		$sql="UPDATE role SET name=?,remark=?,update_time=? WHERE id=?";
-		$query=$this->db->query($sql,[$name,$remark,$nowTime,$roleID]);
+		$query=$this->db->query($sql,[$name,$remark,$nowTime,$roleId]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(0,"updateFailed");
+			returnAjaxData(1,"failed to Update");
 		}
 	}
 
 	
 	public function toDelete()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$id=$this->input->post('id');
+		$id=inputPost('id',0,1);
 
 		$sql="DELETE FROM role WHERE id=?";
 		$query=$this->db->query($sql,[$id]);
@@ -120,47 +117,46 @@ class RBAC_role extends CI_Controller {
 			$this->Log_model->create('角色',$logContent);
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(0,"deleteFailed");
+			returnAjaxData(1,"failed to Delete");
 		}
 	}
 	
 	
-	public function setPermission($roleID,$roleName){
+	public function setPermission($roleId,$roleName){
 		$this->ajax->makeAjaxToken();
 		
 		$list=$this->RBAC_model->getAllMenu();
 
-		$permissions=$this->RBAC_model->getAllPermissionByRole($roleID);
+		$permissions=$this->RBAC_model->getAllPermissionByRole($roleId);
 		$permissions=implode(",",$permissions);
 		
-		$this->load->view('admin/role/setPermission',['list'=>$list,'roleID'=>$roleID,"permission"=>$permissions,'roleName'=>$roleName]);
+		$this->load->view('admin/role/setPermission',['list'=>$list,'roleId'=>$roleId,"permission"=>$permissions,'roleName'=>$roleName]);
 	}
 
 
 	public function toSetPermission()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$roleID=$this->input->post('roleID');
-		$menuIDs=$this->input->post('menuIDs');
-		$menuIDs=explode(",",$menuIDs);
+		$roleId=inputPost('roleId',0,1);
+		$menuIds=inputPost('menuIds',0,1);
+		$menuIds=explode(",",$menuIds);
 
 		// 清空旧权限
-		$sql1="DELETE FROM role_permission WHERE role_id='".$roleID."'";
+		$sql1="DELETE FROM role_permission WHERE role_id='".$roleId."'";
 		$query1=$this->db->simple_query($sql1);
 		if($query1!==TRUE){
-			returnAjaxData(0,"truncateFailed");
+			returnAjaxData(1,"failed to Truncate Role Permission");
 		}
 
-		$totalMenu=count($menuIDs);
+		$totalMenu=count($menuIds);
 		$sql2="INSERT INTO role_permission(role_id,menu_id) VALUES ";
 		$data=array();
 
 		// 循环写入添加权限的SQL语句
-		foreach($menuIDs as $id){
+		foreach($menuIds as $id){
 			$sql2.="(?,?),";
-			array_push($data,$roleID,$id);
+			array_push($data,$roleId,$id);
 		}
 
 		$sql2=substr($sql2,0,strlen($sql2)-1);
@@ -169,17 +165,16 @@ class RBAC_role extends CI_Controller {
 		if($this->db->affected_rows()==$totalMenu){
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(1,"quantityMismatch");
+			returnAjaxData(500,"quantity Mismatch");
 		}
 	}
 
 
 	public function toSetDefaultRole()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$id=$this->input->post('id');
+		$id=inputPost('id',0,1);
 		$sql1="UPDATE role SET is_default=1 WHERE id=?";
 		$query1=$this->db->query($sql1,[$id]);
 
@@ -189,7 +184,7 @@ class RBAC_role extends CI_Controller {
 			
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(0,"setFailed");
+			returnAjaxData(1,"failed to Set Default Role");
 		}
 	}
 }

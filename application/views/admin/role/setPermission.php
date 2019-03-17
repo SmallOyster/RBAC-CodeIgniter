@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-设置角色权限
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-03-16
+ * @version 2019-03-17
  */
 ?>
 <!DOCTYPE html>
@@ -30,8 +30,8 @@
 	<!-- 页面主要内容 -->
 	<section class="content">
 
-		<input type="hidden" id="roleID" value="<?=$roleID; ?>">
-		<input type="hidden" id="menuIDs">
+		<input type="hidden" id="roleId" value="<?=$roleId;?>">
+		<input type="hidden" id="menuIds">
 
 		<ul id="treeDemo" class="ztree"></ul>
 
@@ -79,7 +79,7 @@ function getCheckedNodes(){
 	}
 	ids=ids.substr(0,ids.length-1);
 	console.log(ids);
-	$("#menuIDs").val(ids);
+	$("#menuIds").val(ids);
 }
 
 $(document).ready(function(){
@@ -87,18 +87,18 @@ $(document).ready(function(){
 });
 
 function getAllMenu(){
-	roleID=$("#roleID").val();
+	roleId=$("#roleId").val();
 	
 	$.ajax({
-		url:"<?=site_url('api/getAllMenuForZtree'); ?>",
+		url:"<?=base_url('api/getAllMenuForZtree'); ?>",
 		type:"post",
 		dataType:"json",
 		async:false,
-		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleID':roleID},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleID':roleId},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 
 			$("#tipsModal").modal('show');
 			return false;
@@ -109,45 +109,44 @@ function getAllMenu(){
 	});
 	return ret;
 }
+
 function toSetPermission(){
 	lockScreen();
-	roleID=$("#roleID").val();
-	menuIDs=$("#menuIDs").val();
+	roleId=$("#roleId").val();
+	menuIds=$("#menuIds").val();
 
 	$.ajax({
-		url:"<?=site_url('admin/role/toSetPermission'); ?>",
+		url:"<?=base_url('admin/role/toSetPermission'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleID':roleID,'menuIDs':menuIDs},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleId':roleId,'menuIds':menuIds},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				alert("权限分配成功！");
 				history.go(-1);
 				return true;
-			}else if(ret.message=="quantityMismatch"){
-				$("#tips").html("权限分配数量不匹配！！<br>请联系管理员！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==500){
+				showModalTips("权限分配数量不匹配！！<br>请联系管理员！");
 				return false;
-			}else if(ret.message=="truncateFailed"){
-				$("#tips").html("权限清空失败！！<br>请联系管理员！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==1){
+				showModalTips("权限清空失败！！<br>请联系管理员！");
 				return false;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==403001){
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
+				return false;
+			}else if(ret.code==0){
+				showModalTips("参数缺失！请联系技术支持！");
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}

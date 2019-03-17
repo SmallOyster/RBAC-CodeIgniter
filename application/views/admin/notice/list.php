@@ -117,6 +117,9 @@ function del_sure(){
 				$("#delModal").modal('hide');
 				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
+			}else if(ret.code==0){
+				showModalTips("参数缺失！请联系技术支持！");
+				return false;
 			}else{
 				$("#delModal").modal('hide');
 				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");

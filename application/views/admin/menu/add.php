@@ -25,6 +25,7 @@
 
 	<!-- 页面主要内容 -->
 	<section class="content">
+		<input type="hidden" id="fatherId" value="<?=$fatherId;?>">
 
 		<div class="panel panel-default">
 			<div class="panel-heading">新增菜单（父菜单：<i class="fa fa-<?=$fatherIcon; ?>" aria-hidden="true"></i> <?=$fatherName; ?>）</div>
@@ -88,7 +89,7 @@ function inputJumpOutURI(){
 
 function add(){
 	lockScreen();
-	fatherID=$("#fatherID").val();
+	fatherId=$("#fatherId").val();
 	name=$("#name").val();
 	icon=$("#icon").val();
 	uri=$("#uri").val();
@@ -110,9 +111,9 @@ function add(){
 	}
 	
 	$.ajax({
-		url:"<?=base_url('admin/menu/toAdd'); ?>",
+		url:"<?=base_url('admin/menu/toAdd');?>",
 		type:"POST",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"fatherID":fatherID,"name":name,"icon":icon,"uri":uri},
+		data:{<?=$this->ajax->showAjaxToken();?>,"fatherId":fatherId,"name":name,"icon":icon,"uri":uri},
 		dataType:"JSON",
 		error:function(e){
 			console.log(e);
@@ -129,6 +130,9 @@ function add(){
 				return true;
 			}else if(ret.code==1){
 				showModalTips("新增失败！！！");
+				return false;
+			}else if(ret.code==0){
+				showModalTips("参数缺失！请联系技术支持！");
 				return false;
 			}else if(ret.code==403001){
 				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");

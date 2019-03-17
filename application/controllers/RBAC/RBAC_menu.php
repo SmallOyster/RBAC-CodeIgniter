@@ -38,15 +38,15 @@ class RBAC_menu extends CI_Controller {
 	}
 
 
-	public function add($fatherID)
+	public function add($fatherId)
 	{
 		$this->ajax->makeAjaxToken();
 		
-		if($fatherID==0){
+		if($fatherId==0){
 			$fatherName="主菜单";
 			$fatherIcon="home";
 		}else{
-			$query=$this->db->query("SELECT name,icon FROM menu WHERE id=?",[$fatherID]);		
+			$query=$this->db->query("SELECT name,icon FROM menu WHERE id=?",[$fatherId]);		
 			
 			if($query->num_rows()==1){
 				$info=$query->result_array();
@@ -57,7 +57,7 @@ class RBAC_menu extends CI_Controller {
 			}
 		}
 		
-		$this->load->view('admin/menu/add',['fatherID'=>$fatherID,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/menu/add',['fatherId'=>$fatherId,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
 	}
 
 
@@ -65,14 +65,14 @@ class RBAC_menu extends CI_Controller {
 	{
 		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$fatherId=inputPost('fatherID',0,1);
+		$fatherId=inputPost('fatherId',0,1);
 		$name=inputPost('name',0,1);
 		$icon=inputPost('icon',0,1);
 		$uri=inputPost('uri',0,1);
 		
 		if(substr($uri,0,13)=='show/jumpout/'){
-			$jumpToURL=urlencode(substr(12));
-			$uri='show/jumpout'.$jumpToURL;
+			$jumpToURL=urlencode(substr($uri,13));
+			$uri='show/jumpout/'.$jumpToURL;
 		}
 		
 		$sql="INSERT INTO menu(father_id,name,icon,uri) VALUES (?,?,?,?)";

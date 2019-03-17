@@ -2,13 +2,13 @@
 
 ---
 
-## 简介 Describe
+## 简介 Description
 
-▲ 系统名称：RBAC权限管理系统（使用Codeigniter框架开发）
+▲ 系统名称：RBAC权限管理系统（使用Codeigniter、AdminLTE、Vue.js框架开发）
 
 ▲ 开发商：生蚝科技
 
-▲ 代码版本信息：***Build 00483***
+▲ 代码版本信息：***Build 00499***
 
 ▲ 系统版本信息：***V2.0 developing...***
 

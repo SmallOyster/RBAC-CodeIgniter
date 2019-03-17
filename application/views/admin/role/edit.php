@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改角色
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-03-16
+ * @version 2019-03-17
  */
 ?>
 <!DOCTYPE html>
@@ -26,7 +26,7 @@
 	<!-- 页面主要内容 -->
 	<section class="content">
 
-		<input type="hidden" id="roleID" value="<?=$roleID;?>">
+		<input type="hidden" id="roleId" value="<?=$roleId;?>">
 
 		<div class="panel panel-default">
 			<div class="panel-heading">修改角色</div>
@@ -77,7 +77,7 @@ function edit(){
 	lockScreen();
 	name=$("#name").val();
 	remark=$("#remark").val();
-	roleID=$("#roleID").val();
+	roleId=$("#roleId").val();
 
 	if(name==""){
 		unlockScreen();
@@ -95,7 +95,7 @@ function edit(){
 	$.ajax({
 		url:"<?=site_url('admin/role/toEdit'); ?>",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark,'roleID':roleID},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark,'roleId':roleId},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -107,17 +107,20 @@ function edit(){
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				alert("修改成功！");
 				history.go(-1);
 				return true;
-			}else if(ret.message=="updateFailed"){
+			}else if(ret.code==1){
 				$("#tips").html("修改失败！！！");
 				$("#tipsModal").modal('show');
 				return false;
-			}else if(ret.code=="403"){
+			}else if(ret.code==403001){
 				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
+				return false;
+			}else if(ret.code==0){
+				showModalTips("参数缺失！请联系技术支持！");
 				return false;
 			}else{
 				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
