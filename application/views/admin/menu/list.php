@@ -1,17 +1,17 @@
 <?php 
 /**
- * @name 生蚝科技RBAC开发框架-V-通知管理
+ * @name 生蚝科技RBAC开发框架-V-菜单管理
  * @author Jerry Cheung <master@xshgzs.com>
- * @since 2018-03-28
+ * @since 2018-02-17
  * @version 2019-03-17
- */ 
+ */
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>通知管理 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>菜单管理 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -21,20 +21,15 @@
 
 <!-- 页面内容 -->
 <div id="app" class="content-wrapper">
-	<?php $this->load->view('include/pagePath',['name'=>'通知管理','path'=>[['通知管理','',1]]]); ?>
+	<?php $this->load->view('include/pagePath',['name'=>'菜单管理','path'=>[['菜单管理','',1]]]); ?>
 
 	<!-- 页面主要内容 -->
 	<section class="content">
-
-		<a href="<?=base_url('admin/notice/pub'); ?>" class="btn btn-primary btn-block">发 布 新 通 知 &gt;</a>
-		<hr>
-
-		<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
+		<a href="<?=base_url('admin/menu/add/0'); ?>" class="btn btn-primary btn-block">新 增 主 菜 单</a>
+		<table class="table table-hover" style="border-radius: 5px; border-collapse: separate;">
 			<thead>
 				<tr>
-					<th>标题</th>
-					<th>作者</th>
-					<th>时间</th>
+					<th>菜单名</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -42,16 +37,20 @@
 			<tbody>
 			<?php foreach($list as $info){ ?>
 				<tr>
-					<td><?=$info['title']; ?></td>
-					<td><?=$info['create_user']; ?></td>
-					<td><?=$info['create_time']; ?></td>
-					<td>
-						<a href="<?=base_url('notice/detail/').$info['id']; ?>" class="btn btn-primary">详细</a>
-						<a href="<?=base_url('admin/notice/edit/').$info['id']; ?>" class="btn btn-info">编辑</a>
-						<a onclick='del_ready("<?=$info['id']; ?>","<?=$info['title']; ?>")' class="btn btn-danger">删除</a>
-					</td>
+					<td><i class="fa fa-<?=$info['icon']; ?>" aria-hidden="true"></i> <?=$info['name']; ?></td>
+					<td><a href="<?=base_url('admin/menu/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?=$info['id']; ?>","<?=$info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?=base_url('admin/menu/add/').$info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
 				</tr>
-			<?php } ?>
+				<?php foreach($info['child'] as $child_info){ ?>
+				<tr>
+					<td>---- <i class="fa fa-<?=$child_info['icon']; ?>" aria-hidden="true"></i> <?=$child_info['name']; ?></td>
+					<td><a href="<?=base_url('admin/menu/edit/').$child_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?=$child_info['id']; ?>","<?=$child_info['name']; ?>")' class="btn btn-danger">删除</button> <a href="<?=base_url('admin/menu/add/').$child_info['id']; ?>" class="btn btn-success">新增子菜单</a></td>
+				</tr>
+				<?php foreach($child_info['child'] as $child2_info){ ?>
+				<tr>
+					<td>-------- <i class="fa fa-<?=$child2_info['icon']; ?>" aria-hidden="true"></i> <?=$child2_info['name']; ?></td>
+					<td><a href="<?=base_url('admin/menu/edit/').$child2_info['id']; ?>" class="btn btn-info">编辑</a> <button onclick='del_ready("<?=$child2_info['id']; ?>","<?=$child2_info['name']; ?>")' class="btn btn-danger">删除</button></td>
+				</tr>
+				<?php } } } ?>
 			</tbody>
 		</table>
 	</section>
@@ -67,20 +66,9 @@
 </div>
 
 <script>
-window.onload=function(){
-	$('#table').DataTable({
-		responsive: true,
-		"order":[[2,'desc']],
-		"columnDefs":[{
-			"targets":[3],
-			"orderable": false
-		}]
-	});
-};
-
 function del_ready(id,name){
 	$("#delID").val(id);
-	$("#delName_show").html(name);
+	$("#delName_show").html(id+". "+name);
 	$("#delModal").modal('show');
 }
 
@@ -90,7 +78,7 @@ function del_sure(){
 	id=$("#delID").val();
 
 	$.ajax({
-		url:"<?=base_url('admin/notice/toDelete'); ?>",
+		url:"<?=base_url('admin/menu/toDelete'); ?>",
 		type:"post",
 		dataType:"json",
 		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
@@ -137,7 +125,7 @@ function del_sure(){
 			<div class="modal-body">
 				<input type="hidden" id="delID">
 				<center>
-				<font color="red" style="font-weight:bolder;font-size:23px;">确定要删除下列通知吗？</font>
+				<font color="red" style="font-weight:bolder;font-size:23px;">确定要删除下列菜单吗？</font>
 				<br><br>
 				<font color="blue" style="font-weight:bolder;font-size:23px;"><p id="delName_show"></p></font>
 				</center>

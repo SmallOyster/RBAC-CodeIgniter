@@ -89,7 +89,7 @@ class RBAC_user extends CI_Controller {
 			$data['originPwd']=$originPwd;
 			returnAjaxData(200,"success",$data);
 		}else{
-			returnAjaxData(4,"failed to Insert");
+			returnAjaxData(500,"failed to Insert");
 		}
 	}
 

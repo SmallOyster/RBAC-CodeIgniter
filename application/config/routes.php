@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-路由
  * @author CodeIgniter,Jerry Cheung
  * @since 2018-02-06
- * @version 2019-03-15
+ * @version 2019-03-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -64,12 +64,12 @@ $route['admin/user/toUpdateStatus']['POST']='RBAC/RBAC_user/toUpdateStatus';
 
 
 /*********** RBAC-Admin-Menu ************/
-$route['admin/sys/menu/list']='RBAC/RBAC_menu/toList';
-$route['admin/sys/menu/toDelete']['POST']='RBAC/RBAC_menu/toDelete';
-$route['admin/sys/menu/add/(:num)']='RBAC/RBAC_menu/add/$1';
-$route['admin/sys/menu/toAdd']['POST']='RBAC/RBAC_menu/toAdd';
-$route['admin/sys/menu/edit/(:num)']='RBAC/RBAC_menu/edit/$1';
-$route['admin/sys/menu/toEdit']['POST']='RBAC/RBAC_menu/toEdit';
+$route['admin/menu/list']='RBAC/RBAC_menu/toList';
+$route['admin/menu/toDelete']['POST']='RBAC/RBAC_menu/toDelete';
+$route['admin/menu/add/(:num)']='RBAC/RBAC_menu/add/$1';
+$route['admin/menu/toAdd']['POST']='RBAC/RBAC_menu/toAdd';
+$route['admin/menu/edit/(:num)']='RBAC/RBAC_menu/edit/$1';
+$route['admin/menu/toEdit']['POST']='RBAC/RBAC_menu/toEdit';
 
 
 /************ Admin-Setting *************/

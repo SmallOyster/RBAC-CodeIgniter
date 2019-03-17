@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-通知
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-28
- * @version 2019-02-23
+ * @version 2019-03-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -20,9 +20,9 @@ class Notice extends CI_Controller {
 		parent::__construct();
 		
 		$this->safe->checkPermission();
-		$this->sessPrefix=$this->safe->getSessionPrefix();
 
 		$this->API_PATH=$this->setting->get('apiPath');
+		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
@@ -49,48 +49,40 @@ class Notice extends CI_Controller {
 	{
 		$this->ajax->makeAjaxToken();
 		
-		$this->load->view('admin/notice/pub',[]);
+		$this->load->view('admin/notice/pub');
 	}
 
 
 	public function toPublish()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
-		$title=$this->input->post('title');
-		$content=$this->input->post('content');
+		$title=inputPost('title');
+		$content=inputPost('content');
 		
 		$nowNickName=$this->session->userdata($this->sessPrefix.'nickName');
 		$sql="INSERT INTO notice(title,content,create_user) VALUES (?,?,?)";
 		$query=$this->db->query($sql,[$title,$content,$nowNickName]);
 
 		if($this->db->affected_rows()==1){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","publishFailed");
-			die($ret);
+			returnAjaxData(1,"failed to Publish");
 		}
 	}
 	
 	
 	public function toDelete()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$id=$this->input->post('id');
-
-		$sql1="DELETE FROM notice WHERE id=?";
-		$query1=$this->db->query($sql1,[$id]);
+		$id=inputPost('id');
+		$this->db->delete('notice',['id'=>$id]);
 		
 		if($this->db->affected_rows()==1){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","deleteFailed");
-			die($ret);
+			returnAjaxData(1,"failed to Delete");
 		}
 	}
 	
@@ -121,22 +113,19 @@ class Notice extends CI_Controller {
 
 	public function toEdit()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
-		$id=$this->input->post('id');
-		$title=$this->input->post('title');
-		$content=$this->input->post('content');
+		$id=inputPost('id',0,1);
+		$title=inputPost('title',0,1);
+		$content=inputPost('content',0,1);
 		
 		$sql="UPDATE notice SET title=?,content=? WHERE id=?";
 		$query=$this->db->query($sql,[$title,$content,$id]);
 
 		if($this->db->affected_rows()==1){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","updateFailed");
-			die($ret);
+			returnAjaxData(1,"failed to Update");
 		}
 	}
 }

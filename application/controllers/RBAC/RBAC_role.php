@@ -25,7 +25,6 @@ class RBAC_role extends CI_Controller {
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
-		$this->load->helper('string');
 	}
 
 

@@ -30,7 +30,7 @@
 						<li class="header">最近一个月的通知公告</li>
 						<li>
 							<ul class="menu">
-								<li v-if="navNoticeList!={}" v-for="navNoticeInfo in navNoticeList"><a v-bind:href="[rootUrl+'notice/detail/?id='+navNoticeInfo['id']]"><i class="fa fa-bullhorn"></i> {{navNoticeInfo['title']}}</a></li>
+								<li v-if="navNoticeList!={}" v-for="navNoticeInfo in navNoticeList"><a v-bind:href="[rootUrl+'notice/detail/'+navNoticeInfo['id']]"><i class="fa fa-bullhorn"></i> {{navNoticeInfo['title']}}</a></li>
 								<li v-else><a><font color='blue'><b>暂无公告！</b></font></a></li>
 							</ul>
 						</li>

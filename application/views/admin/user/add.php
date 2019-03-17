@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-新增用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-03-16
+ * @version 2019-03-17
  */
 ?>
 <!DOCTYPE html>
@@ -175,7 +175,7 @@ function add(){
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				$("#info_userName_show").html(userName);
 				$("#info_nickName_show").html(nickName);
 				$("#info_phone_show").html(phone);
@@ -183,16 +183,16 @@ function add(){
 				$("#info_originPwd_show").html(ret.data['originPwd']);
 				$("#infoModal").modal('show');
 				return true;
-			}else if(ret.message=="insertFailed"){
+			}else if(ret.code==500){
 				showModalTips("新增失败！！！");
 				return false;
-			}else if(ret.message=="haveUserName"){
+			}else if(ret.code==1){
 				showModalTips("此用户名已存在！<br>请输入其他用户名！");
 				return false;
-			}else if(ret.message=="havePhone"){
+			}else if(ret.code==2){
 				showModalTips("此手机号已存在！<br>请输入其他手机号！");
 				return false;
-			}else if(ret.message=="haveEmail"){
+			}else if(ret.code==3){
 				showModalTips("此邮箱已存在！<br>请输入其他邮箱！");
 				return false;
 			}else if(ret.code==403001){

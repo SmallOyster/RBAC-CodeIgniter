@@ -3,15 +3,14 @@
  * @name 生蚝体育竞赛管理系统后台-V-通知列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-07-19
- * @version 2019-02-23
+ * @version 2019-03-17
  */
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
-  <?php $this->load->view('include/header'); ?>
-  <title>通知列表 / <?=$this->setting->get('systemName');?></title>
+	<?php $this->load->view('include/header'); ?>
+	<title>通知列表 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -21,14 +20,7 @@
 
 <!-- 页面内容 -->
 <div id="app" class="content-wrapper">
-	<!-- 头部(显示页面名称和路径) -->
-	<section class="content-header">
-		<h1>通知列表</h1>
-		<ol class="breadcrumb">
-			<li><a href="<?=base_url('dashborad');?>"><i class="fa fa-dashboard"></i> <?=$this->setting->get('systemName');?></a></li>
-			<li class="active">通知列表</li>
-		</ol>
-	</section>
+	<?php $this->load->view('include/pagePath',['name'=>'通知列表','path'=>[['通知列表','',1]]]); ?>
 
 	<!-- 页面主要内容 -->
 	<section class="content">

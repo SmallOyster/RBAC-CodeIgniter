@@ -3,17 +3,17 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-菜单
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-17
-* @version 2019-03-15
+* @version 2019-03-17
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class RBAC_menu extends CI_Controller {
 
-	public $allMenu;
 	public $sessPrefix;
 	public $nowUserID;
 	public $nowUserName;
+	public $API_PATH;
 	
 	function __construct()
 	{
@@ -21,10 +21,8 @@ class RBAC_menu extends CI_Controller {
 
 		$this->safe->checkPermission();
 
+		$this->API_PATH=$this->setting->get('apiPath');
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$roleID=$this->session->userdata($this->sessPrefix."roleID");
-		$this->allMenu=$this->RBAC_model->getAllMenuByRole($roleID);
-		
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
@@ -36,7 +34,7 @@ class RBAC_menu extends CI_Controller {
 		$this->ajax->makeAjaxToken();
 		
 		$list=$this->RBAC_model->getAllMenu();
-		$this->load->view('admin/sys/menu/list',["navData"=>$this->allMenu,'list'=>$list]);
+		$this->load->view('admin/menu/list',['list'=>$list]);
 	}
 
 
@@ -59,19 +57,18 @@ class RBAC_menu extends CI_Controller {
 			}
 		}
 		
-		$this->load->view('admin/sys/menu/add',['fatherID'=>$fatherID,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/menu/add',['fatherID'=>$fatherID,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
 	}
 
 
 	public function toAdd()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$fatherID=$this->input->post('fatherID');
-		$name=$this->input->post('name');
-		$icon=$this->input->post('icon');
-		$uri=$this->input->post('uri');
+		$fatherId=inputPost('fatherID',0,1);
+		$name=inputPost('name',0,1);
+		$icon=inputPost('icon',0,1);
+		$uri=inputPost('uri',0,1);
 		
 		if(substr($uri,0,13)=='show/jumpout/'){
 			$jumpToURL=urlencode(substr(12));
@@ -79,17 +76,17 @@ class RBAC_menu extends CI_Controller {
 		}
 		
 		$sql="INSERT INTO menu(father_id,name,icon,uri) VALUES (?,?,?,?)";
-		$query=$this->db->query($sql,[$fatherID,$name,$icon,$uri]);
+		$query=$this->db->query($sql,[$fatherId,$name,$icon,$uri]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(0,"insertFailed");
+			returnAjaxData(1,"failed to Insert");
 		}
 	}
 
 	
-	public function edit($menuID)
+	public function edit($menuId)
 	{
 		$this->ajax->makeAjaxToken();
 
@@ -97,14 +94,14 @@ class RBAC_menu extends CI_Controller {
 		$query1=$this->db->query("SELECT * FROM menu WHERE id=?",[$menuID]);
 		$list1=$query1->result_array();
 		$info=$list1[0];
-		$fatherID=$info['father_id'];
+		$fatherId=$info['father_id'];
 
 		if($query1->num_rows()!=1){
 			header("Location:".base_url());
 		}
 
 		// 获取父菜单名称和Icon
-		if($fatherID==0){
+		if($fatherId==0){
 			$fatherName="主菜单";
 			$fatherIcon="home";
 		}else{
@@ -115,19 +112,18 @@ class RBAC_menu extends CI_Controller {
 			$fatherIcon=$fatherInfo['icon'];
 		}
 
-		$this->load->view('admin/sys/menu/edit',['menuID'=>$menuID,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/menu/edit',['menuID'=>$menuId,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
 	}
 
 
 	public function toEdit()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$menuID=$this->input->post('menuID');
-		$name=$this->input->post('name');
-		$icon=$this->input->post('icon');
-		$uri=$this->input->post('uri');
+		$menuID=inputPost('menuID',0,1);
+		$name=inputPost('name',0,1);
+		$icon=inputPost('icon',0,1);
+		$uri=inputPost('uri',0,1);
 		$nowTime=date("Y-m-d H:i:s");
 	
 		if(substr($uri,0,13)=='show/jumpout/'){
@@ -144,27 +140,23 @@ class RBAC_menu extends CI_Controller {
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(0,"updateFailed");
+			returnAjaxData(1,"failed to Update");
 		}
 	}
 
 
 	public function toDelete()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$id=$this->input->post('id');
-
-		$sql1="DELETE FROM menu WHERE id=?";
-		$query1=$this->db->query($sql1,[$id]);
+		$id=inputPost('id',0,1);
+		$this->db->delete('menu',['id'=>$id]);
 		
 		if($this->db->affected_rows()==1){
-			$sql2="DELETE FROM role_permission WHERE menu_id=?";
-			$query2=$this->db->query($sql2,[$id]);
+			$this->db->delete('role_permission',['menu_id'=>$id]);
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(0,"deleteFailed");
+			returnAjaxData(1,"failed to Delete");
 		}
 	}
 }

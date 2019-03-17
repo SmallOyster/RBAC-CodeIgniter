@@ -1,37 +1,34 @@
 <?php 
 /**
- * @name V-通知详情
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝体育竞赛管理系统后台-V-通知详情
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-30
- * @version V1.0 2018-08-08
+ * @version 2019-03-17
  */ 
 ?>
-
 <!DOCTYPE html>
 <html>
-
 <head>
-  <?php $this->load->view('include/header'); ?>
-  <title>通知详情 / <?=$this->Setting_model->get('systemName');?></title>
+	<?php $this->load->view('include/header'); ?>
+	<title>通知详情 / <?=$this->setting->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<!-- Page Content -->
-<div id="page-wrapper">
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<?php $this->load->view('include/pagePath',['name'=>$info['title'],'path'=>[['通知列表','',1]]]); ?>
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header"><?=$info['title']; ?></h1>
-	</div>
+	<!-- 页面主要内容 -->
+	<section class="content">
+		<?=$info['content']; ?> 
+	</section>
+	<!-- ./页面主要内容 -->
 </div>
-<!-- ./Page Name-->
-
-<?=$info['content']; ?> 
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -39,5 +36,6 @@
 </div>
 <!-- ./Page -->
 </div>
+
 </body>
 </html>
