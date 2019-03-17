@@ -1,9 +1,9 @@
 <?php 
 /**
- * @name 生蚝科技RBAC开发框架-V-系统设置列表
+ * @name 生蚝科技RBAC开发框架-V-系统参数列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-03
- * @version 2019-03-16
+ * @version 2019-03-17
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>系统设置列表 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>系统参数列表 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -21,7 +21,7 @@
 
 <!-- 页面内容 -->
 <div id="app" class="content-wrapper">
-	<?php $this->load->view('include/pagePath',['name'=>'系统设置列表','path'=>[['系统设置列表','',1]]]); ?>
+	<?php $this->load->view('include/pagePath',['name'=>'修改系统参数','path'=>[['系统参数列表','',1]]]); ?>
 
 	<!-- 页面主要内容 -->
 	<section class="content">

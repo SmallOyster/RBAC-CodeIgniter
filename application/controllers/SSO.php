@@ -22,13 +22,13 @@ class SSO extends CI_Controller {
 
 	public function login()
 	{
-		$appId="otsso_025c13ebd55e9af0ebd";
-		$returnUrl="https://test.xshgzs.com/rbac/SSO/login";
-		$ssoLoginUrl="https://ssouc.xshgzs.com/login/".$appId."/".urlencode($returnUrl);
+		$appId=$this->setting->get('ssoAppId');
+		$returnUrl=$this->setting->get('ssoReturnUrl');
+		$ssoLoginUrl=$this->setting->get('ssoServerHost')."login/".$appId."/".urlencode($returnUrl);
 		$token=isset($_GET['token'])&&$_GET['token']!=""?$_GET['token']:die(header("location:".$ssoLoginUrl));
 
 		$postData=array('method'=>'api','token'=>$token,'appId'=>$appId,'returnUrl'=>$returnUrl);
-		$output=curl('https://ssouc.xshgzs.com/api/user/getUserInfo','post',$postData);
+		$output=curl($this->setting->get('ssoApiPath').'user/getUserInfo','post',$postData);
 		$data=json_decode($output,TRUE);
 		
 		if($data['code']!=200){die(header("location:".$ssoLoginUrl));}

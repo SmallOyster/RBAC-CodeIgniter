@@ -91,7 +91,7 @@ class RBAC_menu extends CI_Controller {
 		$this->ajax->makeAjaxToken();
 
 		// 获取菜单信息
-		$query1=$this->db->query("SELECT * FROM menu WHERE id=?",[$menuID]);
+		$query1=$this->db->query("SELECT * FROM menu WHERE id=?",[$menuId]);
 		$list1=$query1->result_array();
 		$info=$list1[0];
 		$fatherId=$info['father_id'];
@@ -105,7 +105,7 @@ class RBAC_menu extends CI_Controller {
 			$fatherName="主菜单";
 			$fatherIcon="home";
 		}else{
-			$query2=$this->db->query("SELECT * FROM menu WHERE id=?",[$fatherID]);
+			$query2=$this->db->query("SELECT * FROM menu WHERE id=?",[$fatherId]);
 			$list2=$query2->result_array();
 			$fatherInfo=$list2[0];
 			$fatherName=$fatherInfo['name'];

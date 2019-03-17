@@ -106,7 +106,11 @@ CREATE TABLE `setting` (
 INSERT INTO `setting` (`id`, `name`, `chinese_name`, `value`, `create_time`, `update_time`) VALUES
 (1, 'sessionPrefix', 'Session名称前缀', 'OTRBAC2_', '2018-03-05 03:55:19', '2018-09-26 18:45:52'),
 (2, 'systemName', '系统名称', '生蚝科技RBAC开发框架V2.0', '2018-03-05 03:55:19', '2019-02-18 18:29:46'),
-(3, 'apiPath', 'API接口目录', 'https://test.xshgzs.com/rbac/api/', '2019-02-23 09:29:55', '2019-02-23 18:36:09');
+(3, 'apiPath', 'API接口目录', 'https://test.xshgzs.com/rbac/api/', '2019-02-23 09:29:55', '2019-02-23 18:36:09'),
+(4, 'ssoAppId', 'SSO-AppId', 'otsso_025c13ebd55e9af0ebd', '2019-03-17 14:22:25', '2019-03-17 22:28:51'),
+(5, 'ssoReturnUrl', 'SSO-回调URL', 'https://test.xshgzs.com/rbac/SSO/login', '2019-03-17 14:22:56', '0000-00-00 00:00:00'),
+(6, 'ssoServerHost', 'SSO-中心服务器域名', 'https://ssouc.xshgzs.com/', '2019-03-17 14:24:52', '0000-00-00 00:00:00'),
+(7, 'ssoApiPath', 'SSO-API接口目录', 'https://ssouc.xshgzs.com/api/', '2019-03-17 14:25:21', '0000-00-00 00:00:00');
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
@@ -168,6 +172,6 @@ ALTER TABLE `role_permission`
 ALTER TABLE `send_mail`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `setting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
