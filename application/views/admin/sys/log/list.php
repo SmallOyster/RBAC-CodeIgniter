@@ -1,13 +1,11 @@
 <?php 
 /**
- * @name V-操作记录管理
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-V-操作记录管理
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-27
- * @version V1.0 2018-08-08
+ * @version 2019-03-16
  */
- 
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -16,50 +14,52 @@
 	<title>操作记录管理 / <?=$this->Setting_model->get('systemName');?></title>
 </head>
 
-<body>
-<div id="wrapper">
+<body class="hold-transition skin-cyan sidebar-mini">
+<div class="wrapper">
 
 <?php $this->load->view('include/navbar'); ?>
 
-<div id="page-wrapper">
-<!-- Page Main Content -->
+<!-- 页面内容 -->
+<div id="app" class="content-wrapper">
+	<?php $this->load->view('include/pagePath',['name'=>'操作记录管理','path'=>[['操作记录管理','',1]]]); ?>
 
-<!-- Page Name-->
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">操作记录管理</h1>
+	<!-- 页面主要内容 -->
+	<section class="content">
 		<button class="btn btn-danger btn-block" onclick="truncate_ready();">清 空 操 作 记 录</button>
-	</div>
+
+		<hr>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
+					<thead>
+						<tr>
+							<th>类型</th>
+							<th>内容</th>
+							<th>用户名</th>
+							<th>时间</th>
+							<th>IP</th>
+						</tr>
+					</thead>
+
+					<tbody>
+					<?php foreach($list as $info){ ?>
+						<tr>
+							<td><?=$info['type']; ?></td>
+							<td><?=$info['content']; ?></td>
+							<td><?=$info['user_name']; ?></td>
+							<td><?=$info['create_time']; ?></td>
+							<td><?=$info['create_ip']; ?></td>
+						</tr>
+					<?php } ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+	<!-- ./页面主要内容 -->
 </div>
-<!-- ./Page Name-->
-
-<hr>
-
-<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
-	<thead>
-		<tr>
-			<th>类型</th>
-			<th>内容</th>
-			<th>用户名</th>
-			<th>时间</th>
-			<th>IP</th>
-		</tr>
-	</thead>
-	
-	<tbody>
-	<?php
-	foreach($list as $info){
-	?>
-	<tr>
-		<td><?=$info['type']; ?></td>
-		<td><?=$info['content']; ?></td>
-		<td><?=$info['user_name']; ?></td>
-		<td><?=$info['create_time']; ?></td>
-		<td><?=$info['create_ip']; ?></td>
-	</tr>
-	<?php } ?>
-</tbody>
-</table>
+<!-- ./页面内容 -->
 
 <?php $this->load->view('include/footer'); ?>
 
@@ -69,6 +69,12 @@
 </div>
 
 <script>
+window.onload=function(){
+	$('#table').DataTable({
+		responsive: true
+	});
+};
+
 function truncate_ready(){
 	$("#truncatePwd").val("");
 	$("#truncateModal").modal('show');
@@ -79,54 +85,54 @@ function truncate_sure(){
 	lockScreen();
 	pwd=$("#truncatePwd").val();
 
+	if(pwd.length<6){
+		unlockScreen();
+		$("#truncateModal").modal('hide');
+		showModalTips("请输入当前用户的密码！！");
+		return false;
+	}
+
 	$.ajax({
-		url:"<?=site_url('admin/sys/log/toTruncate'); ?>",
+		url:"<?=base_url('admin/sys/log/toTruncate');?>",
 		type:"post",
 		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"pwd":pwd},
+		data:{<?=$this->ajax->showAjaxToken();?>,"pwd":pwd},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
 			$("#truncateModal").modal('hide');
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				$("#truncateModal").modal('hide');
 				alert("清空成功！");
 				location.reload();
 				return true;
-			}else if(ret.message=="truncateFailed"){
+			}else if(ret.code==500){
 				$("#truncateModal").modal('hide');
-				$("#tips").html("清空失败！！！");
-				$("#tipsModal").modal('show');
+				showModalTips("清空失败！！！");
 				return false;
-			}else if(ret.message=="invaildPwd"){
+			}else if(ret.code==403){
 				$("#truncateModal").modal('hide');
-				$("#tips").html("密码错误！");
-				$("#tipsModal").modal('show');
+				showModalTips("密码错误！");
 				return false;
-			}else if(ret.code=="403"){
+			}else if(ret.code==403001){
 				$("#truncateModal").modal('hide');
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
 				$("#truncateModal").modal('hide');
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
 	});
 }
 </script>
-
-<?php $this->load->view('include/tipsModal'); ?>
 
 <div class="modal fade" id="truncateModal">
 	<div class="modal-dialog">

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-Log日志
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-26
- * @version 2019-02-23
+ * @version 2019-03-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -20,9 +20,9 @@ class Log extends CI_Controller {
 		parent::__construct();
 
 		$this->safe->checkPermission();
-		$this->sessPrefix=$this->safe->getSessionPrefix();
 
 		$this->API_PATH=$this->setting->get('apiPath');
+		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
@@ -41,28 +41,23 @@ class Log extends CI_Controller {
 	
 	public function toTruncate()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
-		$pwd=$this->input->post('pwd');
-		$userStatus=$this->User_model->validateUser($this->nowUserID,"",$pwd);
+		$pwd=inputPost('pwd',0,1);
+		$userStatus=$this->user->validateUser($this->nowUserID,"",$pwd);
 		
 		if($userStatus!="200"){
-			$ret=$this->ajax->returnData("1","invaildPwd");
-			die($ret);
+			returnAjaxData(403,"invaild Password");
 		}
 		
-		$sql1="DELETE FROM log";
-		$query1=$this->db->query($sql1,[]);
+		$this->db->truncate('log');
 		
 		$logInsert=$this->Log_model->create("日志","清空日志");
 		
-		if($logInsert==TRUE){
-			$ret=$this->ajax->returnData("200","success");
-			die($ret);
+		if($logInsert==true){
+			returnAjaxData(200,"success");
 		}else{
-			$ret=$this->ajax->returnData("0","truncateFailed");
-			die($ret);
+			returnAjaxData(500,"failed to Truncate");
 		}
 	}
 }

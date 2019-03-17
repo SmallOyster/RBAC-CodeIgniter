@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-主页
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-10-20
- * @version 2019-03-15
+ * @version 2019-03-17
  */
 ?>
 <!DOCTYPE html>
@@ -21,14 +21,7 @@
 
 <!-- 页面内容 -->
 <div id="app" class="content-wrapper">
-	<!-- 头部(显示页面名称和路径) -->
-	<section class="content-header">
-		<h1><?=$this->setting->get('systemName'); ?><small>首页</small></h1>
-		<ol class="breadcrumb">
-			<li><a href="<?=base_url('dashborad');?>"><i class="fa fa-dashboard"></i> <?=$this->setting->get('systemName'); ?></a></li>
-			<li class="active">首页</li>
-		</ol>
-	</section>
+	<?php $this->load->view('include/pagePath',['name'=>$this->setting->get('systemName'),'path'=>[['首页','',1]]]); ?>
 
 	<!-- 页面主要内容 -->
 	<section class="content">
@@ -39,7 +32,7 @@
 				<li class="list-group-item">
 					<div class="row">
 						<div class="col-xs-8">
-							<a href="<?=base_url('notice/detail/').$info['id'];?>" target="_blank">
+							<a href="<?=base_url('notice/detail/').$info['id'];?>">
 								<i class="fa fa-bullhorn"></i> <?=$info['title'];?>
 							</a>
 						</div>
