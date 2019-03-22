@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-02-24
+ * @version 2019-03-22
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -84,10 +84,10 @@ class API_User extends CI_Controller {
 	public function updateUserInfo()
 	{
 		$userId=isset($_POST['userId'])&&$_POST['userId']!=""?$_POST['userId']:$this->session->userdata($this->sessPrefix.'user_id');
-		$userName=$this->input->post('userName');
-		$nickName=$this->input->post('nickName');
-		$phone=$this->input->post('phone');
-		$email=$this->input->post('email');
+		$userName=inputPost('userName',0,1);
+		$nickName=inputPost('nickName',0,1);
+		$phone=inputPost('phone',0,1);
+		$email=inputPost('email',0,1);
 		$roleId=isset($_POST['roleId'])&&$_POST['roleId']!=""?$_POST['roleId']:0;
 
 		// 检查是否有重复

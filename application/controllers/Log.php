@@ -44,7 +44,7 @@ class Log extends CI_Controller {
 		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
 		$pwd=inputPost('pwd',0,1);
-		$userStatus=$this->user->validateUser($this->nowUserId,"",$pwd);
+		$userStatus=$this->user->validateUser($pwd,$this->nowUserId);
 		
 		if($userStatus!="200"){
 			returnAjaxData(403,"invaild Password");

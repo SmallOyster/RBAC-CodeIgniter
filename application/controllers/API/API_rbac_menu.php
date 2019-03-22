@@ -21,14 +21,13 @@ class API_rbac_menu extends CI_Controller {
 
 
 	public function getAllMenuForZtree(){
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
 		$query=$this->db->query("SELECT * FROM menu");
 		$list=$query->result_array();
 		
 		// 获取现有权限
-		$roleId=$this->input->post('roleId');
+		$roleId=inputPost('roleId',0,1);
 		if($roleId!==NULL){
 			$allPermission=$this->RBAC_model->getAllPermissionByRole($roleId);
 		}else{

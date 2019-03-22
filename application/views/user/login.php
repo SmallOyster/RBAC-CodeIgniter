@@ -185,7 +185,7 @@ function toLogin(){
 			}else if(ret.code==1){
 				showModalTips("当前用户被禁用！<br>请联系管理员！");
 				return false;
-			}else if(ret.code==4031){
+			}else if(ret.code==403){
 				showModalTips("用户名或密码错误！");
 				return false;
 			}else if(ret.code==3){
@@ -194,7 +194,7 @@ function toLogin(){
 			}else if(ret.code==2){
 				showModalTips("获取角色信息失败！请联系管理员！");
 				return false;
-			}else if(ret.code==403){
+			}else if(ret.code==403001){
 				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{

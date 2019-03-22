@@ -72,6 +72,6 @@ class SSO extends CI_Controller {
 		$this->session->set_userdata($this->sessPrefix.'roleId',$roleId);
 		$this->session->set_userdata($this->sessPrefix.'roleName',$roleName);
 
-		die('<script>window.location.href="'.base_url('/').'";</script>');
+		die(header('location:'.base_url('/')));
 	}
 }

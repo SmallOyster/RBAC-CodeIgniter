@@ -36,27 +36,26 @@ class User_model extends CI_Model {
 
 	/**
 	 * 用户登录验证
+	 * @param String 用户密码
 	 * @param String 用户Id
 	 * @param String 用户名
-	 * @param String 用户密码
 	 * @return String 验证状态码
 	 */
-	public function validateUser($userId=0,$userName="",$pwd)
+	public function validateUser($pwd,$userId=0,$userName="")
 	{
 		$sql1="SELECT salt,password,status FROM user WHERE id=? OR user_name=?";
 		$query1=$this->db->query($sql1,[$userId,$userName]);
 		
 		if($query1->num_rows()!=1){
-			return "404";
+			return 404;
 		}
 		
 		$info=$query1->result_array();
 		$status=$info[0]['status'];
 		$salt=$info[0]['salt'];
 		$pwd_indb=$info[0]['password'];
-		$hashSalt=md5($salt);
 
-		if(sha1($pwd.$hashSalt)==$pwd_indb){
+		if(sha1(md5($pwd).$salt)==$pwd_indb){
 			return 200;
 		}elseif($status==0){
 			return -1;

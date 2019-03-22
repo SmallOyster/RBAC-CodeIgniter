@@ -53,8 +53,7 @@
 						<li class="user-footer">
 							<div class="pull-left">
 								<!--a v-bind:href="[rootUrl+'profile/index']" class="btn btn-default btn-flat">个人中心</a-->
-								<!--a data-toggle="modal" data-target="#changePasswordModal" class="btn btn-default btn-flat">修改密码</a-->
-								<a class="btn btn-default btn-flat" onclick='showModalTips("很抱歉，修改密码功能因业务调整暂时关闭！敬请谅解！<br><br>如有疑问，请咨询管理员")'>修改密码</a>
+								<a data-toggle="modal" data-target="#changePasswordModal" class="btn btn-default btn-flat">修改密码</a>
 							</div>
 							<div class="pull-right">
 								<button data-toggle="modal" data-target="#logoutModal" class="btn btn-default btn-flat">登出</button>

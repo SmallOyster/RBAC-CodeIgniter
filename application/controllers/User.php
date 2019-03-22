@@ -45,44 +45,19 @@ class User extends CI_Controller {
 
 	public function toUpdateProfile()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$nickName=$this->input->post('nickName');
-		$oldPwd=$this->input->post('oldPwd');
-		$newPwd=$this->input->post('newPwd');
-		$phone=$this->input->post('phone');
-		$email=$this->input->post('email');
+		$nickName=inputPost('nickName',0,1);
+		$phone=inputPost('phone',0,1);
+		$email=inputPost('email',0,1);
 
-		$sql="UPDATE user SET nick_name=?,";
-		$updateData=array();
-		array_push($updateData,$nickName);
-
-		if($oldPwd!=""){
-			$validateOldPwd=$this->user->validateUser($this->nowUserId,"",$oldPwd);
-
-			if($validateOldPwd=="200"){
-				$salt=random_string('alnum');
-				$hashSalt=md5($salt);
-				$hashPwd=sha1($newPwd.$hashSalt);
-
-				$sql.="password=?,salt=?,";
-				array_push($updateData,$hashPwd,$salt);
-			}elseif($validateOldPwd=="403"){
-				returnAjaxData(3,"userForbidden");
-			}else{
-				returnAjaxData(4,"invaildPwd");
-			}
-		}
-
-		$sql.="phone=?,email=? WHERE id=?";
-		array_push($updateData,$phone,$email,$this->nowUserId);
-		$query=$this->db->query($sql,$updateData);
+		$sql="UPDATE user SET nick_name=?,phone=?,email=? WHERE id=?";
+		$query=$this->db->query($sql,[$nickName,$phone,$email,$this->nowUserId]);
 
 		if($this->db->affected_rows()==1){
-			returnAjaxData("200","success");
+			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData("0","updateFailed");
+			returnAjaxData(1,"updateFailed");
 		}
 	}
 
@@ -96,15 +71,14 @@ class User extends CI_Controller {
 
 	public function toLogin()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$userName=$this->input->post('userName');
-		$pwd=$this->input->post('pwd');
+		$userName=inputPost('userName',0,1);
+		$pwd=inputPost('pwd',0,1);
 
-		$validate=$this->user->validateUser(0,$userName,$pwd);
+		$validate=$this->user->validateUser($pwd,0,$userName);
 
-		if($validate=="200"){
+		if($validate==200){
 			$userInfo=$this->user->getUserInfoByUserName($userName);
 			$userId=$userInfo['id'];
 			$nickName=$userInfo['nick_name'];
@@ -120,7 +94,7 @@ class User extends CI_Controller {
 			// 获取角色名称
 			$roleQuery=$this->db->query('SELECT name FROM role WHERE id=?',[$roleId]);
 			if($roleQuery->num_rows()!=1){
-				returnAjaxData(2,"noRoleInfo");
+				returnAjaxData(2,"no Role Info");
 			}
 			
 			$roleList=$roleQuery->result_array();
@@ -139,7 +113,7 @@ class User extends CI_Controller {
 		}elseif($validate==-1){
 			returnAjaxData(1,"user Forbidden");
 		}else{
-			returnAjaxData(4031,"invaild Password");
+			returnAjaxData(403,"invaild Password");
 		}
 	}
 	
@@ -161,16 +135,14 @@ class User extends CI_Controller {
 	
 	public function forgetPasswordSendCode()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
-		$email=$this->input->post('email');		
+		$email=inputPost('email',0,1);
 		$sql="SELECT id,user_name,nick_name FROM user WHERE email=?";
 		$query=$this->db->query($sql,[$email]);
 		
 		if($query->num_rows()!=1){
-			$ret=$this->ajax->returnData("1","noUser");
-			die($ret);
+			returnAjaxData(404,"noUser");
 		}else{
 			$list=$query->result_array();
 			$id=$list[0]['id'];
@@ -203,10 +175,10 @@ class User extends CI_Controller {
 		$mailSend=$this->email->send();
 		
 		if($mailSend==TRUE){
-			$ret=$this->ajax->returnData("200","success");
+			$ret=$this->ajax->returnData(200,"success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("0","sendFailed");
+			$ret=$this->ajax->returnData(500,"sendFailed");
 			die($ret);
 		}
 	}
@@ -214,26 +186,24 @@ class User extends CI_Controller {
 	
 	public function forgetPasswordVerifyCode()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
-		$email=$this->input->post('email');
-		$verifyCode=$this->input->post('verifyCode');
+		$email=inputPost('email',0,1);
+		$verifyCode=inputPost('verifyCode',0,1);
 		$info=$this->session->userdata($this->sessPrefix.'forgetPwd_mailInfo');
 		
 		if($email!=$info['email']){
-			$ret=$this->ajax->returnData("1","invalidMail");
+			$ret=$this->ajax->returnData(1,"invalidMail");
 			die($ret);
 		}elseif($verifyCode!=$info['verifyCode']){
-			$ret=$this->ajax->returnData("2","invalidCode");
+			$ret=$this->ajax->returnData(2,"invalidCode");
 			die($ret);
 		}elseif($info['expireTime']<=time()){
-			$ret=$this->ajax->returnData("3","expired");
+			$ret=$this->ajax->returnData(3,"expired");
 			die($ret);
 		}else{
 			$this->session->unset_userdata($this->sessPrefix.'forgetPwd_mailInfo');
-			$ret=$this->ajax->returnData("200","success",base_url('user/resetPassword'));
-			die($ret);
+			returnAjaxData(200,"success",base_url('user/resetPassword'));
 		}
 	}
 
@@ -252,26 +222,24 @@ class User extends CI_Controller {
 	
 	public function toResetPassword()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
 		$id=$this->session->userdata($this->sessPrefix.'forgetPwd_userId');
-		$userName=$this->input->post('userName');
-		$pwd=$this->input->post('pwd');
+		$userName=inputPost('userName',0,1);
+		$pwd=inputPost('pwd',0,1);
 		
 		$salt=random_string('alnum');
-		$hashSalt=md5($salt);
-		$hashPwd=sha1($pwd.$hashSalt);
+		$hashPwd=sha1(md5($pwd).$salt);
 		
 		$nowTime=date("Y-m-d H:i:s");
 		$sql="UPDATE user SET password=?,salt=?,update_time=? WHERE id=?";
 		$query=$this->db->query($sql,[$hashPwd,$salt,$nowTime,$id]);
 		
 		if($this->db->affected_rows()==1){
-			$ret=$this->ajax->returnData("200","success");
+			$ret=$this->ajax->returnData(200,"success");
 			die($ret);
 		}else{
-			$ret=$this->ajax->returnData("0","resetFailed");
+			$ret=$this->ajax->returnData(1,"resetFailed");
 			die($ret);
 		}
 	}
