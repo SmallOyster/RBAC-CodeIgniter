@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-菜单
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-17
-* @version 2019-03-17
+* @version 2019-03-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class RBAC_menu extends CI_Controller {
 
 	public $sessPrefix;
-	public $nowUserID;
+	public $nowUserId;
 	public $nowUserName;
 	public $API_PATH;
 	
@@ -23,7 +23,7 @@ class RBAC_menu extends CI_Controller {
 
 		$this->API_PATH=$this->setting->get('apiPath');
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
+		$this->nowUserId=$this->session->userdata($this->sessPrefix.'userId');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
 
@@ -112,7 +112,7 @@ class RBAC_menu extends CI_Controller {
 			$fatherIcon=$fatherInfo['icon'];
 		}
 
-		$this->load->view('admin/menu/edit',['menuID'=>$menuId,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/menu/edit',['menuId'=>$menuId,'info'=>$info,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
 	}
 
 
@@ -120,7 +120,7 @@ class RBAC_menu extends CI_Controller {
 	{
 		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$menuID=inputPost('menuID',0,1);
+		$menuId=inputPost('menuId',0,1);
 		$name=inputPost('name',0,1);
 		$icon=inputPost('icon',0,1);
 		$uri=inputPost('uri',0,1);
@@ -135,7 +135,7 @@ class RBAC_menu extends CI_Controller {
 		}
 		
 		$sql="UPDATE menu SET name=?,icon=?,uri=?,update_time=? WHERE id=?";
-		$query=$this->db->query($sql,[$name,$icon,$uri,$nowTime,$menuID]);
+		$query=$this->db->query($sql,[$name,$icon,$uri,$nowTime,$menuId]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");

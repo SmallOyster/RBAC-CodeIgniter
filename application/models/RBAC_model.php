@@ -16,11 +16,11 @@ class RBAC_model extends CI_Model {
 
 
 	/**
-	 * 根据URI获取菜单ID
+	 * 根据URI获取菜单Id
 	 * @param String URI
-	 * @return INT 菜单ID
+	 * @return INT 菜单Id
 	 */
-	public function getMenuID($uri)
+	public function getMenuId($uri)
 	{
 		$sql="SELECT id FROM menu WHERE uri=?";
 		$query=$this->db->query($sql,[$uri]);
@@ -37,16 +37,16 @@ class RBAC_model extends CI_Model {
 	
 	
 	/**
-	 * 根据角色获取所有权限的菜单ID
-	 * @param String 角色ID
-	 * @return Array 菜单ID
+	 * 根据角色获取所有权限的菜单Id
+	 * @param String 角色Id
+	 * @return Array 菜单Id
 	 */
-	public function getAllPermissionByRole($roleID)
+	public function getAllPermissionByRole($roleId)
 	{
 		$rtn=array();
 		
 		$sql="SELECT menu_id FROM role_permission WHERE role_id=?";
-		$query=$this->db->query($sql,[$roleID]);
+		$query=$this->db->query($sql,[$roleId]);
 		$list=$query->result_array();
 		
 		foreach($list as $info){
@@ -71,13 +71,13 @@ class RBAC_model extends CI_Model {
 	
 	/**
 	 * 根据角色获取所有父菜单
-	 * @param String 角色ID
+	 * @param String 角色Id
 	 * @return Array 父菜单信息
 	 */
-	public function getFatherMenuByRole($roleID)
+	public function getFatherMenuByRole($roleId)
 	{
 		$sql='SELECT a.*,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id="0"';
-		$query=$this->db->query($sql,[$roleID]);
+		$query=$this->db->query($sql,[$roleId]);
 		$list=$query->result_array();
 		
 		return $list;	
@@ -85,15 +85,15 @@ class RBAC_model extends CI_Model {
 	
 	
 	/**
-	 * 根据角色和父菜单ID获取子菜单信息
-	 * @param String 角色ID
-	 * @param String 父菜单ID
+	 * 根据角色和父菜单Id获取子菜单信息
+	 * @param String 角色Id
+	 * @param String 父菜单Id
 	 * @return Array 子菜单信息
 	 */
-	public function getChildMenuByRole($roleID,$fatherID)
+	public function getChildMenuByRole($roleId,$fatherId)
 	{
 		$sql="SELECT a.*,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id=?";
-		$query=$this->db->query($sql,[$roleID,$fatherID]);
+		$query=$this->db->query($sql,[$roleId,$fatherId]);
 		$list=$query->result_array();
 		
 		return $list;
@@ -102,21 +102,21 @@ class RBAC_model extends CI_Model {
 	
 	/**
 	 * 根据角色获取所有菜单详细信息
-	 * @param String 角色ID
+	 * @param String 角色Id
 	 * @return Array 菜单详细信息
 	 */
-	public function getAllMenuByRole($roleID)
+	public function getAllMenuByRole($roleId)
 	{
 		$allMenu=array();
 		
-		$fatherMenu_list=$this->RBAC_model->getFatherMenuByRole($roleID);
+		$fatherMenu_list=$this->RBAC_model->getFatherMenuByRole($roleId);
 		$allMenu=$fatherMenu_list;
 		$allMenu_total=count($allMenu);
 		
 		// 搜寻二级菜单
 		for($i=0;$i<$allMenu_total;$i++){
-			$fatherID=$allMenu[$i]['id'];
-			$child_list=$this->RBAC_model->getChildMenuByRole($roleID,$fatherID);
+			$fatherId=$allMenu[$i]['id'];
+			$child_list=$this->RBAC_model->getChildMenuByRole($roleId,$fatherId);
 			
 			if($child_list==null){
 				// 没有二级菜单
@@ -132,8 +132,8 @@ class RBAC_model extends CI_Model {
 
 				// 搜寻三级菜单
 				for($j=0;$j<$child_list_total;$j++){
-					$father2ID=$child_list[$j]['id'];
-					$child2_list=$this->RBAC_model->getChildMenuByRole($roleID,$father2ID);
+					$father2Id=$child_list[$j]['id'];
+					$child2_list=$this->RBAC_model->getChildMenuByRole($roleId,$father2Id);
 
 					if($child2_list==null){
 						// 没有三级菜单
@@ -167,14 +167,14 @@ class RBAC_model extends CI_Model {
 	
 	
 	/**
-	 * 根据父菜单ID获取子菜单
-	 * @param String 父菜单ID
+	 * 根据父菜单Id获取子菜单
+	 * @param String 父菜单Id
 	 * @return Array 子菜单信息
 	 */
-	public function getChildMenu($fatherID)
+	public function getChildMenu($fatherId)
 	{
 		$sql="SELECT * FROM menu WHERE father_id=?";
-		$query=$this->db->query($sql,[$fatherID]);
+		$query=$this->db->query($sql,[$fatherId]);
 		$list=$query->result_array();
 		
 		return $list;
@@ -195,8 +195,8 @@ class RBAC_model extends CI_Model {
 		
 		// 搜寻二级菜单
 		for($i=0;$i<$allMenu_total;$i++){
-			$fatherID=$allMenu[$i]['id'];
-			$child_list=$this->RBAC_model->getChildMenu($fatherID);
+			$fatherId=$allMenu[$i]['id'];
+			$child_list=$this->RBAC_model->getChildMenu($fatherId);
 			
 			if($child_list==null){
 				// 没有二级菜单
@@ -212,8 +212,8 @@ class RBAC_model extends CI_Model {
 
 				// 搜寻三级菜单
 				for($j=0;$j<$child_list_total;$j++){
-					$father2ID=$child_list[$j]['id'];
-					$child2_list=$this->RBAC_model->getChildMenu($father2ID);
+					$father2Id=$child_list[$j]['id'];
+					$child2_list=$this->RBAC_model->getChildMenu($father2Id);
 
 					if($child2_list==null){
 						// 没有三级菜单

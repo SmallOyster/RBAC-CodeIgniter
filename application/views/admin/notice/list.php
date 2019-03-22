@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-通知管理
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-28
- * @version 2019-03-17
+ * @version 2019-03-22
  */ 
 ?>
 <!DOCTYPE html>
@@ -79,7 +79,7 @@ window.onload=function(){
 };
 
 function del_ready(id,name){
-	$("#delID").val(id);
+	$("#delId").val(id);
 	$("#delName_show").html(name);
 	$("#delModal").modal('show');
 }
@@ -87,7 +87,7 @@ function del_ready(id,name){
 
 function del_sure(){
 	lockScreen();
-	id=$("#delID").val();
+	id=$("#delId").val();
 
 	$.ajax({
 		url:"<?=base_url('admin/notice/toDelete'); ?>",
@@ -138,7 +138,7 @@ function del_sure(){
 				<h3 class="modal-title" id="ModalTitle">温馨提示</h3>
 			</div>
 			<div class="modal-body">
-				<input type="hidden" id="delID">
+				<input type="hidden" id="delId">
 				<center>
 				<font color="red" style="font-weight:bolder;font-size:23px;">确定要删除下列通知吗？</font>
 				<br><br>

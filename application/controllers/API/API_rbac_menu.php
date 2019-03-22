@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-A-菜单API
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-17
-* @version 2019-03-15
+* @version 2019-03-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -28,9 +28,9 @@ class API_rbac_menu extends CI_Controller {
 		$list=$query->result_array();
 		
 		// 获取现有权限
-		$roleID=$this->input->post('roleID');
-		if($roleID!==NULL){
-			$allPermission=$this->RBAC_model->getAllPermissionByRole($roleID);
+		$roleId=$this->input->post('roleId');
+		if($roleId!==NULL){
+			$allPermission=$this->RBAC_model->getAllPermissionByRole($roleId);
 		}else{
 			$allPermission=array();
 		}

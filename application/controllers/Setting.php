@@ -11,7 +11,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Setting extends CI_Controller {
 
 	public $sessPrefix;
-	public $nowUserID;
 	public $nowUserName;
 	public $API_PATH;
 
@@ -23,7 +22,6 @@ class Setting extends CI_Controller {
 		
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$this->API_PATH=$this->setting->get('apiPath');
-		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
 

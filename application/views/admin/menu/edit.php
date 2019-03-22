@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改菜单
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-18
- * @version 2019-03-17
+ * @version 2019-03-22
  */
 ?>
 <!DOCTYPE html>
@@ -25,7 +25,7 @@
 
 	<!-- 页面主要内容 -->
 	<section class="content">
-		<input type="hidden" id="menuID" value="<?=$menuID;?>">
+		<input type="hidden" id="menuId" value="<?=$menuId;?>">
 
 		<div class="panel panel-default">
 			<div class="panel-heading">修改菜单（父菜单：<i class="fa fa-<?=$fatherIcon; ?>" aria-hidden="true"></i> <?=$fatherName; ?>）</div>
@@ -106,7 +106,7 @@ function inputJumpOutURI(){
 
 function edit(){
 	lockScreen();
-	menuID=$("#menuID").val();
+	menuId=$("#menuId").val();
 	name=$("#name").val();
 	icon=$("#icon").val();
 	uri=$("#uri").val();
@@ -130,7 +130,7 @@ function edit(){
 	$.ajax({
 		url:"<?=base_url('admin/menu/toEdit'); ?>",
 		type:"POST",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"menuID":menuID,"name":name,"icon":icon,"uri":uri},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"menuId":menuId,"name":name,"icon":icon,"uri":uri},
 		dataType:"JSON",
 		error:function(e){
 			console.log(JSON.stringify(e));

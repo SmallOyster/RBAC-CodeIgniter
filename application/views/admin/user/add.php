@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-新增用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-03-17
+ * @version 2019-03-22
  */
 ?>
 <!DOCTYPE html>
@@ -52,8 +52,8 @@
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="roleID">角色</label>
-					<select class="form-control" id="roleID">
+					<label for="roleId">角色</label>
+					<select class="form-control" id="roleId">
 						<option value="-1" selected disabled>--- 请选择角色 ---</option>
 					</select>
 				</div>
@@ -100,9 +100,9 @@ function getAllRole(){
 			
 			if(ret.code==200){
 				for(i in ret.data['list']){
-					roleID=ret.data['list'][i]['id']
+					roleId=ret.data['list'][i]['id']
 					roleName=ret.data['list'][i]['name'];
-					$("#roleID").append('<option value="'+roleID+'">'+roleID+'. '+roleName+'</option>');
+					$("#roleId").append('<option value="'+roleId+'">'+roleId+'. '+roleName+'</option>');
 				}
 				return true;
 			}else if(ret.code==403001){
@@ -123,7 +123,7 @@ function add(){
 	nickName=$("#nickName").val();
 	phone=$("#phone").val();
 	email=$("#email").val();
-	roleID=$("#roleID").val();
+	roleId=$("#roleId").val();
 
 	if(userName==""){
 		unlockScreen();
@@ -155,7 +155,7 @@ function add(){
 		showModalTips("请输入邮箱！");
 		return false;
 	}
-	if(roleID=="-1"){
+	if(roleId=="-1"){
 		unlockScreen();
 		showModalTips("请选择角色！");
 		return false;
@@ -164,7 +164,7 @@ function add(){
 	$.ajax({
 		url:"<?=base_url('admin/user/toAdd');?>",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleID":roleID},
+		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleId":roleId},
 		dataType:'json',
 		error:function(e){
 			console.log(e);

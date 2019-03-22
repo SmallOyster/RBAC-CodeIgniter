@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-设置角色权限
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-03-17
+ * @version 2019-03-22
  */
 ?>
 <!DOCTYPE html>
@@ -94,7 +94,7 @@ function getAllMenu(){
 		type:"post",
 		dataType:"json",
 		async:false,
-		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleID':roleId},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleId':roleId},
 		error:function(e){
 			console.log(e);
 			unlockScreen();

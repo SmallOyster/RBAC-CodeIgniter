@@ -1,6 +1,6 @@
 <footer class="main-footer">
 	<div class="pull-right hidden-xs">
-		<b>Version</b> 1.0.0
+		<b>Version</b> 2.0.0
 	</div>
 	
 	<strong>Copyright &copy; <a href="https://www.xshgzs.com/?from=<?=$this->sessPrefix;?>">生蚝科技</a> 2014-<?=date("Y");?>.</strong> All rights reserved.

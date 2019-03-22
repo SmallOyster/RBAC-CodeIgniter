@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-03-16
+ * @version 2019-03-22
  */
 ?>
 <!DOCTYPE html>
@@ -73,7 +73,7 @@
 </div>
 
 <script>
-var statusID="";
+var statusId="";
 var statusNum="";
 
 window.onload=function(){
@@ -88,7 +88,7 @@ window.onload=function(){
 
 
 function updateStatus_ready(id,nickName,status){
-	statusID=id;
+	statusId=id;
 	statusNum=status;
 	statusTips="确定要";
 	
@@ -114,7 +114,7 @@ function updateStatus_sure(){
 		url:"<?=base_url('admin/user/toUpdateStatus'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":statusID,"status":statusNum},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":statusId,"status":statusNum},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
@@ -152,7 +152,7 @@ function updateStatus_sure(){
 
 
 function resetPwd_ready(id,name){
-	$("#resetID").val(id);
+	$("#resetId").val(id);
 	$("#resetName_show").html(name);
 	$("#resetModal").modal('show');
 }
@@ -160,7 +160,7 @@ function resetPwd_ready(id,name){
 
 function resetPwd_sure(){
 	lockScreen();
-	id=$("#resetID").val();
+	id=$("#resetId").val();
 	
 	$.ajax({
 		url:"<?=base_url('admin/user/toResetPwd'); ?>",
@@ -209,7 +209,7 @@ function resetPwd_sure(){
 
 
 function del_ready(id,name){
-	$("#delID").val(id);
+	$("#delId").val(id);
 	$("#delName_show").html(name);
 	$("#delModal").modal('show');
 }
@@ -217,7 +217,7 @@ function del_ready(id,name){
 
 function del_sure(){
 	lockScreen();
-	id=$("#delID").val();
+	id=$("#delId").val();
 
 	$.ajax({
 		url:"<?=base_url('admin/user/toDelete'); ?>",
@@ -268,7 +268,7 @@ function del_sure(){
 				<h3 class="modal-title" id="ModalTitle">温馨提示</h3>
 			</div>
 			<div class="modal-body">
-				<input type="hidden" id="delID">
+				<input type="hidden" id="delId">
 				<center>
 				<font color="red" style="font-weight:bolder;font-size:23px;">确定要删除下列用户吗？</font>
 				<br><br>
@@ -291,7 +291,7 @@ function del_sure(){
 				<h3 class="modal-title" id="ModalTitle">温馨提示</h3>
 			</div>
 			<div class="modal-body">
-				<input type="hidden" id="resetID">
+				<input type="hidden" id="resetId">
 				<center>
 				<font color="red" style="font-weight:bolder;font-size:23px;">确定要重置下列用户的密码吗？</font>
 				<br><br>

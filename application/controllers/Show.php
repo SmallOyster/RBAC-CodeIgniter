@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-显示
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-06
-* @version 2019-03-17
+* @version 2019-03-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -11,7 +11,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Show extends CI_Controller {
 
 	public $sessPrefix;
-	public $nowUserID;
 	public $nowUserName;
 	public $API_PATH;
 
@@ -21,7 +20,6 @@ class Show extends CI_Controller {
 		
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$this->API_PATH=$this->setting->get('apiPath');
-		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
 

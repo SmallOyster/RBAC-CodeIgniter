@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-通知
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-02-24
+ * @version 2019-03-22
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -22,7 +22,7 @@ class API_Notice extends CI_Controller {
 	public function get()
 	{
 		$type=inputGet('type',0,1);
-		$userId=$this->session->userdata($this->sessPrefix.'userID')!=null?$this->session->userdata($this->sessPrefix.'userID'):returnAjaxData(403,"Not Login");
+		$userId=$this->session->userdata($this->sessPrefix.'userId')!=null?$this->session->userdata($this->sessPrefix.'userId'):returnAjaxData(403,"Not Login");
 		$sql="SELECT a.*,b.nick_name AS publisher FROM notice a,user b WHERE a.publisher_id=b.id AND (receiver='0' OR receiver LIKE '%".$userId."%') ";
 
 		switch($type){

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-角色
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-02-24
+ * @version 2019-03-22
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -33,7 +33,7 @@ class API_Role extends CI_Controller {
 
 	public function getUserMenu()
 	{
-		$roleId=$this->session->userdata($this->sessPrefix."roleID");
+		$roleId=$this->session->userdata($this->sessPrefix."roleId");
 		
 		if($roleId>=1) returnAjaxData(200,"success",['treeData'=>$this->getAllMenuByRole($roleId)]);
 		else returnAjaxData(403,"failed To Auth");

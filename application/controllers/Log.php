@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-Log日志
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-26
- * @version 2019-03-17
+ * @version 2019-03-22
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Log extends CI_Controller {
 
 	public $sessPrefix;
-	public $nowUserID;
+	public $nowUserId;
 	public $nowUserName;
 	public $API_PATH;
 
@@ -23,7 +23,7 @@ class Log extends CI_Controller {
 
 		$this->API_PATH=$this->setting->get('apiPath');
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
+		$this->nowUserId=$this->session->userdata($this->sessPrefix.'userId');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
 
@@ -44,7 +44,7 @@ class Log extends CI_Controller {
 		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 		
 		$pwd=inputPost('pwd',0,1);
-		$userStatus=$this->user->validateUser($this->nowUserID,"",$pwd);
+		$userStatus=$this->user->validateUser($this->nowUserId,"",$pwd);
 		
 		if($userStatus!="200"){
 			returnAjaxData(403,"invaild Password");

@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-用户
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-03-16
+* @version 2019-03-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class RBAC_user extends CI_Controller {
 	
 	public $sessPrefix;
-	public $nowUserID;
+	public $nowUserId;
 	public $nowUserName;
 	public $API_PATH;
 	
@@ -23,7 +23,7 @@ class RBAC_user extends CI_Controller {
 
 		$this->API_PATH=$this->setting->get('apiPath');
 		$this->sessPrefix=$this->safe->getSessionPrefix();
-		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
+		$this->nowUserId=$this->session->userdata($this->sessPrefix.'userId');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 		$this->load->helper('string');
 	}
@@ -57,7 +57,7 @@ class RBAC_user extends CI_Controller {
 		$nickName=inputPost('nickName',0,1);
 		$phone=inputPost('phone',0,1);
 		$email=inputPost('email',0,1);
-		$roleID=inputPost('roleID',0,1);
+		$roleId=inputPost('roleId',0,1);
 		$status=1;
 		
 		// 检查用户名手机邮箱是否已存在
@@ -83,7 +83,7 @@ class RBAC_user extends CI_Controller {
 		$hashPwd=sha1($originPwd.$hashSalt);
 
 		$sql="INSERT INTO user(user_name,nick_name,password,salt,phone,email,role_id,status) VALUES (?,?,?,?,?,?,?,?)";
-		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$phone,$email,$roleID,$status]);
+		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$phone,$email,$roleId,$status]);
 
 		if($this->db->affected_rows()==1){
 			$data['originPwd']=$originPwd;
@@ -94,11 +94,11 @@ class RBAC_user extends CI_Controller {
 	}
 
 	
-	public function edit($userID)
+	public function edit($userId)
 	{
 		$this->ajax->makeAjaxToken();
 
-		$query=$this->db->query("SELECT * FROM user WHERE id=?",[$userID]);
+		$query=$this->db->query("SELECT * FROM user WHERE id=?",[$userId]);
 
 		if($query->num_rows()!=1){
 			header("Location:".base_url());
@@ -106,7 +106,7 @@ class RBAC_user extends CI_Controller {
 
 		$list=$query->result_array();
 
-		$this->load->view('admin/user/edit',['userID'=>$userID,'info'=>$list[0]]);
+		$this->load->view('admin/user/edit',['userId'=>$userId,'info'=>$list[0]]);
 	}
 
 
@@ -114,16 +114,16 @@ class RBAC_user extends CI_Controller {
 	{
 		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
-		$userID=inputPost('userID',0,1);
+		$userId=inputPost('userId',0,1);
 		$userName=inputPost('userName',0,1);
 		$nickName=inputPost('nickName',0,1);
 		$phone=inputPost('phone',0,1);
 		$email=inputPost('email',0,1);
-		$roleID=inputPost('roleID',0,1);
+		$roleId=inputPost('roleId',0,1);
 		$nowTime=date("Y-m-d H:i:s");
 		
 		$sql="UPDATE user SET user_name=?,nick_name=?,phone=?,email=?,role_id=?,update_time=? WHERE id=?";
-		$query=$this->db->query($sql,[$userName,$nickName,$phone,$email,$roleID,$nowTime,$userID]);
+		$query=$this->db->query($sql,[$userName,$nickName,$phone,$email,$roleId,$nowTime,$userId]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");
@@ -140,7 +140,7 @@ class RBAC_user extends CI_Controller {
 
 		$id=inputPost('id',0,1);
 		
-		if($id==$this->nowUserID){
+		if($id==$this->nowUserId){
 			returnAjaxData(400,"now User");
 		}
 
@@ -163,7 +163,7 @@ class RBAC_user extends CI_Controller {
 
 		$id=inputPost('id',0,1);
 		
-		if($id==$this->nowUserID){			
+		if($id==$this->nowUserId){			
 			returnAjaxData(400,'now User');
 		}
 		
@@ -204,7 +204,7 @@ class RBAC_user extends CI_Controller {
 		$id=inputPost('id',0,1);
 		$status=inputPost('status',0,1);
 		
-		if($id==$this->nowUserID){			
+		if($id==$this->nowUserId){			
 			returnAjaxData(400,'now User');
 		}
 

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-操作记录管理
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-27
- * @version 2019-03-16
+ * @version 2019-03-22
  */
 ?>
 <!DOCTYPE html>
@@ -71,7 +71,8 @@
 <script>
 window.onload=function(){
 	$('#table').DataTable({
-		responsive: true
+		responsive: true,
+		"order":[[3,'desc']],
 	});
 };
 
@@ -142,7 +143,6 @@ function truncate_sure(){
 				<h3 class="modal-title" id="ModalTitle">温馨提示</h3>
 			</div>
 			<div class="modal-body">
-				<input type="hidden" id="truncateID">
 				<center>
 				<font color="red" style="font-weight:bolder;font-size:23px;">确定要清空系统日志吗？</font>
 				<br>

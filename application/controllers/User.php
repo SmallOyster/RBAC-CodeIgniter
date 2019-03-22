@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-02-25
+ * @version 2019-03-22
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -11,9 +11,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User extends CI_Controller {
 
 	public $sessPrefix;
-	public $nowUserID;
+	public $nowUserId;
 	public $nowUserName;
-	public $forgetPwdUserID;
+	public $forgetPwdUserId;
 	public $API_PATH;
 
 	function __construct()
@@ -26,7 +26,7 @@ class User extends CI_Controller {
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		
 		$this->API_PATH=$this->setting->get('apiPath');
-		$this->nowUserID=$this->session->userdata($this->sessPrefix.'userID');
+		$this->nowUserId=$this->session->userdata($this->sessPrefix.'userId');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 	}
 
@@ -36,7 +36,7 @@ class User extends CI_Controller {
 		$this->ajax->makeAjaxToken();
 
 		$sql="SELECT * FROM user WHERE id=?";
-		$query=$this->db->query($sql,[$this->nowUserID]);
+		$query=$this->db->query($sql,[$this->nowUserId]);
 		$list=$query->result_array();
 		$info=$list[0];
 		$this->load->view('user/updateProfile',['info'=>$info]);
@@ -59,7 +59,7 @@ class User extends CI_Controller {
 		array_push($updateData,$nickName);
 
 		if($oldPwd!=""){
-			$validateOldPwd=$this->user->validateUser($this->nowUserID,"",$oldPwd);
+			$validateOldPwd=$this->user->validateUser($this->nowUserId,"",$oldPwd);
 
 			if($validateOldPwd=="200"){
 				$salt=random_string('alnum');
@@ -76,7 +76,7 @@ class User extends CI_Controller {
 		}
 
 		$sql.="phone=?,email=? WHERE id=?";
-		array_push($updateData,$phone,$email,$this->nowUserID);
+		array_push($updateData,$phone,$email,$this->nowUserId);
 		$query=$this->db->query($sql,$updateData);
 
 		if($this->db->affected_rows()==1){
@@ -106,9 +106,9 @@ class User extends CI_Controller {
 
 		if($validate=="200"){
 			$userInfo=$this->user->getUserInfoByUserName($userName);
-			$userID=$userInfo['id'];
+			$userId=$userInfo['id'];
 			$nickName=$userInfo['nick_name'];
-			$roleID=$userInfo['role_id'];
+			$roleId=$userInfo['role_id'];
 			$status=$userInfo['status'];
 			
 			if($status==0){
@@ -118,7 +118,7 @@ class User extends CI_Controller {
 			}
 			
 			// 获取角色名称
-			$roleQuery=$this->db->query('SELECT name FROM role WHERE id=?',[$roleID]);
+			$roleQuery=$this->db->query('SELECT name FROM role WHERE id=?',[$roleId]);
 			if($roleQuery->num_rows()!=1){
 				returnAjaxData(2,"noRoleInfo");
 			}
@@ -127,13 +127,13 @@ class User extends CI_Controller {
 			$roleName=$roleList[0]['name'];
 			
 			// 将用户信息存入session
-			$this->session->set_userdata($this->sessPrefix.'userID',$userID);
+			$this->session->set_userdata($this->sessPrefix.'userId',$userId);
 			$this->session->set_userdata($this->sessPrefix.'nickName',$nickName);
 			$this->session->set_userdata($this->sessPrefix.'userName',$userName);
-			$this->session->set_userdata($this->sessPrefix.'roleID',$roleID);
+			$this->session->set_userdata($this->sessPrefix.'roleId',$roleId);
 			$this->session->set_userdata($this->sessPrefix.'roleName',$roleName);
 
-			$this->db->query("UPDATE user SET last_login=? WHERE id=?",[date("Y-m-d H:i:s"),$userID]);
+			$this->db->query("UPDATE user SET last_login=? WHERE id=?",[date("Y-m-d H:i:s"),$userId]);
 			
 			returnAjaxData(200,"success");
 		}elseif($validate==-1){
@@ -181,7 +181,7 @@ class User extends CI_Controller {
 		$verifyCode=mt_rand(123456,987654);
 		$expireTime=time()+600;
 		$this->session->set_userdata($this->sessPrefix.'forgetPwd_mailInfo',array('email'=>$email,'verifyCode'=>$verifyCode,'expireTime'=>$expireTime));
-		$this->session->set_userdata($this->sessPrefix.'forgetPwd_userID',$id);
+		$this->session->set_userdata($this->sessPrefix.'forgetPwd_userId',$id);
 		$this->session->set_userdata($this->sessPrefix.'forgetPwd_nickName',$nickName);
 		$this->session->set_userdata($this->sessPrefix.'forgetPwd_userName',$userName);
 		
@@ -242,7 +242,7 @@ class User extends CI_Controller {
 	{
 		$this->ajax->makeAjaxToken();
 
-		if($this->session->userdata($this->sessPrefix.'forgetPwd_userID')<1 || $this->session->userdata($this->sessPrefix.'forgetPwd_mailInfo')!=NULL){
+		if($this->session->userdata($this->sessPrefix.'forgetPwd_userId')<1 || $this->session->userdata($this->sessPrefix.'forgetPwd_mailInfo')!=NULL){
 			die('<script>alert("非法访问！");window.location.href="'.base_url('user/forgetPassword').'";</script>');
 		}else{
 			$this->load->view('user/resetPwd');
@@ -255,7 +255,7 @@ class User extends CI_Controller {
 		$token=$this->input->post('token');
 		$this->ajax->checkAjaxToken($token);
 		
-		$id=$this->session->userdata($this->sessPrefix.'forgetPwd_userID');
+		$id=$this->session->userdata($this->sessPrefix.'forgetPwd_userId');
 		$userName=$this->input->post('userName');
 		$pwd=$this->input->post('pwd');
 		

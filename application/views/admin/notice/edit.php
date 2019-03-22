@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-通知编辑
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-31
- * @version 2019-03-17
+ * @version 2019-03-22
  */
 ?>
 <!DOCTYPE html>
@@ -25,7 +25,7 @@
 
 	<!-- 页面主要内容 -->
 	<section class="content">
-		<input type="hidden" id="noticeID" value="<?=$info['id']; ?>">
+		<input type="hidden" id="noticeId" value="<?=$info['id']; ?>">
 
 		<div class="panel panel-default">
 			<div class="panel-body">
@@ -69,7 +69,7 @@ $(function(){
 
 function edit(){
 	lockScreen();
-	id=$("#noticeID").val();
+	id=$("#noticeId").val();
 	title=$("#title").val();
 	content=editor.txt.html();
 	$("#wangEditor_div").attr("style","display:none;");

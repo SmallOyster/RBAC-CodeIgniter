@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-L-安全类
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-01-18
-* @version 2019-03-15
+* @version 2019-03-22
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -41,16 +41,16 @@ class Safe {
 			return;
 		}
 		
-		$roleID=$this->_CI->session->userdata($this->sessPrefix."roleID");
-		$allPermission=$this->_CI->RBAC_model->getAllPermissionByRole($roleID);
-		$menuID=$this->_CI->RBAC_model->getMenuID($this->_CI->uri->uri_string());
+		$roleId=$this->_CI->session->userdata($this->sessPrefix."roleId");
+		$allPermission=$this->_CI->RBAC_model->getAllPermissionByRole($roleId);
+		$menuId=$this->_CI->RBAC_model->getMenuId($this->_CI->uri->uri_string());
 		
-		if($roleID<1){
+		if($roleId<1){
 			die('<script>alert("抱歉！您暂无权限访问此页面！\n请从正常途径访问系统！");window.location.href="'.base_url('/').'";</script>');
-		}elseif($menuID==null){
+		}elseif($menuId==null){
 			// 当前页面不存在于数据库中
 			return;
-		}elseif(in_array($menuID,$allPermission) && $allPermission!=array()){
+		}elseif(in_array($menuId,$allPermission) && $allPermission!=array()){
 			// 有权限
 			return;
 		}else{

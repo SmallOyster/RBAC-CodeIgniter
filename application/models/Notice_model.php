@@ -17,7 +17,7 @@ class Notice_model extends CI_Model {
 	
 	/**
 	 * 获取通知
-	 * @param INT    通知ID (0代表获取所有)
+	 * @param INT    通知Id (0代表获取所有)
 	 * @param String 获取类型
 	 * @return Array 所有系统配置
 	 */
