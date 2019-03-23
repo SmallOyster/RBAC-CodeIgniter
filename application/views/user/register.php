@@ -1,9 +1,9 @@
 <?php 
 /**
- * @name V-用户注册
- * @author SmallOysyer <master@xshgzs.com>
+ * @name 生蚝科技RBAC开发框架-V-用户注册
+ * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-22
- * @version V1.0 2018-08-07
+ * @version 2019-03-23
  */
 ?>
 
@@ -12,20 +12,20 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>注册 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>注册 / <?=$this->setting->get('systemName');?></title>
 	<style>
 	body{
-		padding-top: 40px;
+		padding-top: 20px;
 	}
 	</style>
 </head>
 
-<body>
+<body style="background-color: #66CCFF;">
 <div class="container">
 	<div class="col-md-6 col-md-offset-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">欢迎注册<?=$this->config->item('systemName'); ?></h3>
+				<h3 class="panel-title">欢迎注册 <?=$this->setting->get('systemName');?></h3>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
@@ -71,7 +71,36 @@
 	</div>
 </div>
 
-<?php $this->load->view('include/footer'); ?>
+<center>
+	<!-- 页脚版权 -->
+	<p style="font-weight:bold;font-size:20px;line-height:26px;">
+		&copy; <a href="https://www.xshgzs.com?from=rbac" target="_blank" style="font-size:21px;">生蚝科技</a> 2014-2019
+		<a style="color:#07C160" onclick='showWXCode()'><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
+		<a style="color:#FF7043" onclick='launchQQ()'><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
+		<a style="color:#29B6F6" href="mailto:master@xshgzs.com"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a>
+		<a style="color:#AB47BC" href="https://github.com/OysterTech" target="_blank"><i class="fa fa-github fa-lg" aria-hidden="true"></i></a>
+		
+		<br>
+		
+		All Rights Reserved.<br>
+		<a href="http://www.miitbeian.gov.cn/" target="_blank" style="color:black;">粤ICP备19018320号-1</a><br><br>
+	</p>
+	<!-- ./页脚版权 -->
+</center>
+
+<script>
+function launchQQ(){
+	if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+		window.location.href="mqqwpa://im/chat?chat_type=wpa&uin=571339406";
+	}else{
+		window.open("http://wpa.qq.com/msgrd?v=3&uin=571339406");
+	}
+}
+
+function showWXCode(){
+	$("#wxModal").modal('show');
+}
+</script>
 
 <script>
 function reg(){
@@ -147,9 +176,9 @@ function reg(){
 	}
 
 	$.ajax({
-		url:"<?=site_url('user/toReg'); ?>",
+		url:"<?=base_url('user/toRegister');?>",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"pwd":pwd},
+		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"pwd":pwd},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
@@ -163,7 +192,7 @@ function reg(){
 			
 			if(ret.code=="200"){
 				alert("注册成功！即将跳转至登录页面！");
-				window.location.href="<?=site_url('user/login'); ?>";
+				window.location.href="<?=base_url('user/login'); ?>";
 				return true;
 			}else if(ret.message=="regFailed"){
 				$("#tips").html("注册失败！！！");
@@ -199,7 +228,22 @@ function reg(){
 }
 </script>
 
-<?php $this->load->view('include/tipsModal'); ?>
+<div class="modal fade" id="wxModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				<h3 class="modal-title">微信公众号二维码</h3>
+			</div>
+			<div class="modal-body">
+				<center><img src="https://www.xshgzs.com/resource/index/images/wxOfficialAccountQRCode.jpg" style="width:85%"></center>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick='$("#wxModal").modal("hide");'>关闭 &gt;</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 </body>
 </html>

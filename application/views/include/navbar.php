@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-导航栏
  * @author Jerry Cheung <master@smhgzs.com>
  * @since 2018-12-31
- * @version 2019-03-22
+ * @version 2019-03-23
  */
 ?>
 
@@ -52,7 +52,7 @@
 						<!-- Menu Footer-->
 						<li class="user-footer">
 							<div class="pull-left">
-								<!--a v-bind:href="[rootUrl+'profile/index']" class="btn btn-default btn-flat">个人中心</a-->
+								<a v-bind:href="[rootUrl+'user/updateProfile']" class="btn btn-default btn-flat">修改资料</a>
 								<a data-toggle="modal" data-target="#changePasswordModal" class="btn btn-default btn-flat">修改密码</a>
 							</div>
 							<div class="pull-right">
