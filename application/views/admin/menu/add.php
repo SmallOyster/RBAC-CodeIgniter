@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-新增菜单
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-03-17
+ * @version 2019-03-24
  */
 ?>
 <!DOCTYPE html>
@@ -38,7 +38,7 @@
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="icon">菜单图标 (预览: <i id="icon_preview" class="" aria-hidden="true"></i>)</label>
+					<label for="icon">菜单图标 (预览: <i id="icon_preview" class="" aria-hidden="true"></i>) &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="$('#icon').val('circle-o');iconPreview();">使用默认图标</button></label>
 					<input class="form-control" id="icon" onkeyup='if(event.keyCode==13)$("#uri").focus();' oninput='iconPreview();'>
 					<p class="help-block">请输入Font-Awesome图标名称，无需输入前缀“fa-”，输入后可在上方预览</p>
 				</div>
