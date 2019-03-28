@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-03-23
+ * @version 2019-03-28
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -49,13 +49,13 @@ class User extends CI_Controller {
 		$phone=inputPost('phone',0,1);
 		$email=inputPost('email',0,1);
 
-		$sql="UPDATE user SET nick_name=?,phone=?,email=? WHERE id=?";
+		$sql='UPDATE user SET nick_name=?,phone=?,email=? WHERE id=?';
 		$query=$this->db->query($sql,[$nickName,$phone,$email,$this->nowUserId]);
 
 		if($this->db->affected_rows()==1){
-			returnAjaxData(200,"success");
+			returnAjaxData(200,'success');
 		}else{
-			returnAjaxData(1,"failed to Update");
+			returnAjaxData(1,'failed to Update');
 		}
 	}
 
@@ -84,15 +84,15 @@ class User extends CI_Controller {
 			$status=$userInfo['status'];
 			
 			if($status==0){
-				returnAjaxData(1,"user Forbidden");
+				returnAjaxData(1,'user Forbidden');
 			}elseif($status==2){
-				returnAjaxData(3,"user Not Active");
+				returnAjaxData(3,'user Not Active');
 			}
 			
 			// 获取角色名称
 			$roleQuery=$this->db->query('SELECT name FROM role WHERE id=?',[$roleId]);
 			if($roleQuery->num_rows()!=1){
-				returnAjaxData(2,"no Role Info");
+				returnAjaxData(2,'no Role Info');
 			}
 			
 			$roleList=$roleQuery->result_array();
@@ -105,7 +105,7 @@ class User extends CI_Controller {
 			$this->session->set_userdata($this->sessPrefix.'roleId',$roleId);
 			$this->session->set_userdata($this->sessPrefix.'roleName',$roleName);
 
-			$this->db->query("UPDATE user SET last_login=? WHERE id=?",[date("Y-m-d H:i:s"),$userId]);
+			$this->db->query('UPDATE user SET last_login=? WHERE id=?',[date('Y-m-d H:i:s'),$userId]);
 			
 			returnAjaxData(200,"success");
 		}elseif($validate==-1){
@@ -140,37 +140,37 @@ class User extends CI_Controller {
 		$pwd=$this->input->post('pwd');
 		$phone=$this->input->post('phone');
 		$email=$this->input->post('email');
+		
 		// 检查用户名手机邮箱是否已存在
-		$sql1="SELECT id FROM user WHERE user_name=?";
+		$sql1='SELECT id FROM user WHERE user_name=?';
 		$query1=$this->db->query($sql1,[$userName]);
 		if($query1->num_rows()!=0){
-			returnAjaxData("1","haveUserName");
+			returnAjaxData(1,'have UserName');
 		}
-		$sql2="SELECT id FROM user WHERE phone=?";
+		$sql2='SELECT id FROM user WHERE phone=?';
 		$query2=$this->db->query($sql2,[$phone]);
 		if($query2->num_rows()!=0){
-			returnAjaxData("2","havePhone");
+			returnAjaxData(2,'have Phone');
 		}
-		$sql3="SELECT id FROM user WHERE email=?";
+		$sql3='SELECT id FROM user WHERE email=?';
 		$query3=$this->db->query($sql3,[$email]);
 		if($query3->num_rows()!=0){
-			returnAjaxData("3","haveEmail");
+			returnAjaxData(3,'have Email');
 		}
 		$salt=random_string('alnum');
-		$hashSalt=md5($salt);
-		$hashPwd=sha1($pwd.$hashSalt);
-		$roleQuery=$this->db->query("SELECT id FROM role WHERE is_default=1");
+		$hashPwd=sha1(md5($pwd).$salt);
+		$roleQuery=$this->db->query('SELECT id FROM role WHERE is_default=1');
 		if($roleQuery->num_rows()!=1){
-			returnAjaxData("4","noRoleInfo");
+			returnAjaxData(4,'no Original Role Info');
 		}
 		$roleList=$roleQuery->result_array();
-		$roleID=$roleList[0]['id'];
+		$roleId=$roleList[0]['id'];
 	
-		$sql="INSERT INTO user(user_name,nick_name,password,salt,role_id,phone,email) VALUES (?,?,?,?,?,?,?)";
-		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$roleID,$phone,$email]);
+		$sql='INSERT INTO user(user_name,nick_name,password,salt,role_id,phone,email) VALUES (?,?,?,?,?,?,?)';
+		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$roleId,$phone,$email]);
 		
 		$emailToken=md5(random_string('alnum',16).session_id());
-		$emailURL=site_url('user/reg/verify/').$emailToken;
+		$emailURL=base_url('user/reg/verify/').$emailToken;
 		$message='Email注册验证 / '.$this->setting->get("systemName").'<hr>';
 		$message.='尊敬的'.$userName.'用户，感谢您注册'.$this->setting->get("systemName").'！为验证您的身份，请点击下方链接以完成注册激活：<br>';
 		$message.='<a href="'.$emailURL.'">'.$emailURL.'</a><br><br>';
@@ -178,35 +178,38 @@ class User extends CI_Controller {
 		$message.='如您本人没有申请过注册本系统，请忽略本邮件。此邮件由系统自动发送，请勿回复！谢谢！<br><br>';
 		$message.='如有任何问题，请<a href="mailto:service@xshgzs.com">联系我们</a>';
 		$message.='<hr>';
-		$message.='<center>生蚝科技 &copy;2017 - '.date('Y').'</center>';
+		$message.='<center>&copy; 生蚝科技 2014-'.date('Y').'</center>';
 		
 		$this->load->library('email');
-		$this->email->from($this->config->item('smtp_user').'@qq.com','生蚝科技');
+		$this->email->from($this->config->item('smtp_user'),'生蚝科技');
 		$this->email->to($email);
 		$this->email->subject('['.$this->setting->get("systemName").'] 注册邮箱认证');
 		$this->email->message($message);
 		$mailSend=$this->email->send();
-		if($this->db->affected_rows()==1 && $mailSend==TRUE){
+		
+		if($this->db->affected_rows()==1 && $mailSend==true){
 			$ip=$this->input->ip_address();
 			$param=array('userName'=>$userName);
 			$param=json_encode($param);
 			$expireTime=time()+900;
-			$sql2="INSERT INTO send_mail(email,token,param,expire_time,ip) VALUES (?,?,?,?,?)";
+			$sql2='INSERT INTO send_mail(email,token,param,expire_time,ip) VALUES (?,?,?,?,?)';
 			$query2=$this->db->query($sql2,[$email,$emailToken,$param,$expireTime,$ip]);
-			returnAjaxData("200","success");
+			returnAjaxData(200,'success');
+		}else if($this->db->affected_rows()==1){
+			returnAjaxData(5001,'success to Register But Failed to Send Active Email');
 		}else{
-			returnAjaxData("0","regFailed");
+			returnAjaxData(5002,'failed to Register');
 		}
 	}
 	
 	
 	public function verifyRegister($token)
 	{
-		$sql1="SELECT expire_time,param,status FROM send_mail WHERE token=?";
+		$sql1='SELECT expire_time,param,status FROM send_mail WHERE token=?';
 		$query1=$this->db->query($sql1,[$token]);
 		
 		if($query1->num_rows()!=1){
-			die('<script>alert("激活链接无效！\n请通过正确途径激活邮箱！");window.location.href="'.site_url().'";</script>');
+			die('<script>alert("激活链接无效！\n请通过正确途径激活邮箱！");window.location.href="'.base_url().'";</script>');
 		}
 		
 		$list=$query1->result_array();
@@ -216,28 +219,28 @@ class User extends CI_Controller {
 		$status=$info['status'];
 		
 		if($expire_time<=time()){
-			die('<script>alert("激活链接已过期！");window.location.href="'.site_url().'";</script>');
+			die('<script>alert("激活链接已过期！");window.location.href="'.base_url().'";</script>');
 		}
 		if($status!=0){
-			die('<script>alert("激活链接已被使用！");window.location.href="'.site_url().'";</script>');
+			die('<script>alert("激活链接已被使用！");window.location.href="'.base_url().'";</script>');
 		}
 		
 		$param=json_decode($param,TRUE);
 		$userName=$param['userName'];
 		
-		$sql2="UPDATE user SET status=1 WHERE user_name=?";
+		$sql2='UPDATE user SET status=1 WHERE user_name=?';
 		$query2=$this->db->query($sql2,[$userName]);
 		
 		if($this->db->affected_rows()==1){
-			$sql3="UPDATE send_mail SET status=1 WHERE token=?";
+			$sql3='UPDATE send_mail SET status=1 WHERE token=?';
 			$query3=$this->db->query($sql3,[$token]);
 			if($this->db->affected_rows()==1){
-				die('<script>alert("激活成功！请重新登录！");window.location.href="'.site_url().'";</script>');
+				die('<script>alert("激活成功！请重新登录！");window.location.href="'.base_url().'";</script>');
 			}else{
-				die('<script>alert("激活失败！请联系管理员！");window.location.href="'.site_url().'";</script>');
+				die('<script>alert("激活失败！请联系管理员！");window.location.href="'.base_url().'";</script>');
 			}
 		}else{
-			die('<script>alert("用户激活失败！请联系管理员！");window.location.href="'.site_url().'";</script>');
+			die('<script>alert("用户激活失败！请联系管理员！");window.location.href="'.base_url().'";</script>');
 		}
 	}
 	
@@ -259,7 +262,7 @@ class User extends CI_Controller {
 		$query=$this->db->query($sql,[$email]);
 		
 		if($query->num_rows()!=1){
-			returnAjaxData(404,"noUser");
+			returnAjaxData(404,"no User");
 		}else{
 			$list=$query->result_array();
 			$id=$list[0]['id'];
@@ -280,7 +283,7 @@ class User extends CI_Controller {
 		$message.='如您本人没有申请过重置密码，请忽略本邮件。此邮件由系统自动发送，请勿回复！谢谢！<br><br>';
 		$message.='如有任何问题，请<a href="mailto:service@xshgzs.com">联系我们</a>';
 		$message.='<hr>';
-		$message.='<center>生蚝科技 &copy;2014-'.date("Y").'</center>';
+		$message.='<center>&copy; 生蚝科技 2014-'.date('Y').'</center>';
 		
 		$this->load->library('email');
 
@@ -293,10 +296,8 @@ class User extends CI_Controller {
 		
 		if($mailSend==TRUE){
 			returnAjaxData(200,"success");
-			die($ret);
 		}else{
-			returnAjaxData(500,"sendFailed");
-			die($ret);
+			returnAjaxData(500,"failed to Send Email");
 		}
 	}
 	
@@ -310,14 +311,11 @@ class User extends CI_Controller {
 		$info=$this->session->userdata($this->sessPrefix.'forgetPwd_mailInfo');
 		
 		if($email!=$info['email']){
-			returnAjaxData(1,"invalidMail");
-			die($ret);
+			returnAjaxData(1,'invalid Mail');
 		}elseif($verifyCode!=$info['verifyCode']){
-			returnAjaxData(2,"invalidCode");
-			die($ret);
+			returnAjaxData(2,'invalid Code');
 		}elseif($info['expireTime']<=time()){
-			returnAjaxData(3,"expired");
-			die($ret);
+			returnAjaxData(3,'expired');
 		}else{
 			$this->session->unset_userdata($this->sessPrefix.'forgetPwd_mailInfo');
 			returnAjaxData(200,"success",base_url('user/resetPassword'));
@@ -348,16 +346,14 @@ class User extends CI_Controller {
 		$salt=random_string('alnum');
 		$hashPwd=sha1(md5($pwd).$salt);
 		
-		$nowTime=date("Y-m-d H:i:s");
-		$sql="UPDATE user SET password=?,salt=?,update_time=? WHERE id=?";
+		$nowTime=date('Y-m-d H:i:s');
+		$sql='UPDATE user SET password=?,salt=?,update_time=? WHERE id=?';
 		$query=$this->db->query($sql,[$hashPwd,$salt,$nowTime,$id]);
 		
 		if($this->db->affected_rows()==1){
-			returnAjaxData(200,"success");
-			die($ret);
+			returnAjaxData(200,'success');
 		}else{
-			returnAjaxData(1,"resetFailed");
-			die($ret);
+			returnAjaxData(1,'failed to Reset Password');
 		}
 	}
 }

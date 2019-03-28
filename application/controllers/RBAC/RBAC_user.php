@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-用户
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-03-22
+* @version 2019-03-28
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -181,8 +181,7 @@ class RBAC_user extends CI_Controller {
 		// 生成初始密码
 		$originPwd=random_string('nozero');
 		$salt=random_string('alnum');
-		$hashSalt=md5($salt);
-		$hashPwd=sha1($originPwd.$hashSalt);
+		$hashPwd=sha1(md5($originPwd).$salt);
 
 		$sql2="UPDATE user SET password=?,salt=? WHERE id=? AND user_name=?";
 		$query2=$this->db->query($sql2,[$hashPwd,$salt,$id,$userName]);

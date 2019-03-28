@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-登录
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-20
- * @version 2019-03-15
+ * @version 2019-03-23
  */
 ?>
 
@@ -12,7 +12,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>登录 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>登录 / <?=$this->setting->get('systemName');?></title>
 	<style>
 	body{
 		padding-top: 20px;
@@ -26,7 +26,7 @@
 		<!--center><img src="<?=base_url('resource/images/logo.png');?>" style="display: inline-block;height: auto;max-width: 100%;"></center><br-->
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title" style="text-align:center;line-height:23px;">欢迎登录<br><?=$this->Setting_model->get('systemName');?></h3>
+				<h3 class="panel-title" style="text-align:center;line-height:23px;">欢迎登录<br><?=$this->setting->get('systemName');?></h3>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
@@ -58,7 +58,7 @@
 <center>
 	<!-- 页脚版权 -->
 	<p style="font-weight:bold;font-size:20px;line-height:26px;">
-		&copy; <a href="https://www.xshgzs.com?from=sport" target="_blank" style="font-size:21px;">生蚝科技</a> 2014-2019
+		&copy; <a href="https://www.xshgzs.com?from=rbac" target="_blank" style="font-size:21px;">生蚝科技</a> 2014-2019
 		<a style="color:#07C160" onclick='showWXCode()'><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
 		<a style="color:#FF7043" onclick='launchQQ()'><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
 		<a style="color:#29B6F6" href="mailto:master@xshgzs.com"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a>
@@ -66,8 +66,8 @@
 		
 		<br>
 		
-		All Rights Reserved.<br>		
-		<a href="http://www.miitbeian.gov.cn/" target="_blank" style="color:black;">粤ICP备19018320号-1</a><br>
+		All Rights Reserved.<br>
+		<a href="http://www.miitbeian.gov.cn/" target="_blank" style="color:black;">粤ICP备19018320号-1</a><br><br>
 	</p>
 	<!-- ./页脚版权 -->
 </center>

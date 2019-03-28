@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-菜单
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-17
-* @version 2019-03-22
+* @version 2019-03-27
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -68,7 +68,7 @@ class RBAC_menu extends CI_Controller {
 		$fatherId=inputPost('fatherId',0,1);
 		$name=inputPost('name',0,1);
 		$icon=inputPost('icon',0,1);
-		$uri=inputPost('uri',0,1);
+		$uri=inputPost('uri',1,1);
 		
 		if(substr($uri,0,13)=='show/jumpout/'){
 			$jumpToURL=urlencode(substr($uri,13));
@@ -123,7 +123,7 @@ class RBAC_menu extends CI_Controller {
 		$menuId=inputPost('menuId',0,1);
 		$name=inputPost('name',0,1);
 		$icon=inputPost('icon',0,1);
-		$uri=inputPost('uri',0,1);
+		$uri=inputPost('uri',1,1);
 		$nowTime=date("Y-m-d H:i:s");
 	
 		if(substr($uri,0,13)=='show/jumpout/'){

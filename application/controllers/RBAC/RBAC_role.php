@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-角色
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-03-22
+* @version 2019-03-26
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -51,7 +51,7 @@ class RBAC_role extends CI_Controller {
 		$this->ajax->checkAjaxToken(inputPost('token',0,1));
 
 		$name=inputPost('name',0,1);
-		$remark=inputPost('remark',0,1);
+		$remark=inputPost('remark',1,1);
 		
 		$sql="INSERT INTO role(name,remark) VALUES (?,?)";
 		$query=$this->db->query($sql,[$name,$remark]);

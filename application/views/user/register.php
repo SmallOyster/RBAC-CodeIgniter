@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户注册
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-22
- * @version 2019-03-23
+ * @version 2019-03-28
  */
 ?>
 
@@ -114,64 +114,54 @@ function reg(){
 
 	if(userName==""){
 		unlockScreen();
-		$("#tips").html("请输入用户名！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入用户名！");
 		return false;
 	}
 	if(userName.length<4 || userName.length>20){
 		unlockScreen();
-		$("#tips").html("请输入 4~20字 的用户名！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入 4~20字 的用户名！");
 		return false;
 	}
 	if(nickName==""){
 		unlockScreen();
-		$("#tips").html("请输入昵称！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入昵称！");
 		return false;
 	}
 	
 	if(pwd==""){
 		unlockScreen();
-		$("#tips").html("请输入密码！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入密码！");
 		return false;
 	}
 	if(checkPwd==""){
 		unlockScreen();
-		$("#tips").html("请再次输入密码！");
-		$("#tipsModal").modal('show');
+		showModalTips("请再次输入密码！");
 		return false;
 	}
 	if(pwd.length<6 || pwd.length>20){
 		unlockScreen();
-		$("#tips").html("请输入 6~20 字的密码！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入 6~20 字的密码！");
 		return false;
 	}
 	if(pwd!=checkPwd){
 		unlockScreen();
-		$("#tips").html("两次输入的密码不相同！<br>请重新输入！");
-		$("#tipsModal").modal('show');
+		showModalTips("两次输入的密码不相同！<br>请重新输入！");
 		return false;
 	}
 	
 	if(phone==""){
 		unlockScreen();
-		$("#tips").html("请输入手机号！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入手机号！");
 		return false;
 	}
 	if(phone.length!=11){
 		unlockScreen();
-		$("#tips").html("请正确输入手机号！");
-		$("#tipsModal").modal('show');
+		showModalTips("请正确输入手机号！");
 		return false;
 	}
 	if(email==""){
 		unlockScreen();
-		$("#tips").html("请输入邮箱！");
-		$("#tipsModal").modal('show');
+		showModalTips("请输入邮箱！");
 		return false;
 	}
 
@@ -183,44 +173,39 @@ function reg(){
 		error:function(e){
 			console.log(e);
 			unlockScreen();
-			$("#tips").html("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			$("#tipsModal").modal('show');
+			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
 		},
 		success:function(ret){
 			unlockScreen();
 			
-			if(ret.code=="200"){
+			if(ret.code==200){
 				alert("注册成功！即将跳转至登录页面！");
-				window.location.href="<?=base_url('user/login'); ?>";
+				window.location.href="<?=base_url('user/login');?>";
 				return true;
-			}else if(ret.message=="regFailed"){
-				$("#tips").html("注册失败！！！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==5001){
+				showModalTips("注册成功！<br>发送激活邮件失败！");
 				return false;
-			}else if(ret.message=="noRoleInfo"){
-				$("#tips").html("获取角色信息失败！请联系管理员！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==5002){
+				showModalTips("注册失败！！！");
 				return false;
-			}else if(ret.message=="haveUserName"){
-				$("#tips").html("此用户名已存在！<br>请输入其他用户名！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==4){
+				showModalTips("获取角色信息失败！请联系管理员！");
 				return false;
-			}else if(ret.message=="havePhone"){
-				$("#tips").html("此手机号已存在！<br>请输入其他手机号！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==1){
+				showModalTips("此用户名已存在！<br>请输入其他用户名！");
 				return false;
-			}else if(ret.message=="haveEmail"){
-				$("#tips").html("此邮箱已存在！<br>请输入其他邮箱！");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==2){
+				showModalTips("此手机号已存在！<br>请输入其他手机号！");
 				return false;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				$("#tipsModal").modal('show');
+			}else if(ret.code==3){
+				showModalTips("此邮箱已存在！<br>请输入其他邮箱！");
+				return false;
+			}else if(ret.code==403001){
+				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
-				$("#tips").html("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				$("#tipsModal").modal('show');
+				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 				return false;
 			}
 		}
