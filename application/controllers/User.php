@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-03-28
+ * @version 2019-03-30
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -90,24 +90,31 @@ class User extends CI_Controller {
 			}
 			
 			// 获取角色名称
-			$roleQuery=$this->db->query('SELECT name FROM role WHERE id=?',[$roleId]);
-			if($roleQuery->num_rows()!=1){
-				returnAjaxData(2,'no Role Info');
+			$roleIds=explode(',',$roleId);
+			$allRoleInfo=array();
+			foreach($roleIds as $id){
+				$roleQuery=$this->db->query('SELECT name FROM role WHERE id=?',[$id]);
+
+				if($roleQuery->num_rows()!=1){
+					returnAjaxData(2,'no Role Info');
+				}else{
+					$roleList=$roleQuery->result_array();
+					$allRoleInfo[$id]=$roleList[0]['name'];
+				}
 			}
-			
-			$roleList=$roleQuery->result_array();
-			$roleName=$roleList[0]['name'];
 			
 			// 将用户信息存入session
 			$this->session->set_userdata($this->sessPrefix.'userId',$userId);
 			$this->session->set_userdata($this->sessPrefix.'nickName',$nickName);
 			$this->session->set_userdata($this->sessPrefix.'userName',$userName);
-			$this->session->set_userdata($this->sessPrefix.'roleId',$roleId);
-			$this->session->set_userdata($this->sessPrefix.'roleName',$roleName);
+			$this->session->set_userdata($this->sessPrefix.'roleId',$roleIds[0]);
+			$this->session->set_userdata($this->sessPrefix.'allRoleId',$roleIds);
+			$this->session->set_userdata($this->sessPrefix.'roleName',reset($allRoleInfo));
+			$this->session->set_userdata($this->sessPrefix.'allRoleInfo',$allRoleInfo);
 
 			$this->db->query('UPDATE user SET last_login=? WHERE id=?',[date('Y-m-d H:i:s'),$userId]);
 			
-			returnAjaxData(200,"success");
+			returnAjaxData(200,"success",['allRoleInfo'=>json_encode($allRoleInfo)]);
 		}elseif($validate==-1){
 			returnAjaxData(1,"user Forbidden");
 		}else{

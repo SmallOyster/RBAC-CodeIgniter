@@ -114,9 +114,9 @@ function delCookie(name){
 /**
 * lockScreen 屏幕锁定，显示加载图标
 **/
-function lockScreen(){
+function lockScreen(content=""){
 	$('body').append(
-		'<div class="loadingwrap" id="loadingwrap"><div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div></div>'
+		'<div class="loadingwrap" id="loadingwrap"><div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div><br><font style="color:yellow;font-size:24px;font-weight:bold;">'+content+'</font></div></div>'
 		);
 }
 
@@ -141,4 +141,14 @@ function showModalTips(msg,title='温馨提示'){
 	$("#tips").html(msg);
 	$("#tipsTitle").html(title);
 	$("#tipsModal").modal("show");
+}
+
+
+function arrayToObject(array){
+	b={};
+	array.map(function(e,i){
+		b[i]=e;
+	});
+
+	return b;
 }

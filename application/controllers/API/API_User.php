@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-03-22
+ * @version 2019-03-30
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -129,11 +129,40 @@ class API_User extends CI_Controller {
 
 	public function getUserInfo()
 	{
-		$method=isset($_POST['method'])&&$_POST['method']!=""?$_POST['method']:returnAjaxData(0,"lack Param");
+		$method=inputPost('method',0,1);
 
-		if($method=="id"){
-			$id=isset($_POST['id'])&&strlen($_POST['id'])>=1?$_POST['id']:returnAjaxData(0,"lack Param");
-			$query=$this->db->query('SELECT a.user_name AS userName,a.nick_name AS nickName,a.phone,a.email,b.name AS roleName FROM user a,role b WHERE a.id=? AND a.role_id=b.id',[$id]);
+		if($method=="admin"){
+			$id=inputPost('userId',0,1);
+			$query=$this->db->query('SELECT user_name AS userName,nick_name AS nickName,phone,email,role_id FROM user WHERE id=?',[$id]);
+
+			if($query->num_rows()!=1){
+				returnAjaxData(1,'no User');
+			}else{
+				$list=$query->result_array();
+				$userInfo=$list[0];
+
+				$roleIds=explode(',',$list[0]['role_id']);
+
+				foreach($roleIds as $roleId){
+					$this->db->or_where('id', $roleId);
+				}
+
+				unset($userInfo['role_id']);
+				$query2=$this->db->get('role');
+				$roleList=$query2->result_array();
+				$roleName='';
+
+				foreach($roleList as $roleInfo){
+					$roleName.=$roleInfo['name'].',';
+					$userInfo['roleName'][$roleInfo['id']]=$roleInfo['name'];
+				}
+
+				$userInfo['allRoleName']=substr($roleName,0,strlen($roleName)-1);
+
+				returnAjaxData(200,'success',['userInfo'=>$userInfo]);
+			}
+		}else if($method=="own"){
+			$query=$this->db->query('SELECT a.user_name AS userName,a.nick_name AS nickName,a.phone,a.email,b.name AS roleName FROM user a,role b WHERE a.id=? AND b.id=?',[$_SESSION[$this->sessPrefix.'userId'],$_SESSION[$this->sessPrefix.'roleId']]);
 
 			if($query->num_rows()!=1){
 				returnAjaxData(1,'no User');

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-登录
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-20
- * @version 2019-03-23
+ * @version 2019-03-30
  */
 ?>
 
@@ -181,6 +181,7 @@ function toLogin(){
 			$("#pwd").removeAttr("disabled");
 
 			if(ret.code==200){
+				localStorage.setItem('allRoleInfo',ret.data['allRoleInfo']);
 				window.location.href="<?=base_url('/');?>"
 			}else if(ret.code==1){
 				showModalTips("当前用户被禁用！<br>请联系管理员！");

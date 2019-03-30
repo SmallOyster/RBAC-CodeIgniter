@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-导航栏
  * @author Jerry Cheung <master@smhgzs.com>
  * @since 2018-12-31
- * @version 2019-03-23
+ * @version 2019-03-30
  */
 ?>
 
@@ -131,7 +131,13 @@
 			</div>
 			<div class="pull-left info">
 				<p>{{userInfo['nickName']}}</p>
-				<small>{{userInfo['roleName']}}</small>
+				<!--small>{{userInfo['roleName']}}</small-->
+				<select style="background-color:rgb(59, 73, 102);border:0;color:#fff;margin-left:-4px;">
+					<!--<?php foreach($_SESSION[$this->sessPrefix.'allRoleName'] as $roleName){ ?>
+						<option><?=$roleName;?></option>
+					<?php } ?>-->
+					<option v-for="(roleName,roleId) in allRoleInfo" v-bind:id="roleId">{{roleName}}</option>
+				</select>
 			</div>
 		</div>
 		<!-- 菜单树 -->
@@ -250,7 +256,8 @@ var headerVm = new Vue({
 		userInfo:{},
 		treeData:{},
 		navNoticeList:{},
-		navNoticeTotal:0
+		navNoticeTotal:0,
+		allRoleInfo:{}
 	},
 	methods:{
 		getUserInfo:function(){
@@ -259,7 +266,7 @@ var headerVm = new Vue({
 			$.ajax({
 				url:headerVm.apiPath+"user/getUserInfo",
 				type:"post",
-				data:{"method":"id","id":headerVm.userId},
+				data:{"method":"own"},
 				dataType:"json",
 				error:function(e){
 					unlockScreen();
@@ -333,6 +340,10 @@ var headerVm = new Vue({
 					}
 				}
 			});
+		},
+		getAllRole:function(){
+			allRoleInfo=localStorage.getItem('allRoleInfo');
+			headerVm.allRoleInfo=JSON.parse(allRoleInfo);
 		}
 	}
 });
@@ -340,4 +351,5 @@ var headerVm = new Vue({
 headerVm.getUserInfo();
 headerVm.getMenuTree();
 headerVm.getNavbarNotice();
+headerVm.getAllRole();
 </script>
