@@ -1,9 +1,9 @@
 <?php 
 /**
- * @name 生蚝体育竞赛管理系统后台-V-通知列表
+ * @name 生蚝科技RBAC开发框架-V-通知列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-07-19
- * @version 2019-03-17
+ * @version 2019-05-13
  */
 ?>
 <!DOCTYPE html>
@@ -40,7 +40,7 @@
 						<?php foreach($list as $info){ ?>
 							<tr>
 								<td><a href="<?=base_url('notice/detail/').$info['id'];?>"><?=$info['title'];?></a></td>
-								<td><?=$info['create_user'];?></td>
+								<td><?=$info['publisherName'];?></td>
 								<td><?=$info['create_time'];?></td>
 							</tr>
 						<?php } ?>

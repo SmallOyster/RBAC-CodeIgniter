@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-通知管理
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-28
- * @version 2019-03-22
+ * @version 2019-05-13
  */ 
 ?>
 <!DOCTYPE html>
@@ -43,7 +43,7 @@
 			<?php foreach($list as $info){ ?>
 				<tr>
 					<td><?=$info['title']; ?></td>
-					<td><?=$info['create_user']; ?></td>
+					<td><?=$info['publisherName']; ?></td>
 					<td><?=$info['create_time']; ?></td>
 					<td>
 						<a href="<?=base_url('notice/detail/').$info['id']; ?>" class="btn btn-primary">详细</a>

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-通知
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-28
- * @version 2019-03-22
+ * @version 2019-05-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -59,8 +59,8 @@ class Notice extends CI_Controller {
 		$content=inputPost('content');
 		
 		$nowNickName=$this->session->userdata($this->sessPrefix.'nickName');
-		$sql="INSERT INTO notice(title,content,create_user) VALUES (?,?,?)";
-		$query=$this->db->query($sql,[$title,$content,$nowNickName]);
+		$sql="INSERT INTO notice(title,content,publisher_id) VALUES (?,?,?)";
+		$query=$this->db->query($sql,[$title,$content,$this->session->userdata($this->sessPrefix.'userId')]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-03-30
+ * @version 2019-05-14
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -167,8 +167,9 @@ class API_User extends CI_Controller {
 			if($query->num_rows()!=1){
 				returnAjaxData(1,'no User');
 			}else{
-				$list=$query->result_array();
-				returnAjaxData(200,'success',['userInfo'=>$list[0]]);
+				$info=$query->first_row('array');
+				$info['roleId']=$_SESSION[$this->sessPrefix.'roleId'];
+				returnAjaxData(200,'success',['userInfo'=>$info]);
 			}
 		}/*else if($method=="api"){
 			$token=isset($_POST['token'])&&$_POST['token']!=""?$_POST['token']:returnAjaxData(0,"lack Param");

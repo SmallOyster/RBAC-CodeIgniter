@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-SSO
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-02-17
- * @version 2019-03-22
+ * @version 2019-05-13
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -55,9 +55,20 @@ class SSO extends CI_Controller {
 		}
 
 		// 获取角色名称
-		$roleQuery=$this->db->query('SELECT name FROM role WHERE id=?',[$roleId]);
-		if($roleQuery->num_rows()!=1){
+		$roleIds=explode(',',$roleId);
+		$allRoleInfo=array();
+			
+		$this->db->where_in($roleIds);
+		$roleQuery=$this->db->get('role');
+
+		if($roleQuery->num_rows()<1){
 			die('<script>alert("角色信息不存在！\n请联系管理员！");window.location.href="'.base_url('/').'";</script>');
+		}else{
+			$roleList=$roleQuery->result_array();
+				
+			foreach($roleList as $roleInfo){
+				$allRoleInfo[$roleInfo['id']]=$roleInfo['name'];
+			}
 		}
 
 		$query=$this->db->query("UPDATE user SET last_login=? WHERE id=?",[date("Y-m-d H:i:s"),$userId]);
@@ -69,8 +80,9 @@ class SSO extends CI_Controller {
 		$this->session->set_userdata($this->sessPrefix.'userId',$userId);
 		$this->session->set_userdata($this->sessPrefix.'nickName',$nickName);
 		$this->session->set_userdata($this->sessPrefix.'userName',$userName);
-		$this->session->set_userdata($this->sessPrefix.'roleId',$roleId);
-		$this->session->set_userdata($this->sessPrefix.'roleName',$roleName);
+		$this->session->set_userdata($this->sessPrefix.'roleId',$roleIds[0]);
+		$this->session->set_userdata($this->sessPrefix.'roleName',reset($allRoleInfo));
+		$this->session->set_userdata($this->sessPrefix.'allRoleInfo',$allRoleInfo);
 
 		die(header('location:'.base_url('/')));
 	}

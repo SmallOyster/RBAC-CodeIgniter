@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-M-RBAC
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-06
- * @version 2018-04-01
+ * @version 2019-05-14
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -109,8 +109,7 @@ class RBAC_model extends CI_Model {
 	{
 		$allMenu=array();
 		
-		$fatherMenu_list=$this->RBAC_model->getFatherMenuByRole($roleId);
-		$allMenu=$fatherMenu_list;
+		$allMenu=$this->RBAC_model->getFatherMenuByRole($roleId);
 		$allMenu_total=count($allMenu);
 		
 		// 搜寻二级菜单
@@ -158,7 +157,7 @@ class RBAC_model extends CI_Model {
 	 */
 	public function getFatherMenu()
 	{
-		$sql='SELECT * FROM menu WHERE father_id="0"';
+		$sql='SELECT * FROM menu WHERE father_id=0';
 		$query=$this->db->query($sql);
 		$list=$query->result_array();
 		
@@ -173,11 +172,9 @@ class RBAC_model extends CI_Model {
 	 */
 	public function getChildMenu($fatherId)
 	{
-		$sql="SELECT * FROM menu WHERE father_id=?";
-		$query=$this->db->query($sql,[$fatherId]);
-		$list=$query->result_array();
+		$query=$this->db->get_where('menu',['father_id'=>$fatherId]);
 		
-		return $list;
+		return $query->result_array();
 	}
 	
 	
@@ -189,8 +186,7 @@ class RBAC_model extends CI_Model {
 	{
 		$allMenu=array();
 		
-		$fatherMenu_list=$this->RBAC_model->getFatherMenu();
-		$allMenu=$fatherMenu_list;
+		$allMenu=self::getFatherMenu();
 		$allMenu_total=count($allMenu);
 		
 		// 搜寻二级菜单

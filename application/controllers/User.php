@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-03-30
+ * @version 2019-05-14
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -28,6 +28,17 @@ class User extends CI_Controller {
 		$this->API_PATH=$this->setting->get('apiPath');
 		$this->nowUserId=$this->session->userdata($this->sessPrefix.'userId');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
+	}
+	
+	
+	public function toChangeRole()
+	{
+		$this->ajax->checkAjaxToken(inputPost('token',0,1));
+	
+		$roleId=inputPost('roleId',0,1);
+		$_SESSION[$this->sessPrefix.'roleId']=$roleId;
+		
+		returnAjaxData(200,'success');
 	}
 
 
@@ -92,14 +103,17 @@ class User extends CI_Controller {
 			// 获取角色名称
 			$roleIds=explode(',',$roleId);
 			$allRoleInfo=array();
-			foreach($roleIds as $id){
-				$roleQuery=$this->db->query('SELECT name FROM role WHERE id=?',[$id]);
+			
+			$this->db->where_in($roleIds);
+			$roleQuery=$this->db->get('role');
 
-				if($roleQuery->num_rows()!=1){
-					returnAjaxData(2,'no Role Info');
-				}else{
-					$roleList=$roleQuery->result_array();
-					$allRoleInfo[$id]=$roleList[0]['name'];
+			if($roleQuery->num_rows()<1){
+				returnAjaxData(2,'no Role Info');
+			}else{
+				$roleList=$roleQuery->result_array();
+				
+				foreach($roleList as $roleInfo){
+					$allRoleInfo[$roleInfo['id']]=$roleInfo['name'];
 				}
 			}
 			
@@ -108,7 +122,6 @@ class User extends CI_Controller {
 			$this->session->set_userdata($this->sessPrefix.'nickName',$nickName);
 			$this->session->set_userdata($this->sessPrefix.'userName',$userName);
 			$this->session->set_userdata($this->sessPrefix.'roleId',$roleIds[0]);
-			$this->session->set_userdata($this->sessPrefix.'allRoleId',$roleIds);
 			$this->session->set_userdata($this->sessPrefix.'roleName',reset($allRoleInfo));
 			$this->session->set_userdata($this->sessPrefix.'allRoleInfo',$allRoleInfo);
 

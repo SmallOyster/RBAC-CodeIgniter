@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-A-角色API
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-17
-* @version 2019-03-22
+* @version 2019-05-17
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -21,8 +21,6 @@ class API_rbac_role extends CI_Controller {
 
 
 	public function getAllRole(){
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$list=$this->RBAC_model->getAllRole();
 		$data['list']=$list;
 

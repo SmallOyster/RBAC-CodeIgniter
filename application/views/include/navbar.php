@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-导航栏
  * @author Jerry Cheung <master@smhgzs.com>
  * @since 2018-12-31
- * @version 2019-03-30
+ * @version 2019-05-14
  */
 ?>
 
@@ -131,12 +131,8 @@
 			</div>
 			<div class="pull-left info">
 				<p>{{userInfo['nickName']}}</p>
-				<!--small>{{userInfo['roleName']}}</small-->
-				<select style="background-color:rgb(59, 73, 102);border:0;color:#fff;margin-left:-4px;">
-					<!--<?php foreach($_SESSION[$this->sessPrefix.'allRoleName'] as $roleName){ ?>
-						<option><?=$roleName;?></option>
-					<?php } ?>-->
-					<option v-for="(roleName,roleId) in allRoleInfo" v-bind:id="roleId">{{roleName}}</option>
+				<select id="roleList" style="background-color:rgb(59, 73, 102);border:0;color:#fff;margin-left:-4px;" v-on:change="changeRole" v-model="roleIdSelected">
+					<option v-for="(roleName,roleId) in allRoleInfo" v-bind:value="roleId">{{roleName}}</option>
 				</select>
 			</div>
 		</div>
@@ -257,7 +253,8 @@ var headerVm = new Vue({
 		treeData:{},
 		navNoticeList:{},
 		navNoticeTotal:0,
-		allRoleInfo:{}
+		allRoleInfo:{},
+		roleIdSelected:''
 	},
 	methods:{
 		getUserInfo:function(){
@@ -279,6 +276,7 @@ var headerVm = new Vue({
 						unlockScreen();
 						info=ret.data['userInfo'];
 						headerVm.userInfo=info;
+						headerVm.roleIdSelected=headerVm.userInfo['roleId'];
 						return true;
 					}else{
 						unlockScreen();
@@ -344,6 +342,24 @@ var headerVm = new Vue({
 		getAllRole:function(){
 			allRoleInfo=localStorage.getItem('allRoleInfo');
 			headerVm.allRoleInfo=JSON.parse(allRoleInfo);
+		},
+		changeRole:function(){
+			roleId=$("#roleList").val();
+
+			if(roleId=='' || roleId==headerVm.userInfo['roleId']) return;
+
+			$.ajax({
+				url:headerVm.rootUrl+"user/toChangeRole",
+				type:"post",
+				data:{"token":headerVm.token,"roleId":roleId},
+				dataType:"json",
+				error:function(e){
+					console.log(JSON.stringify(e));
+				},
+				success:function(ret){
+					window.location.href=headerVm.rootUrl;
+				}
+			});
 		}
 	}
 });

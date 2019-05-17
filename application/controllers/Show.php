@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-显示
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-06
-* @version 2019-03-22
+* @version 2019-05-15
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -45,8 +45,19 @@ class Show extends CI_Controller {
 	}
 	
 
-	public function jumpOut($url,$name=""){
+	public function jumpOut($url,$name="")
+	{
 		$url=urldecode($url);
 		$this->load->view('show/jumpOut',['url'=>$url,'name'=>$name]);
+	}
+	
+	
+	public function testJWT()
+	{
+		$this->load->helper('jwt_helper');
+		
+		echo $token=jwt_helper::create(['testUID'=>6]).PHP_EOL.PHP_EOL;
+		echo var_dump(jwt_helper::decode($token)).PHP_EOL.PHP_EOL;
+		echo var_dump(jwt_helper::validate($token)).PHP_EOL.PHP_EOL;
 	}
 }

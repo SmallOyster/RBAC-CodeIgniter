@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-角色
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-03-22
+ * @version 2019-05-14
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -23,7 +23,7 @@ class API_Role extends CI_Controller {
 		$auth=$this->safe->checkAuth('api',substr($this->input->server('HTTP_REFERER'),strpos($this->input->server('HTTP_REFERER'),base_url())+strlen(base_url())));
 		if($auth!=true) returnAjaxData(403,"no Permission");
 
-		if($roleId>=1) $this->db->where('id',$roleId);
+		if(strlen($roleId)==6) $this->db->where('id',$roleId);
 
 		$query=$this->db->get('role');
 
@@ -35,7 +35,7 @@ class API_Role extends CI_Controller {
 	{
 		$roleId=$this->session->userdata($this->sessPrefix."roleId");
 		
-		if($roleId>=1) returnAjaxData(200,"success",['treeData'=>$this->getAllMenuByRole($roleId)]);
+		if(strlen($roleId)==6) returnAjaxData(200,"success",['treeData'=>$this->getAllMenuByRole($roleId)]);
 		else returnAjaxData(403,"failed To Auth");
 	}
 
