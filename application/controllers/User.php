@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-05-14
+ * @version 2019-05-18
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -104,7 +104,7 @@ class User extends CI_Controller {
 			$roleIds=explode(',',$roleId);
 			$allRoleInfo=array();
 			
-			$this->db->where_in($roleIds);
+			$this->db->where_in('id',$roleIds);
 			$roleQuery=$this->db->get('role');
 
 			if($roleQuery->num_rows()<1){

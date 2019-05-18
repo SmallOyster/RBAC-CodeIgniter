@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-05-17
+ * @version 2019-05-18
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>修改用户 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>修改用户 / <?=$this->setting->get('systemName');?></title>
 	<script src="<?=base_url('resource/js/select.js');?>"></script>
 	<link rel="stylesheet" href="<?=base_url('resource/css/select.css');?>">
 </head>
@@ -55,10 +55,7 @@
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="roleId">角色</label>
-					<!--select class="form-control" id="roleId" multiple="multiple" v-on:change="changeRole">
-						<option value="-1" selected disabled>--- 请选择角色 ---</option>
-					</select-->
+					<label>角色</label>
 					<div class="mainSelect">
 						<div id="roleSelect"></div>
 					</div>
@@ -97,8 +94,7 @@
 var vm = new Vue({
 	el:'#app',
 	data:{
-		integralData:{},
-		transactionLog:{},
+		nowRoleId:"<?=$info['role_id']; ?>".split(','),
 		roleList:[{
 			"name": "全选",
 			"list": []
@@ -117,9 +113,6 @@ var vm = new Vue({
 		}
 	},
 	methods:{
-		changeRole:function(){
-			alert($("#roleId").val());
-		},
 		getAllRole:function(){
 			lockScreen();
 
@@ -137,11 +130,12 @@ var vm = new Vue({
 
 					if(ret.code==200){
 						for(i in ret.data['list']){
-							vm.roleList[0].list.push({"optionName":ret.data['list'][i]['name'],"optionId":ret.data['list'][i]['id']});
+							pushData={"optionName":ret.data['list'][i]['name'],"optionId":ret.data['list'][i]['id']};
+							$.inArray(ret.data['list'][i]['id'],vm.nowRoleId)>=0 ? pushData.selected=true : '';
+							vm.roleList[0].list.push(pushData);
 						}
 
 						vm.option.data=vm.roleList;
-
 						selectTool.initialize(vm.option);
 						$("#maincontent").attr('style','width:'+$("#email").css('width'));
 						$("#maincontent").hide();
@@ -159,7 +153,6 @@ var vm = new Vue({
 	}
 });
 
-//var nowRoleId="<?=$info['role_id']; ?>";
 vm.getAllRole();
 
 function edit(){
@@ -169,7 +162,7 @@ function edit(){
 	nickName=$("#nickName").val();
 	phone=$("#phone").val();
 	email=$("#email").val();
-	roleId=$("#roleId").val();
+	roleId=$("#roleSelect #selectValue").val();
 
 	if(userName==""){
 		unlockScreen();
@@ -201,7 +194,7 @@ function edit(){
 		showModalTips("请输入邮箱！");
 		return false;
 	}
-	if(roleId=="-1"){
+	if(roleId.length<6){
 		unlockScreen();
 		showModalTips("请选择角色！");
 		return false;

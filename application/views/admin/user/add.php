@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-新增用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-03-22
+ * @version 2019-05-18
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,9 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>新增用户 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>新增用户 / <?=$this->setting->get('systemName');?></title>
+	<script src="<?=base_url('resource/js/select.js');?>"></script>
+	<link rel="stylesheet" href="<?=base_url('resource/css/select.css');?>">
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -52,10 +54,10 @@
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="roleId">角色</label>
-					<select class="form-control" id="roleId">
-						<option value="-1" selected disabled>--- 请选择角色 ---</option>
-					</select>
+					<label>角色</label>
+					<div class="mainSelect">
+						<div id="roleSelect"></div>
+					</div>
 				</div>
 
 				<hr>
@@ -76,45 +78,67 @@
 </div>
 
 <script>
-window.onload=function(){
-	getAllRole();
-}
-
-
-function getAllRole(){
-	lockScreen();
-
-	$.ajax({
-		url:"<?=base_url('api/getAllRole'); ?>",
-		type:"post",
-		data:{<?=$this->ajax->showAjaxToken();?>},
-		dataType:'json',
-		error:function(e){
-			console.log(JSON.stringify(e));
-			unlockScreen();
-			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			return false;
-		},
-		success:function(ret){
-			unlockScreen();
-			
-			if(ret.code==200){
-				for(i in ret.data['list']){
-					roleId=ret.data['list'][i]['id']
-					roleName=ret.data['list'][i]['name'];
-					$("#roleId").append('<option value="'+roleId+'">'+roleId+'. '+roleName+'</option>');
-				}
-				return true;
-			}else if(ret.code==403001){
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				return false;
-			}else{
-				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				return false;
-			}
+var vm = new Vue({
+	el:'#app',
+	data:{
+		roleList:[{
+			"name": "全选",
+			"list": []
+		}],
+		option:{
+			el: 'roleSelect',//容器名称
+			type: 'more',//插件类型
+			width: $("#email").css('width'),//内容显示宽度
+			height: '40px',//内容显示高度
+			background: '#FFFFFF',//默认背景色
+			color: '#000000',//默认字体颜色
+			selectBackground: '#337AB7',//选中背景色
+			selectColor: '#FFFFFF',//选中字体颜色
+			show: 'false',//是否展开
+			content: '请选择用户角色',//要显示的内容
 		}
-	});
-}
+	},
+	methods:{
+		getAllRole:function(){
+			lockScreen();
+
+			$.ajax({
+				url:headerVm.apiPath+"getAllRole",
+				dataType:'json',
+				error:function(e){
+					console.log(JSON.stringify(e));
+					unlockScreen();
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;
+				},
+				success:function(ret){
+					unlockScreen();
+
+					if(ret.code==200){
+						for(i in ret.data['list']){
+							pushData={"optionName":ret.data['list'][i]['name'],"optionId":ret.data['list'][i]['id']};
+							vm.roleList[0].list.push(pushData);
+						}
+
+						vm.option.data=vm.roleList;
+						selectTool.initialize(vm.option);
+						$("#maincontent").attr('style','width:'+$("#email").css('width'));
+						$("#maincontent").hide();
+						return true;
+					}else if(ret.code==403001){
+						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
+						return false;
+					}else{
+						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
+						return false;
+					}
+				}
+			});
+		}
+	}
+});
+
+vm.getAllRole();
 
 
 function add(){
@@ -123,7 +147,7 @@ function add(){
 	nickName=$("#nickName").val();
 	phone=$("#phone").val();
 	email=$("#email").val();
-	roleId=$("#roleId").val();
+	roleId=$("#roleSelect #selectValue").val();
 
 	if(userName==""){
 		unlockScreen();
@@ -155,7 +179,7 @@ function add(){
 		showModalTips("请输入邮箱！");
 		return false;
 	}
-	if(roleId=="-1"){
+	if(roleId.length<6){
 		unlockScreen();
 		showModalTips("请选择角色！");
 		return false;

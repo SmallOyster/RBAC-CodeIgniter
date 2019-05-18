@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-登录
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-20
- * @version 2019-03-30
+ * @version 2019-05-18
  */
 ?>
 
@@ -108,6 +108,8 @@ window.onload=function(){
     $("#userName").focus();
   }
   /********** ▲ 记住密码 ▲ **********/
+
+  localStorage.removeItem("allRoleInfo");
 }
 
 function toLogin(){
