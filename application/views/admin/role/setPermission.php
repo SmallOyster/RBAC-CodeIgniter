@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-设置角色权限
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-03-22
+ * @version 2019-05-18
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>设置角色权限 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>设置角色权限 / <?=$this->setting->get('systemName');?></title>
 	<style>
 		.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
 		ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;height:360px;overflow-y:scroll;overflow-x:auto;}
@@ -51,9 +51,6 @@
 </div>
 
 <script>
-window.onload=function(){
-}
-
 var setting = {
 	view: {
 		selectedMulti: false

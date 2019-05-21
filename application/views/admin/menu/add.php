@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>新增菜单 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>新增菜单 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -39,7 +39,7 @@
 				<br>
 				<div class="form-group">
 					<label for="icon">菜单图标 (预览: <i id="icon_preview" class="" aria-hidden="true"></i>) &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="$('#icon').val('circle-o');iconPreview();">使用默认图标</button></label>
-					<input class="form-control" id="icon" onkeyup='if(event.keyCode==13)$("#uri").focus();' oninput='iconPreview();'>
+					<input class="form-control" id="icon" onkeyup='if(event.keyCode==13)$("#uri").focus();' v-on:input='iconPreview'>
 					<p class="help-block">请输入Font-Awesome图标名称，无需输入前缀“fa-”，输入后可在上方预览</p>
 				</div>
 				<br>
@@ -69,10 +69,17 @@
 </div>
 
 <script>
-function iconPreview(){
-	icon=$("#icon").val();
-	$("#icon_preview").attr("class","fa fa-"+icon);
-}
+var vm = new Vue({
+	el:'#app',
+	data:{
+	},
+	methods:{
+		iconPreview:function(){
+			icon=$("#icon").val();
+			$("#icon_preview").attr("class","fa fa-"+icon);
+		}
+	}
+})
 
 function inputJumpOutURI(){
   uri=prompt("请输入需要跳转到的网站的完整URL（包括HTTP/HTTPS头）","http://");

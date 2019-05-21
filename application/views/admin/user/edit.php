@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-05-18
+ * @version 2019-05-19
  */
 ?>
 <!DOCTYPE html>
@@ -117,7 +117,7 @@ var vm = new Vue({
 			lockScreen();
 
 			$.ajax({
-				url:headerVm.apiPath+"getAllRole",
+				url:headerVm.apiPath+"role/get",
 				dataType:'json',
 				error:function(e){
 					console.log(JSON.stringify(e));

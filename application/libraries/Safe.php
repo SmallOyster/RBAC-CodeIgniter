@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-L-安全类
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-01-18
-* @version 2019-05-14
+* @version 2019-05-20
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -55,6 +55,54 @@ class Safe {
 			return;
 		}else{
 			die('<script>alert("抱歉！您暂无权限访问此页面！\n请从正常途径访问系统！");window.location.href="'.base_url('/').'";</script>');
+		}
+	}
+	
+	
+		/**
+	 * 判断当前页面是否有权限访问
+	 */
+	public function checkAuth($method="",$uri="")
+	{
+		if($this->_CI->session->userdata($this->sessPrefix.'isLogin')!=1){
+			if($method!='api'){
+				logout();
+			}else{
+				return false;
+			}
+		}
+
+		if($uri=='') $uri=uri_string();
+		$menuPermission=array();
+		$roleId=$this->_CI->session->userdata($this->sessPrefix.'role_id');
+
+		$this->_CI->db->select('menu_id');
+		$this->_CI->db->where('role_id',$roleId);
+		$query=$this->_CI->db->get('role_permission');
+		$list=$query->result_array();
+
+		foreach($list as $value){
+			array_push($menuPermission,$value['menu_id']);
+		}
+
+		$this->_CI->db->like('uri',$uri);
+		$query=$this->_CI->db->get('menu');
+
+		if($query->num_rows()!=1){
+			return false;
+		}else{
+			$info=$query->result_array();
+			$menuId=$info[0]['id'];
+
+			if(in_array($menuId,$menuPermission)){
+				return true;
+			}else{
+				if($method!='api'){
+					logout();
+				}else{
+					return false;
+				}
+			}
 		}
 	}
 }
