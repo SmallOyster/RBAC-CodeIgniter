@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-03-22
+ * @version 2019-05-24
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>用户列表 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>用户列表 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -25,7 +25,7 @@
 
 	<!-- 页面主要内容 -->
 	<section class="content">
-		<a href="<?=base_url('admin/user/add'); ?>" class="btn btn-primary btn-block">新 增 用 户</a>
+		<a href="<?=base_url('admin/user/add');?>" class="btn btn-primary btn-block">新 增 用 户</a>
 		<hr>
 
 		<div class="panel panel-default">
@@ -53,7 +53,7 @@
 										<font color="blue">未激活</font>
 									<?php } ?>
 								</td>
-								<td><a href="<?=base_url('admin/user/edit/').$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
+								<td><a href="<?=base_url('admin/user/edit').'?id='.$info['id']; ?>" class="btn btn-info">编辑</a> <a onclick='resetPwd_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-warning">重置密码</a> <a onclick='del_ready("<?=$info['id']; ?>","<?=$info['nick_name']; ?>")' class="btn btn-danger">删除</a></td>
 							</tr>
 						<?php } ?>
 					</tbody>

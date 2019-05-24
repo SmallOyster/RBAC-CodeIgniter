@@ -53,7 +53,7 @@ class RBAC_menu extends CI_Controller {
 				$fatherName=$info[0]['name'];
 				$fatherIcon=$info[0]['icon'];
 			}else{
-				header('Location:'.base_url('index'));
+				header('location:'.base_url('index'));
 			}
 		}
 		

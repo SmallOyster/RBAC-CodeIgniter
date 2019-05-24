@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-路由
  * @author CodeIgniter,Jerry Cheung
  * @since 2018-02-06
- * @version 2019-05-17
+ * @version 2019-05-24
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -19,10 +19,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['dashborad'] = 'Main/index';
 
 /************* RBAC-API **************/
-/**/$route['api/getAllRole']='API/API_rbac_role/getAllRole';
-/**/$route['api/getAllMenuForZtree']='API/API_rbac_menu/getAllMenuForZtree';
-$route['api/role/getRoleInfo']='API/API_Role/getRoleInfo';// 获取所有角色
-$route['api/role/getRoleInfo/(:any)']='API/API_Role/getRoleInfo/$1';// 获取某一角色
+$route['api/role/get']='API/API_Role/getRoleInfo';
 $route['api/role/getUserMenu']='API/API_Role/getUserMenu';
 $route['api/role/getRoleMenuForZtree/(:any)']='API/API_Role/getRoleMenuForZtree/$1';
 
@@ -57,7 +54,7 @@ $route['admin/user/list']='RBAC/RBAC_user/toList';
 $route['admin/user/add']='RBAC/RBAC_user/add';
 $route['admin/user/toAdd']['POST']='RBAC/RBAC_user/toAdd';
 $route['admin/user/toDelete']['POST']='RBAC/RBAC_user/toDelete';
-$route['admin/user/edit/(:num)']['GET']='RBAC/RBAC_user/edit/$1';
+$route['admin/user/edit']='RBAC/RBAC_user/edit';
 $route['admin/user/toEdit']['POST']='RBAC/RBAC_user/toEdit';
 $route['admin/user/toResetPwd']['POST']='RBAC/RBAC_user/toResetPwd';
 $route['admin/user/toUpdateStatus']['POST']='RBAC/RBAC_user/toUpdateStatus';

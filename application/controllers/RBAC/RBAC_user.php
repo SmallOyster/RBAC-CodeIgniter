@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-用户
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-03-28
+* @version 2019-05-24
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -34,7 +34,7 @@ class RBAC_user extends CI_Controller {
 		$this->safe->checkPermission();
 		$this->ajax->makeAjaxToken();
 
-		$query=$this->db->query("SELECT * FROM user");
+		$query=$this->db->get('user');
 		$list=$query->result_array();
 
 		$this->load->view('admin/user/list',['list'=>$list]);
@@ -45,7 +45,7 @@ class RBAC_user extends CI_Controller {
 	{
 		$this->ajax->makeAjaxToken();
 
-		$this->load->view('admin/user/add',[]);
+		$this->load->view('admin/user/add');
 	}
 
 
@@ -94,14 +94,15 @@ class RBAC_user extends CI_Controller {
 	}
 
 	
-	public function edit($userId)
+	public function edit()
 	{
+		$userId=inputGet('id',0);
 		$this->ajax->makeAjaxToken();
 
-		$query=$this->db->query("SELECT * FROM user WHERE id=?",[$userId]);
+		$query=$this->db->get_where('user',['id'=>$userId]);
 
 		if($query->num_rows()!=1){
-			header("Location:".base_url());
+			header("location:".base_url());
 		}
 
 		$list=$query->result_array();

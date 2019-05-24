@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-角色
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-05-14
+ * @version 2019-05-24
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -20,11 +20,7 @@ class API_Role extends CI_Controller {
 
 	public function getRoleInfo($roleId=0)
 	{
-		$auth=$this->safe->checkAuth('api',substr($this->input->server('HTTP_REFERER'),strpos($this->input->server('HTTP_REFERER'),base_url())+strlen(base_url())));
-		if($auth!=true) returnAjaxData(403,"no Permission");
-
 		if(strlen($roleId)==6) $this->db->where('id',$roleId);
-
 		$query=$this->db->get('role');
 
 		returnAjaxData(200,"success",['list'=>$query->result_array()]);
@@ -35,14 +31,15 @@ class API_Role extends CI_Controller {
 	{
 		$roleId=$this->session->userdata($this->sessPrefix."roleId");
 		
-		if(strlen($roleId)==6) returnAjaxData(200,"success",['treeData'=>$this->getAllMenuByRole($roleId)]);
+		if(strlen($roleId)==6) returnAjaxData(200,"success",['treeData'=>self::getAllMenuByRole($roleId)]);
 		else returnAjaxData(403,"failed To Auth");
 	}
 
 
-	private function getFatherMenuByRole($roleId)
+	private function getFatherMenuByRole($roleId,$type=0)
 	{
-		$sql='SELECT a.menu_id,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id="0"';
+		$sql='SELECT a.menu_id,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id=0 ';
+		if($type>0) $sql.=' AND b.type='.$type;
 		$query=$this->db->query($sql,[$roleId]);
 		$list=$query->result_array();
 
@@ -50,9 +47,10 @@ class API_Role extends CI_Controller {
 	}
 
 
-	private function getChildMenuByRole($roleId,$fatherId)
+	private function getChildMenuByRole($roleId,$fatherId,$type=0)
 	{
-		$sql="SELECT a.menu_id,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id=?";
+		$sql='SELECT a.menu_id,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id=? ';
+		if($type>0) $sql.=' AND b.type='.$type;
 		$query=$this->db->query($sql,[$roleId,$fatherId]);
 		$list=$query->result_array();
 
@@ -64,14 +62,14 @@ class API_Role extends CI_Controller {
 	{
 		$allMenu=array();
 
-		$fatherMenu_list=$this->getFatherMenuByRole($roleId);
+		$fatherMenu_list=self::getFatherMenuByRole($roleId,1);
 		$allMenu=$fatherMenu_list;
 		$allMenu_total=count($allMenu);
 
 		// 搜寻二级菜单
 		for($i=0;$i<$allMenu_total;$i++){
 			$fatherId=$allMenu[$i]['id'];
-			$child_list=$this->getChildMenuByRole($roleId,$fatherId);
+			$child_list=self::getChildMenuByRole($roleId,$fatherId,1);
 
 			if($child_list==null){
 			// 没有二级菜单
@@ -88,7 +86,7 @@ class API_Role extends CI_Controller {
 				// 搜寻三级菜单
 				for($j=0;$j<$child_list_total;$j++){
 					$father2Id=$child_list[$j]['id'];
-					$child2_list=$this->getChildMenuByRole($roleId,$father2Id);
+					$child2_list=self::getChildMenuByRole($roleId,$father2Id,1);
 
 					if($child2_list==null){
 						// 没有三级菜单
@@ -125,7 +123,7 @@ class API_Role extends CI_Controller {
 		foreach($menuList as $key=>$info){
 			$rtn[$key]['id']=(int)$info['id'];
 			$rtn[$key]['pId']=(int)$info['father_id'];
-			$rtn[$key]['name']=urlencode($info['name']);
+			$rtn[$key]['name']=$info['type']==1?urlencode($info['name']):($info['type']==2?'(按钮)'.urlencode($info['name']):'(接口)'.urlencode($info['name']));
 			if(in_array($info['id'],$allPermission)) $rtn[$key]['checked']=true;
 		}
 
