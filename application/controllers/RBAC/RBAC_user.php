@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-用户
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-05-24
+* @version 2019-05-25
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -31,13 +31,20 @@ class RBAC_user extends CI_Controller {
 
 	public function toList()
 	{
-		$this->safe->checkPermission();
 		$this->ajax->makeAjaxToken();
+		$this->load->view('admin/user/list');
+	}
 
+
+	public function get()
+	{
+		$auth=$this->safe->checkAuth('api','admin/user/list');
+		if($auth!=true) returnAjaxData(403002,"no Permission");
+
+		$this->db->select('id,user_name,nick_name,email,phone,status,role_id,sso_union_id,create_time,update_time,last_login');
 		$query=$this->db->get('user');
 		$list=$query->result_array();
-
-		$this->load->view('admin/user/list',['list'=>$list]);
+		returnAjaxData(200,'success',['list'=>$list]);
 	}
 
 
@@ -51,7 +58,8 @@ class RBAC_user extends CI_Controller {
 
 	public function toAdd()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
+		$auth=$this->safe->checkAuth('api',substr($this->input->server('HTTP_REFERER'),strpos($this->input->server('HTTP_REFERER'),base_url())+strlen(base_url())));
+		if($auth!=true) returnAjaxData(403002,"no Permission");
 
 		$userName=inputPost('userName',0,1);
 		$nickName=inputPost('nickName',0,1);
@@ -61,18 +69,15 @@ class RBAC_user extends CI_Controller {
 		$status=1;
 		
 		// 检查用户名手机邮箱是否已存在
-		$sql1="SELECT id FROM user WHERE user_name=?";
-		$query1=$this->db->query($sql1,[$userName]);
+		$query1=$this->db->get_where('user',['user_name'=>$userName]);
 		if($query1->num_rows()!=0){
 			returnAjaxData(1,"have UserName");
 		}
-		$sql2="SELECT id FROM user WHERE phone=?";
-		$query2=$this->db->query($sql2,[$phone]);
+		$query2=$this->db->get_where('user',['phone'=>$phone]);
 		if($query2->num_rows()!=0){
 			returnAjaxData(2,"have Phone");
 		}
-		$sql3="SELECT id FROM user WHERE email=?";
-		$query3=$this->db->query($sql3,[$email]);
+		$query3=$this->db->get_where('user',['email'=>$email]);
 		if($query3->num_rows()!=0){
 			returnAjaxData(3,"have Email");
 		}
@@ -145,11 +150,10 @@ class RBAC_user extends CI_Controller {
 			returnAjaxData(400,"now User");
 		}
 
-		$sql="DELETE FROM user WHERE id=?";
-		$query=$this->db->query($sql,[$id]);
+		$this->db->delete('user',['id'=>$id]);
 
 		if($this->db->affected_rows()==1){
-			$logContent='删除用户|'.$id;
+			//$logContent='删除用户|'.$id;
 			//$this->Log_model->create('用户',$logContent);
 			returnAjaxData(200,"success");
 		}else{
@@ -160,7 +164,8 @@ class RBAC_user extends CI_Controller {
 
 	public function toResetPwd()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
+		$auth=$this->safe->checkAuth('api',substr($this->input->server('HTTP_REFERER'),strpos($this->input->server('HTTP_REFERER'),base_url())+strlen(base_url())));
+		if($auth!=true) returnAjaxData(403002,"no Permission");
 
 		$id=inputPost('id',0,1);
 		
@@ -169,8 +174,8 @@ class RBAC_user extends CI_Controller {
 		}
 		
 		// 获取用户名
-		$sql1="SELECT user_name,nick_name FROM user WHERE id=?";
-		$query1=$this->db->query($sql1,[$id]);
+		$this->db->select('user_name,nick_name');
+		$query1=$this->db->get_where('user',['id'=>$id]);
 		if($query1->num_rows()!=1){
 			returnAjaxData(1,"no User");
 		}else{
@@ -184,8 +189,9 @@ class RBAC_user extends CI_Controller {
 		$salt=random_string('alnum');
 		$hashPwd=sha1(md5($originPwd).$salt);
 
-		$sql2="UPDATE user SET password=?,salt=? WHERE id=? AND user_name=?";
-		$query2=$this->db->query($sql2,[$hashPwd,$salt,$id,$userName]);
+		$this->db->where('id',$id);
+		$this->db->where('user_name',$userName);
+		$this->db->update('user',['password'=>$hashPwd,'salt'=>$salt]);
 
 		if($this->db->affected_rows()==1){
 			$logContent='重置密码|'.$id.'|'.$userName;
@@ -199,7 +205,8 @@ class RBAC_user extends CI_Controller {
 
 	public function toUpdateStatus()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
+		$auth=$this->safe->checkAuth('api',substr($this->input->server('HTTP_REFERER'),strpos($this->input->server('HTTP_REFERER'),base_url())+strlen(base_url())));
+		if($auth!=true) returnAjaxData(403002,"no Permission");
 
 		$id=inputPost('id',0,1);
 		$status=inputPost('status',0,1);
@@ -208,8 +215,8 @@ class RBAC_user extends CI_Controller {
 			returnAjaxData(400,'now User');
 		}
 
-		$sql="UPDATE user SET status=? WHERE id=?";
-		$query=$this->db->query($sql,[$status,$id]);
+		$this->db->where('id',$id);
+		$this->db->update('user',['status'=>$status]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");

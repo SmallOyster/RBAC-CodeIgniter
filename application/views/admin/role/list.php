@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-角色列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version 2019-03-22
+ * @version 2019-05-25
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>角色列表 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>角色列表 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -38,22 +38,7 @@
 							<th>操作</th>
 						</tr>
 					</thead>
-					<tbody>
-						<?php foreach($list as $info){ ?>
-							<tr>
-								<td><?=$info['name']; ?></td>
-								<td>
-									<a href="<?=base_url('admin/role/edit/').$info['id'].'/'.$info['name']; ?>" class="btn btn-info">编辑</a>
-									<a onclick='del_ready("<?=$info['id']; ?>","<?=$info['name']; ?>")' class="btn btn-danger">删除</a>
-									<a href="<?=base_url('admin/role/setPermission/').$info['id'].'/'.$info['name']; ?>" class="btn btn-success">分配权限</a>
-
-									<?php if($info['is_default']==0){ ?>
-										<a onclick='setDefaultRole("<?=$info['id']; ?>")' class="btn btn-primary">设为默认角色</a>
-									<?php } ?>
-								</td>
-							</tr>
-						<?php } ?>
-					</tbody>
+					<tbody></tbody>
 				</table>
 			</div>
 		</div>
@@ -70,104 +55,132 @@
 </div>
 
 <script>
-window.onload=function(){
-	$('#table').DataTable({
-		responsive: true,
-		"columnDefs":[{
-			"targets":[1],
-			"orderable": false
-		}]
-	});
-};
+let table;
 
+var vm = new Vue({
+	el:'#app',
+	data:{
+		deleteId:0
+	},
+	methods:{
+		getList:()=>{
+			$.ajax({
+				url:"./get",
+				dataType:'json',
+				success:ret=>{
+					if(ret.code==200){
+						let list=ret.data['list'];
 
-function del_ready(id,name){
-	$("#delId").val(id);
-	$("#delName_show").html(name);
-	$("#delModal").modal('show');
-}
+						table=$('#table').DataTable({
+							responsive: true,
+							"columnDefs":[{
+								"targets":[1],
+								"orderable": false
+							}]
+						});
 
+						for(i in list){
+							let operateHtml=''
+							               +'<a href="'+headerVm.rootUrl+'admin/role/edit?id='+list[i]['id']+'&name='+list[i]['name']+'" class="btn btn-info">编辑</a> '
+							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['name']+'"'+")' class='btn btn-danger'>删除</a> "
+							               +'<a href="'+headerVm.rootUrl+'admin/role/setPermission?id='+list[i]['id']+'&name='+list[i]['name']+'" class="btn btn-success">分配权限</a> ';
 
-function del_sure(){
-	lockScreen();
-	id=$("#delId").val();
+							operateHtml=list[i]['is_default']!=0?operateHtml:operateHtml+"<a onclick='setDefaultRole("+'"'+list[i]['id']+'"'+")' class='btn btn-primary'>设为默认角色</a>";
 
-	$.ajax({
-		url:"<?=base_url('admin/role/toDelete'); ?>",
-		type:"post",
-		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
-		error:function(e){
-			console.log(e);
-			unlockScreen();
-			$("#delModal").modal('hide');
-			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			return false;
+							table.row.add({
+								0: list[i]['name'],
+								1: operateHtml
+							}).draw();
+						}
+					}
+				}
+			})
 		},
-		success:function(ret){
-			unlockScreen();
-			
-			if(ret.code==200){
-				$("#delModal").modal('hide');
-				alert("删除成功！");
-				location.reload();
-				return true;
-			}else if(ret.code==1){
-				$("#delModal").modal('hide');
-				showModalTips("删除失败！！！");
-				return false;
-			}else if(ret.code==403001){
-				$("#delModal").modal('hide');
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				return false;
-			}else{
-				$("#delModal").modal('hide');
-				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				return false;
-			}
-		}
-	});
-}
-
-
-function setDefaultRole(id){
-	lockScreen();
-
-	$.ajax({
-		url:"<?=base_url('admin/role/toSetDefaultRole'); ?>",
-		type:"post",
-		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
-		error:function(e){
-			console.log(e);
-			unlockScreen();
-			$("#delModal").modal('hide');
-			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			return false;
+		del_ready:(id,name)=>{
+			vm.deleteId=id;
+			$("#delName_show").html(name);
+			$("#delModal").modal('show');
 		},
-		success:function(ret){
-			unlockScreen();
-			
-			if(ret.code==200){
-				alert("设置成功！");
-				location.reload();
-				return true;
-			}else if(ret.code==1){
-				showModalTips("设置失败！！！");
-				return false;
-			}else if(ret.code==403001){
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				return false;
-			}else if(ret.code==0){
-				showModalTips("参数缺失！请联系技术支持！");
-				return false;
-			}else{
-				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				return false;
-			}
+		del_sure:()=>{
+			lockScreen();
+			$.ajax({
+				url:"./toDelete",
+				type:"post",
+				dataType:"json",
+				data:{<?=$this->ajax->showAjaxToken(); ?>,"id":vm.deleteId},
+				error:function(e){
+					console.log(e);
+					unlockScreen();
+					$("#delModal").modal('hide');
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;
+				},
+				success:function(ret){
+					unlockScreen();
+
+					if(ret.code==200){
+						$("#delModal").modal('hide');
+						alert("删除成功！");
+						location.reload();
+						return true;
+					}else if(ret.code==1){
+						$("#delModal").modal('hide');
+						showModalTips("删除失败！！！");
+						return false;
+					}else if(ret.code==403001){
+						$("#delModal").modal('hide');
+						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
+						return false;
+					}else{
+						$("#delModal").modal('hide');
+						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
+						return false;
+					}
+				}
+			});
+		},
+		setDefaultRole:(id)=>{
+			lockScreen();
+
+			$.ajax({
+				url:"<?=base_url('admin/role/toSetDefaultRole'); ?>",
+				type:"post",
+				dataType:"json",
+				data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
+				error:function(e){
+					console.log(e);
+					unlockScreen();
+					$("#delModal").modal('hide');
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;
+				},
+				success:function(ret){
+					unlockScreen();
+
+					if(ret.code==200){
+						alert("设置成功！");
+						location.reload();
+						return true;
+					}else if(ret.code==1){
+						showModalTips("设置失败！！！");
+						return false;
+					}else if(ret.code==403001){
+						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
+						return false;
+					}else if(ret.code==0){
+						showModalTips("参数缺失！请联系技术支持！");
+						return false;
+					}else{
+						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
+						return false;
+					}
+				}
+			});
 		}
-	});
-}
+	}
+});
+
+vm.getList();
 </script>
 
 <div class="modal fade" id="delModal">
@@ -178,7 +191,6 @@ function setDefaultRole(id){
 				<h3 class="modal-title" id="ModalTitle">温馨提示</h3>
 			</div>
 			<div class="modal-body">
-				<input type="hidden" id="delId">
 				<center>
 				<font color="red" style="font-weight:bolder;font-size:23px;">确定要删除下列角色吗？</font>
 				<br><br>

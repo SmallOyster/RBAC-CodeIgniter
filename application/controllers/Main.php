@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-基本
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-07
- * @version 2019-03-22
+ * @version 2019-05-25
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -29,8 +29,11 @@ class Main extends CI_Controller {
 
 	public function index()
 	{
-		if($this->nowUserId==NULL){
-			header('Location:'.base_url('user/logout'));
+		if($this->nowUserId===null){
+			$url=base_url().'user/login';
+			$url=isset($_GET['redirect'])?$url.'?redirect='.$_GET['redirect']:$url;
+			
+			header('location:'.$url);
 		}
 		
 		$latestNotice=$this->Notice_model->get(0,'index');

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-路由
  * @author CodeIgniter,Jerry Cheung
  * @since 2018-02-06
- * @version 2019-05-24
+ * @version 2019-05-25
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -39,18 +39,20 @@ $route['api/notice/get']='API/API_Notice/get';
 
 /*********** RBAC-Admin-Role ************/
 $route['admin/role/list']='RBAC/RBAC_role/toList';
+$route['admin/role/get']='RBAC/RBAC_role/get';
 $route['admin/role/add']='RBAC/RBAC_role/add';
 $route['admin/role/toAdd']['POST']='RBAC/RBAC_role/toAdd';
-$route['admin/role/edit/(:any)/(:any)']['GET']='RBAC/RBAC_role/edit/$1/$2';
+$route['admin/role/edit']='RBAC/RBAC_role/edit';
 $route['admin/role/toEdit']['POST']='RBAC/RBAC_role/toEdit';
 $route['admin/role/toDelete']['POST']='RBAC/RBAC_role/toDelete';
-$route['admin/role/setPermission/(:any)/(:any)']='RBAC/RBAC_role/setPermission/$1/$2';
+$route['admin/role/setPermission']='RBAC/RBAC_role/setPermission';
 $route['admin/role/toSetPermission']['POST']='RBAC/RBAC_role/toSetPermission';
 $route['admin/role/toSetDefaultRole']['POST']='RBAC/RBAC_role/toSetDefaultRole';
 
 
 /*********** RBAC-Admin-User ************/
 $route['admin/user/list']='RBAC/RBAC_user/toList';
+$route['admin/user/get']='RBAC/RBAC_user/get';
 $route['admin/user/add']='RBAC/RBAC_user/add';
 $route['admin/user/toAdd']['POST']='RBAC/RBAC_user/toAdd';
 $route['admin/user/toDelete']['POST']='RBAC/RBAC_user/toDelete';
