@@ -76,7 +76,7 @@ class RBAC_model extends CI_Model {
 	 */
 	public function getFatherMenuByRole($roleId)
 	{
-		$sql='SELECT a.*,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id="0"';
+		$sql='SELECT a.*,b.* FROM role_permission a,menu b WHERE a.role_id=? AND a.menu_id=b.id AND b.father_id=0';
 		$query=$this->db->query($sql,[$roleId]);
 		$list=$query->result_array();
 		
@@ -119,11 +119,11 @@ class RBAC_model extends CI_Model {
 			
 			if($child_list==null){
 				// 没有二级菜单
-				$allMenu[$i]['hasChild']="0";
+				$allMenu[$i]['hasChild']='0';
 				$allMenu[$i]['child']=array();
 			}else{
 				// 有二级菜单
-				$allMenu[$i]['hasChild']="1";
+				$allMenu[$i]['hasChild']='1';
 				$allMenu[$i]['child']=$child_list;
 
 				// 二级菜单的数量
@@ -136,11 +136,11 @@ class RBAC_model extends CI_Model {
 
 					if($child2_list==null){
 						// 没有三级菜单
-						$allMenu[$i]['child'][$j]['hasChild']="0";
+						$allMenu[$i]['child'][$j]['hasChild']='0';
 						$allMenu[$i]['child'][$j]['child']=array();
 					}else{
 						// 有三级菜单
-						$allMenu[$i]['child'][$j]['hasChild']="1";
+						$allMenu[$i]['child'][$j]['hasChild']='1';
 						$allMenu[$i]['child'][$j]['child']=$child2_list;
 					}
 				}
@@ -157,8 +157,7 @@ class RBAC_model extends CI_Model {
 	 */
 	public function getFatherMenu()
 	{
-		$sql='SELECT * FROM menu WHERE father_id=0';
-		$query=$this->db->query($sql);
+		$query=$this->db->get_where('menu',['father_id'=>0]);
 		$list=$query->result_array();
 		
 		return $list;	
@@ -196,11 +195,11 @@ class RBAC_model extends CI_Model {
 			
 			if($child_list==null){
 				// 没有二级菜单
-				$allMenu[$i]['hasChild']="0";
+				$allMenu[$i]['hasChild']='0';
 				$allMenu[$i]['child']=array();
 			}else{
 				// 有二级菜单
-				$allMenu[$i]['hasChild']="1";
+				$allMenu[$i]['hasChild']='1';
 				$allMenu[$i]['child']=$child_list;
 
 				// 二级菜单的数量
@@ -213,11 +212,11 @@ class RBAC_model extends CI_Model {
 
 					if($child2_list==null){
 						// 没有三级菜单
-						$allMenu[$i]['child'][$j]['hasChild']="0";
+						$allMenu[$i]['child'][$j]['hasChild']='0';
 						$allMenu[$i]['child'][$j]['child']=array();
 					}else{
 						// 有三级菜单
-						$allMenu[$i]['child'][$j]['hasChild']="1";
+						$allMenu[$i]['child'][$j]['hasChild']='1';
 						$allMenu[$i]['child'][$j]['child']=$child2_list;
 					}
 				}

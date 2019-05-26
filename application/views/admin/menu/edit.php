@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改菜单
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-18
- * @version 2019-05-24
+ * @version 2019-05-26
  */
 ?>
 <!DOCTYPE html>
@@ -31,6 +31,16 @@
 			<div class="panel-heading">修改菜单（父菜单：<i class="fa fa-<?=$fatherIcon; ?>" aria-hidden="true"></i> <?=$fatherName; ?>）</div>
 
 			<div class="panel-body">
+				<div class="form-group">
+					<label for="name">菜单类型</label>
+					<select class="form-control" id="type" v-model="type" onkeyup='if(event.keyCode==13)$("#name").focus()'>
+						<option value="1">菜单</option>
+						<option value="2">按钮</option>
+						<option value="3">接口</option>
+					</select>
+					<p class="help-block">Tips</p>
+				</div>
+				<br>
 				<div class="form-group">
 					<label for="name">菜单名称</label>
 					<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#icon").focus();' value="<?=$info['name']; ?>">
@@ -107,6 +117,7 @@ function inputJumpOutURI(){
 function edit(){
 	lockScreen();
 	menuId=$("#menuId").val();
+	type=$("#type").val();
 	name=$("#name").val();
 	icon=$("#icon").val();
 	uri=$("#uri").val();
@@ -130,7 +141,7 @@ function edit(){
 	$.ajax({
 		url:"<?=base_url('admin/menu/toEdit'); ?>",
 		type:"POST",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"menuId":menuId,"name":name,"icon":icon,"uri":uri},
+		data:{<?=$this->ajax->showAjaxToken(); ?>,"menuId":menuId,"type":type,"name":name,"icon":icon,"uri":uri},
 		dataType:"JSON",
 		error:function(e){
 			console.log(JSON.stringify(e));

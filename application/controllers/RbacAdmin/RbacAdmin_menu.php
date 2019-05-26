@@ -67,6 +67,7 @@ class RbacAdmin_menu extends CI_Controller {
 	public function toAdd()
 	{
 		$fatherId=inputPost('fatherId',0,1);
+		$type=inputPost('type',0,1);
 		$name=inputPost('name',0,1);
 		$icon=inputPost('icon',0,1);
 		$uri=inputPost('uri',1,1);
@@ -76,8 +77,8 @@ class RbacAdmin_menu extends CI_Controller {
 			$uri='show/jumpout/'.$jumpToURL;
 		}
 		
-		$sql='INSERT INTO menu(father_id,name,icon,uri) VALUES (?,?,?,?)';
-		$query=$this->db->query($sql,[$fatherId,$name,$icon,$uri]);
+		$sql='INSERT INTO menu(father_id,type,name,icon,uri) VALUES (?,?,?,?,?)';
+		$query=$this->db->query($sql,[$fatherId,$type,$name,$icon,$uri]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");
@@ -122,6 +123,7 @@ class RbacAdmin_menu extends CI_Controller {
 	public function toEdit()
 	{
 		$menuId=inputPost('menuId',0,1);
+		$type=inputPost('type',0,1);
 		$name=inputPost('name',0,1);
 		$icon=inputPost('icon',0,1);
 		$uri=inputPost('uri',1,1);
@@ -136,7 +138,7 @@ class RbacAdmin_menu extends CI_Controller {
 		}
 		
 		$this->db->where('id', $menuId);
-		$this->db->update('menu',['name'=>$name,'icon'=>$icon,'uri'=>$uri,'update_time'=>$nowTime]);
+		$this->db->update('menu',['type'=>$type,'name'=>$name,'icon'=>$icon,'uri'=>$uri,'update_time'=>$nowTime]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");

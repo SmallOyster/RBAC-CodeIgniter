@@ -30,6 +30,16 @@
 
 			<div class="panel-body">
 				<div class="form-group">
+					<label for="name">菜单类型</label>
+					<select class="form-control" id="type" v-model="type" onkeyup='if(event.keyCode==13)$("#name").focus()'>
+						<option value="1">菜单</option>
+						<option value="2">按钮</option>
+						<option value="3">接口</option>
+					</select>
+					<p class="help-block">Tips</p>
+				</div>
+				<br>
+				<div class="form-group">
 					<label for="name">菜单名称</label>
 					<input class="form-control" id="name" v-model="name" onkeyup='if(event.keyCode==13)$("#icon").focus()'>
 					<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的菜单名称</p>
@@ -71,6 +81,7 @@ var vm = new Vue({
 	el:'#app',
 	data:{
 		fatherId:<?=$fatherId;?>,
+		type:1,
 		name:'',
 		icon:'',
 		uri:''
@@ -114,7 +125,7 @@ var vm = new Vue({
 			$.ajax({
 				url:"<?=base_url('admin/menu/toAdd');?>",
 				type:"post",
-				data:{"fatherId":vm.fatherId,"name":vm.name,"icon":vm.icon,"uri":vm.uri},
+				data:{"fatherId":vm.fatherId,"type":vm.type,"name":vm.name,"icon":vm.icon,"uri":vm.uri},
 				dataType:"JSON",
 				error:function(e){
 					console.log(e);

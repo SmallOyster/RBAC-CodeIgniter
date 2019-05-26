@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-导航栏
  * @author Jerry Cheung <master@smhgzs.com>
  * @since 2018-12-31
- * @version 2019-05-14
+ * @version 2019-05-26
  */
 ?>
 
@@ -30,7 +30,7 @@
 						<li class="header">最近一个月的通知公告</li>
 						<li>
 							<ul class="menu">
-								<li v-if="navNoticeList!={}" v-for="navNoticeInfo in navNoticeList"><a v-bind:href="[rootUrl+'notice/detail/'+navNoticeInfo['id']]"><i class="fa fa-bullhorn"></i> {{navNoticeInfo['title']}}</a></li>
+								<li v-if="navNoticeList!={}" v-for="navNoticeInfo in navNoticeList"><a v-bind:href="[rootUrl+'notice/detail?id='+navNoticeInfo['id']]"><i class="fa fa-bullhorn"></i> {{navNoticeInfo['title']}}</a></li>
 								<li v-else><a><font color='blue'><b>暂无公告！</b></font></a></li>
 							</ul>
 						</li>
@@ -41,12 +41,12 @@
 
 				<li class="dropdown user user-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img src="<?=base_url('resource/images/user.png');?>" class="user-image">
+						<img v-bind:src="[rootUrl+'resource/images/user.png']" class="user-image">
 						<span class="hidden-xs">{{userInfo['nickName']}}</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="user-header">
-							<img src="<?=base_url('resource/images/user.png');?>" class="img-circle">
+							<img v-bind:src="[rootUrl+'resource/images/user.png']" class="img-circle">
 							<p>{{userInfo['userName']}} - {{userInfo['nickName']}}<!--small>Member since ?</small--></p>
 						</li>
 						<!-- Menu Footer-->
@@ -127,7 +127,7 @@
 	<section class="sidebar">
 		<div class="user-panel">
 			<div class="pull-left image">
-				<img src="<?=base_url('resource/images/user.png');?>" class="img-circle">
+				<img v-bind:src="[rootUrl+'resource/images/user.png']" class="img-circle">
 			</div>
 			<div class="pull-left info">
 				<p>{{userInfo['nickName']}}</p>
@@ -140,13 +140,13 @@
 		<!-- 父菜单 -->
 		<ul class="sidebar-menu" data-widget="tree">
 			<li>
-				<a href="<?=base_url('dashborad');?>">
+				<a v-bind:href="[rootUrl+'dashborad']">
 					<i class="fa fa-home"></i> 系统主页面
 				</a>
 			</li>
-			<li v-for="fatherInfo in treeData" v-if="fatherInfo['hasChild']!=1"><a v-bind:href="[rootUrl+fatherInfo['uri']]"><i v-bind:class="['fa fa-'+fatherInfo['icon']]"></i> {{fatherInfo['name']}}</a></li>
+			<li v-for="fatherInfo in treeData" v-if="fatherInfo['hasChild']!=1 && fatherInfo['type']==1"><a v-bind:href="[rootUrl+fatherInfo['uri']]"><i v-bind:class="['fa fa-'+fatherInfo['icon']]"></i> {{fatherInfo['name']}}</a></li>
 			<!-- 二级菜单 -->
-			<li v-else class="treeview">
+			<li v-else-if="fatherInfo['type']==1" class="treeview">
 				<a href="#">
 					<i v-bind:class="['fa fa-'+fatherInfo['icon']]"></i> <span>{{fatherInfo['name']}}</span>
 					<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>

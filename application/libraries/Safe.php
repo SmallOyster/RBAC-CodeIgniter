@@ -15,8 +15,8 @@ class Safe {
 
 	function __construct(){
 		$this->_CI =& get_instance();
-		$this->_CI->load->helper(array('url'));
-		$this->_CI->load->model(array('Setting_model'));
+		$this->_CI->load->model('Setting_model');
+		$this->_CI->load->helper('url');
 
 		$this->sessPrefix=$this->_CI->Setting_model->get('sessionPrefix');
 	}
