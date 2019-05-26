@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-菜单管理
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-05-18
+ * @version 2019-05-26
  */
 ?>
 <!DOCTYPE html>
@@ -29,7 +29,7 @@
 
 	<!-- 页面主要内容 -->
 	<section class="content">
-		<a href="<?=base_url('admin/menu/add/0'); ?>" class="btn btn-primary btn-block">新 增 主 菜 单</a>
+		<a href="./add?fatherId=0" class="btn btn-primary btn-block">新 增 主 菜 单</a>
 
 		<ul id="treeDemo" class="ztree"></ul>
 	</section>
@@ -45,7 +45,7 @@
 </div>
 
 <script>
-var setting = {
+let setting = {
 	view: {
 		selectedMulti: false
 	},
@@ -65,12 +65,13 @@ var zNodes=getAllMenu();
 $(document).ready(function(){
 	$.fn.zTree.init($("#treeDemo"),setting,zNodes);
 });
+
 function addHoverDom(treeId, treeNode) {
 	var aObj=$("#"+treeNode.tId+"_a");
 	var editStr=""
-		+"<button class='btn btn-info' id='treeBtn_edit_"+treeNode.id+"' onclick='window.location.href="+'"'+"<?=base_url('admin/menu/edit/');?>"+treeNode.id+'"'+"'>编辑</button> "
+		+"<button class='btn btn-info' id='treeBtn_edit_"+treeNode.id+"' onclick='window.location.href="+'"edit?menuId='+treeNode.id+'"'+"'>编辑</button> "
 		+"<button class='btn btn-danger' id='treeBtn_delete_"+treeNode.id+"' onclick="+'"'+"del_ready("+treeNode.id+",'"+treeNode.name+"')"+'"'+"'>删除</button> "
-		+"<button class='btn btn-success' id='treeBtn_add_"+treeNode.id+"' onclick='window.location.href="+'"'+"<?=base_url('admin/menu/add/');?>"+treeNode.id+'"'+"'>新增子菜单</button>";
+		+"<button class='btn btn-success' id='treeBtn_add_"+treeNode.id+"' onclick='window.location.href="+'"add?fatherId='+treeNode.id+'"'+"'>新增子菜单</button>";
 	
 	// 如果已存在button就返回
 	if($("#treeBtn_edit_"+treeNode.id).length>0) return;
@@ -82,6 +83,7 @@ function addHoverDom(treeId, treeNode) {
 	// 三级菜单不允许新增子菜单
 	if(treeNode.level>=2) $("#treeBtn_add_"+treeNode.id).remove();
 }
+
 function removeHoverDom(treeId, treeNode) {
 	$("#treeBtn_edit_"+treeNode.id).unbind().remove();
 	$("#treeBtn_delete_"+treeNode.id).unbind().remove();
@@ -92,7 +94,7 @@ function getAllMenu(){
 	roleId=$("#roleId").val();
 	
 	$.ajax({
-		url:"<?=base_url('api/role/getRoleMenuForZtree/0');?>",
+		url:headerVm.apiPath+"role/getRoleMenuForZtree",
 		dataType:"json",
 		async:false,
 		error:function(e){
@@ -123,7 +125,7 @@ function del_sure(){
 	id=$("#delId").val();
 
 	$.ajax({
-		url:"<?=base_url('admin/menu/toDelete');?>",
+		url:"./toDelete",
 		type:"post",
 		dataType:"json",
 		data:{<?=$this->ajax->showAjaxToken();?>,"id":id},

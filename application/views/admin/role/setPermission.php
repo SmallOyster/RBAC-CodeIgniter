@@ -87,11 +87,10 @@ function getAllMenu(){
 	roleId=$("#roleId").val();
 	
 	$.ajax({
-		url:"<?=base_url('api/getAllMenuForZtree'); ?>",
-		type:"post",
+		url:headerVm.apiPath+"role/getRoleMenuForZtree",
+		data:{'roleId':roleId},
 		dataType:"json",
 		async:false,
-		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleId':roleId},
 		error:function(e){
 			console.log(e);
 			unlockScreen();

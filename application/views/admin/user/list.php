@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-05-25
+ * @version 2019-05-26
  */
 ?>
 <!DOCTYPE html>
@@ -90,7 +90,7 @@ var vm = new Vue({
 							let operateHtml=''
 							               +'<a href="'+headerVm.rootUrl+'admin/user/edit?id='+list[i]['id']+'" class="btn btn-info">编辑</a> '
 							               +"<a onclick='vm.resetPwd_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+")' class='btn btn-warning'>重置密码</a> "
-							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+")' class='btn btn-danger'>删除</a> ";
+							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+")' class='btn btn-danger'>删除</a>";
 
 							table.row.add({
 								0: list[i]['user_name'],
@@ -271,10 +271,11 @@ var vm = new Vue({
 				}
 			});
 		}
+	},
+	mounted:function(){
+		this.getList();
 	}
 });
-
-vm.getList();
 </script>
 
 <div class="modal fade" id="delModal">

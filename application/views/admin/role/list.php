@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-角色列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version 2019-05-25
+ * @version 2019-05-26
  */
 ?>
 <!DOCTYPE html>
@@ -85,7 +85,7 @@ var vm = new Vue({
 							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['name']+'"'+")' class='btn btn-danger'>删除</a> "
 							               +'<a href="'+headerVm.rootUrl+'admin/role/setPermission?id='+list[i]['id']+'&name='+list[i]['name']+'" class="btn btn-success">分配权限</a> ';
 
-							operateHtml=list[i]['is_default']!=0?operateHtml:operateHtml+"<a onclick='setDefaultRole("+'"'+list[i]['id']+'"'+")' class='btn btn-primary'>设为默认角色</a>";
+							operateHtml=list[i]['is_default']!=0?operateHtml:operateHtml+"<a onclick='setDefaultRole("+'"'+list[i]['id']+'"'+")' class='btn btn-primary'>设为默认角色</a> ";
 
 							table.row.add({
 								0: list[i]['name'],
@@ -177,10 +177,11 @@ var vm = new Vue({
 				}
 			});
 		}
+	},
+	mounted:function(){
+		this.getList();
 	}
 });
-
-vm.getList();
 </script>
 
 <div class="modal fade" id="delModal">

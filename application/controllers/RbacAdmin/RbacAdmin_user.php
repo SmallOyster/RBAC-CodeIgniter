@@ -3,12 +3,12 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-用户
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-05-25
+* @version 2019-05-26
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class RBAC_user extends CI_Controller {
+class RbacAdmin_user extends CI_Controller {
 	
 	public $sessPrefix;
 	public $nowUserId;

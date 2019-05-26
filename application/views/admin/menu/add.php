@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-新增菜单
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-05-24
+ * @version 2019-05-26
  */
 ?>
 <!DOCTYPE html>
@@ -88,6 +88,7 @@ var vm = new Vue({
 			}else if(uri==null){
 				return;
 			}else{
+				vm.uri="show/jumpout/"+uri;
 				$("#uri").val("show/jumpout/"+uri);
 			}
 		},

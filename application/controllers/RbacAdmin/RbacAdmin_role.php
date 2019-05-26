@@ -3,12 +3,12 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-角色
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-05-25
+* @version 2019-05-26
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class RBAC_role extends CI_Controller {
+class RbacAdmin_role extends CI_Controller {
 
 	public $sessPrefix;
 	public $nowUserName;
@@ -124,9 +124,9 @@ class RBAC_role extends CI_Controller {
 		$roleId=inputGet('id',0);
 		$roleName=inputGet('name',0);
 
-		$list=$this->RBAC_model->getAllMenu();
+		$list=$this->rbac->getAllMenu();
 
-		$permissions=$this->RBAC_model->getAllPermissionByRole($roleId);
+		$permissions=$this->rbac->getAllPermissionByRole($roleId);
 		$permissions=implode(",",$permissions);
 		
 		$this->load->view('admin/role/setPermission',['list'=>$list,'roleId'=>$roleId,"permission"=>$permissions,'roleName'=>$roleName]);

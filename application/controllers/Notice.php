@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-通知
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-28
- * @version 2019-05-17
+ * @version 2019-05-26
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -29,24 +29,19 @@ class Notice extends CI_Controller {
 	public function adminList()
 	{
 		$this->ajax->makeAjaxToken();
-		$list=$this->Notice_model->get();
-		
-		$this->load->view('admin/notice/list',['list'=>$list]);
+		$this->load->view('admin/notice/list');
 	}
 	
 	
 	public function list()
 	{
-		$list=$this->Notice_model->get();
-		
-		$this->load->view('notice/list',['list'=>$list]);
+		$this->load->view('notice/list');
 	}
 
 
 	public function publish()
 	{
 		$this->ajax->makeAjaxToken();
-		
 		$this->load->view('admin/notice/pub');
 	}
 
@@ -59,7 +54,7 @@ class Notice extends CI_Controller {
 		$content=inputPost('content');
 		
 		$nowNickName=$this->session->userdata($this->sessPrefix.'nickName');
-		$sql="INSERT INTO notice(title,content,publisher_id) VALUES (?,?,?)";
+		$sql='INSERT INTO notice(title,content,publisher_id,receiver) VALUES (?,?,?,"0")';
 		$query=$this->db->query($sql,[$title,$content,$this->session->userdata($this->sessPrefix.'userId')]);
 
 		if($this->db->affected_rows()==1){
@@ -85,26 +80,22 @@ class Notice extends CI_Controller {
 	}
 	
 	
-	public function showDetail($id)
+	public function showDetail()
 	{
-		$info=$this->Notice_model->get($id);
+		$info=$this->notice->get(inputGet('id',0));
 	 
-		if($info==array()){
-	 		header("Location:".base_url('/'));
-	 	}
+		if($info==array()) header("location:".base_url());
 	 
 		$this->load->view('notice/detail',['info'=>$info[0]]);
 	}
 
 
-	public function edit($id)
+	public function edit()
 	{
-		$info=$this->Notice_model->get($id);
-	 
-		if($info==array()){
-	 		header("Location:".base_url('/'));
-	 	}
-	 
+		$info=$this->notice->get(inputGet('id',0));
+
+		if($info==array()) header("location:".base_url());
+
 		$this->load->view('admin/notice/edit',['info'=>$info[0]]);
 	}
 
@@ -117,8 +108,8 @@ class Notice extends CI_Controller {
 		$title=inputPost('title',0,1);
 		$content=inputPost('content',0,1);
 		
-		$sql="UPDATE notice SET title=?,content=? WHERE id=?";
-		$query=$this->db->query($sql,[$title,$content,$id]);
+		$this->db->where('id', $id);
+		$this->db->update('notice',['title'=>$title,'content'=>$content]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");

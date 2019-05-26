@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-角色
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-05-24
+ * @version 2019-05-26
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -105,8 +105,9 @@ class API_Role extends CI_Controller {
 	}
 
 
-	public function getRoleMenuForZtree($roleId=0)
+	public function getRoleMenuForZtree()
 	{
+		$roleId=inputGet('roleId',0);
 		$rtn=array();
 		$allPermission=array();
 

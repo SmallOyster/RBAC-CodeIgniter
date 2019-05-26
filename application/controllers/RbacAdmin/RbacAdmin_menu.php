@@ -3,12 +3,12 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-菜单
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-17
-* @version 2019-03-27
+* @version 2019-05-26
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class RBAC_menu extends CI_Controller {
+class RbacAdmin_menu extends CI_Controller {
 
 	public $sessPrefix;
 	public $nowUserId;
@@ -33,27 +33,30 @@ class RBAC_menu extends CI_Controller {
 		$this->safe->checkPermission();
 		$this->ajax->makeAjaxToken();
 		
-		$list=$this->RBAC_model->getAllMenu();
+		$list=$this->rbac->getAllMenu();
 		$this->load->view('admin/menu/list',['list'=>$list]);
 	}
 
 
-	public function add($fatherId)
+	public function add()
 	{
 		$this->ajax->makeAjaxToken();
+
+		$fatherId=inputGet('fatherId',0);
 		
 		if($fatherId==0){
 			$fatherName="主菜单";
 			$fatherIcon="home";
 		}else{
-			$query=$this->db->query("SELECT name,icon FROM menu WHERE id=?",[$fatherId]);		
+			$this->db->select('name,icon');
+			$query=$this->db->get_where('menu',['id'=>$fatherId]);		
 			
 			if($query->num_rows()==1){
 				$info=$query->result_array();
 				$fatherName=$info[0]['name'];
 				$fatherIcon=$info[0]['icon'];
 			}else{
-				header('location:'.base_url('index'));
+				header('location:'.base_url());
 			}
 		}
 		
@@ -63,8 +66,6 @@ class RBAC_menu extends CI_Controller {
 
 	public function toAdd()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$fatherId=inputPost('fatherId',0,1);
 		$name=inputPost('name',0,1);
 		$icon=inputPost('icon',0,1);
@@ -75,7 +76,7 @@ class RBAC_menu extends CI_Controller {
 			$uri='show/jumpout/'.$jumpToURL;
 		}
 		
-		$sql="INSERT INTO menu(father_id,name,icon,uri) VALUES (?,?,?,?)";
+		$sql='INSERT INTO menu(father_id,name,icon,uri) VALUES (?,?,?,?)';
 		$query=$this->db->query($sql,[$fatherId,$name,$icon,$uri]);
 
 		if($this->db->affected_rows()==1){
@@ -86,18 +87,20 @@ class RBAC_menu extends CI_Controller {
 	}
 
 	
-	public function edit($menuId)
+	public function edit()
 	{
 		$this->ajax->makeAjaxToken();
 
+		$menuId=inputGet('menuId',0);
+
 		// 获取菜单信息
-		$query1=$this->db->query("SELECT * FROM menu WHERE id=?",[$menuId]);
+		$query1=$this->db->get_where('menu',['id'=>$menuId]);
 		$list1=$query1->result_array();
 		$info=$list1[0];
 		$fatherId=$info['father_id'];
 
 		if($query1->num_rows()!=1){
-			header("Location:".base_url());
+			header("location:".base_url());
 		}
 
 		// 获取父菜单名称和Icon
@@ -105,7 +108,7 @@ class RBAC_menu extends CI_Controller {
 			$fatherName="主菜单";
 			$fatherIcon="home";
 		}else{
-			$query2=$this->db->query("SELECT * FROM menu WHERE id=?",[$fatherId]);
+			$query2=$this->db->get_where('menu',['id'=>$fatherId]);
 			$list2=$query2->result_array();
 			$fatherInfo=$list2[0];
 			$fatherName=$fatherInfo['name'];
@@ -118,8 +121,6 @@ class RBAC_menu extends CI_Controller {
 
 	public function toEdit()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$menuId=inputPost('menuId',0,1);
 		$name=inputPost('name',0,1);
 		$icon=inputPost('icon',0,1);
@@ -127,15 +128,15 @@ class RBAC_menu extends CI_Controller {
 		$nowTime=date("Y-m-d H:i:s");
 	
 		if(substr($uri,0,13)=='show/jumpout/'){
-			$jumpParam=substr($uri,13);
+			$jumpParam=substr($uri,12);
 			$loc=strpos($jumpParam,"/");
 			$jumpToURL=substr($jumpParam,0,$loc);
 			$jumpName=substr($jumpParam,$loc+1);
 			$uri='show/jumpout/'.$jumpToURL.'/'.$jumpName;
 		}
 		
-		$sql="UPDATE menu SET name=?,icon=?,uri=?,update_time=? WHERE id=?";
-		$query=$this->db->query($sql,[$name,$icon,$uri,$nowTime,$menuId]);
+		$this->db->where('id', $menuId);
+		$this->db->update('menu',['name'=>$name,'icon'=>$icon,'uri'=>$uri,'update_time'=>$nowTime]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");

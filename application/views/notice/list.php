@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-通知列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-07-19
- * @version 2019-05-13
+ * @version 2019-05-26
  */
 ?>
 <!DOCTYPE html>
@@ -35,16 +35,7 @@
 							<th>时间</th>
 						</tr>
 					</thead>
-
-					<tbody>
-						<?php foreach($list as $info){ ?>
-							<tr>
-								<td><a href="<?=base_url('notice/detail/').$info['id'];?>"><?=$info['title'];?></a></td>
-								<td><?=$info['publisherName'];?></td>
-								<td><?=$info['create_time'];?></td>
-							</tr>
-						<?php } ?>
-					</tbody>
+					<tbody></tbody>
 				</table>
 			</div>
 		</div>
@@ -54,12 +45,42 @@
 <?php $this->load->view('include/footer'); ?>
 
 <script>
-window.onload=function(){
-	$('#table').DataTable({
-		responsive: true,
-		"order":[[2,'desc']]
-	});
-};
+let table;
+
+var vm = new Vue({
+	el:'#app',
+	data:{},
+	methods:{
+		getList:()=>{
+			$.ajax({
+				url:headerVm.apiPath+"notice/get",
+				data:{'type':'list'},
+				dataType:'json',
+				success:ret=>{
+					if(ret.code==200){
+						let list=ret.data['list'];
+
+						table=$('#table').DataTable({
+							responsive: true,
+							"order":[[2,'desc']]
+						});
+
+						for(i in list){
+							table.row.add({
+								0: '<a href="'+headerVm.rootUrl+'notice/detail?id='+list[i]['id']+'">'+list[i]['title']+'</a>',
+								1: list[i]['publisher'],
+								2: list[i]['update_time']
+							}).draw();
+						}
+					}
+				}
+			})
+		}
+	},
+	mounted:function(){
+		this.getList();
+	}
+});
 </script>
 
 </body>

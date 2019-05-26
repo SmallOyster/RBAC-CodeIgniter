@@ -42,8 +42,8 @@ class Safe {
 		}
 		
 		$roleId=$this->_CI->session->userdata($this->sessPrefix."roleId");
-		$allPermission=$this->_CI->RBAC_model->getAllPermissionByRole($roleId);
-		$menuId=$this->_CI->RBAC_model->getMenuId($this->_CI->uri->uri_string());
+		$allPermission=$this->_CI->rbac->getAllPermissionByRole($roleId);
+		$menuId=$this->_CI->rbac->getMenuId($this->_CI->uri->uri_string());
 		
 		if(strlen($roleId)!=6){
 			die('<script>alert("抱歉！您暂无权限访问此页面！\n请从正常途径访问系统！");window.location.href="'.base_url().'?redirect='.urlencode($_SERVER['REQUEST_URI']).'";</script>');

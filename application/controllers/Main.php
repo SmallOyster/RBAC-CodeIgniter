@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-基本
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-07
- * @version 2019-05-25
+ * @version 2019-05-26
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -36,7 +36,7 @@ class Main extends CI_Controller {
 			header('location:'.$url);
 		}
 		
-		$latestNotice=$this->Notice_model->get(0,'index');
+		$latestNotice=$this->notice->get(0,'index');
 		
 		$this->load->view('index',['allNotice'=>$latestNotice]);
 	}

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-主页
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-10-20
- * @version 2019-03-17
+ * @version 2019-05-26
  */
 ?>
 <!DOCTYPE html>
@@ -32,7 +32,7 @@
 				<li class="list-group-item">
 					<div class="row">
 						<div class="col-xs-8">
-							<a href="<?=base_url('notice/detail/').$info['id'];?>">
+							<a href="<?=base_url('notice/detail?id=').$info['id'];?>">
 								<i class="fa fa-bullhorn"></i> <?=$info['title'];?>
 							</a>
 						</div>

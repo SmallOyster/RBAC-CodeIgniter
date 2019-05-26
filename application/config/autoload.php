@@ -132,4 +132,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('RBAC_model','Log_model','User_model'=>'user','Setting_model'=>'setting','Notice_model');
+$autoload['model'] = array('RBAC_model'=>'rbac','Log_model','User_model'=>'user','Setting_model'=>'setting','Notice_model'=>'notice');

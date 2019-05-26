@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-通知管理
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-28
- * @version 2019-05-13
+ * @version 2019-05-26
  */ 
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>通知管理 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>通知管理 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -29,31 +29,21 @@
 		<a href="<?=base_url('admin/notice/pub'); ?>" class="btn btn-primary btn-block">发 布 新 通 知 &gt;</a>
 		<hr>
 
-		<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
-			<thead>
-				<tr>
-					<th>标题</th>
-					<th>作者</th>
-					<th>时间</th>
-					<th>操作</th>
-				</tr>
-			</thead>
-
-			<tbody>
-			<?php foreach($list as $info){ ?>
-				<tr>
-					<td><?=$info['title']; ?></td>
-					<td><?=$info['publisherName']; ?></td>
-					<td><?=$info['create_time']; ?></td>
-					<td>
-						<a href="<?=base_url('notice/detail/').$info['id']; ?>" class="btn btn-primary">详细</a>
-						<a href="<?=base_url('admin/notice/edit/').$info['id']; ?>" class="btn btn-info">编辑</a>
-						<a onclick='del_ready("<?=$info['id']; ?>","<?=$info['title']; ?>")' class="btn btn-danger">删除</a>
-					</td>
-				</tr>
-			<?php } ?>
-			</tbody>
-		</table>
+		<div class="box">
+			<div class="box-body">
+				<table id="table" class="table table-striped table-bordered table-hover" style="border-radius: 5px; border-collapse: separate;">
+					<thead>
+						<tr>
+							<th>标题</th>
+							<th>作者</th>
+							<th>时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
 	</section>
 	<!-- ./页面主要内容 -->
 </div>
@@ -67,67 +57,100 @@
 </div>
 
 <script>
-window.onload=function(){
-	$('#table').DataTable({
-		responsive: true,
-		"order":[[2,'desc']],
-		"columnDefs":[{
-			"targets":[3],
-			"orderable": false
-		}]
-	});
-};
+let table;
 
-function del_ready(id,name){
-	$("#delId").val(id);
-	$("#delName_show").html(name);
-	$("#delModal").modal('show');
-}
+var vm = new Vue({
+	el:'#app',
+	data:{
+		deleteId:0
+	},
+	methods:{
+		getList:()=>{
+			$.ajax({
+				url:headerVm.apiPath+"notice/get",
+				data:{'type':'list'},
+				dataType:'json',
+				success:ret=>{
+					if(ret.code==200){
+						let list=ret.data['list'];
 
+						table=$('#table').DataTable({
+							responsive: true,
+							"order":[[2,'desc']],
+							"columnDefs":[{
+								"targets":[3],
+								"orderable": false
+							}]
+						});
 
-function del_sure(){
-	lockScreen();
-	id=$("#delId").val();
+						for(i in list){
+							let operateHtml=''
+							               +'<a href="'+headerVm.rootUrl+'notice/detail'+list[i]['id']+'" class="btn btn-primary">详细</a> '
+							               +'<a href="'+headerVm.rootUrl+'admin/notice/edit'+list[i]['id']+'" class="btn btn-info">编辑</a> '
+							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+escape(list[i]['title'])+'"'+")' class='btn btn-danger'>删除</a> ";
 
-	$.ajax({
-		url:"<?=base_url('admin/notice/toDelete'); ?>",
-		type:"post",
-		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
-		error:function(e){
-			console.log(e);
-			unlockScreen();
-			$("#delModal").modal('hide');
-			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-			return false;
+							table.row.add({
+								0: list[i]['title'],
+								1: list[i]['publisher'],
+								2: list[i]['update_time'],
+								3: operateHtml
+							}).draw();
+						}
+					}
+				}
+			})
 		},
-		success:function(ret){
-			unlockScreen();
-			
-			if(ret.code==200){
-				$("#delModal").modal('hide');
-				alert("删除成功！");
-				location.reload();
-				return true;
-			}else if(ret.code==1){
-				$("#delModal").modal('hide');
-				showModalTips("删除失败！！！");
-				return false;
-			}else if(ret.code==403001){
-				$("#delModal").modal('hide');
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				return false;
-			}else if(ret.code==0){
-				showModalTips("参数缺失！请联系技术支持！");
-				return false;
-			}else{
-				$("#delModal").modal('hide');
-				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
-				return false;
-			}
+		del_ready:(id,name)=>{
+			vm.deleteId=id;
+			$("#delName_show").html(unescape(name));
+			$("#delModal").modal('show');
+		},
+		del_sure(){
+			lockScreen();
+			$.ajax({
+				url:"./toDelete",
+				type:"post",
+				dataType:"json",
+				data:{<?=$this->ajax->showAjaxToken(); ?>,"id":vm.deleteId},
+				error:function(e){
+					console.log(e);
+					unlockScreen();
+					$("#delModal").modal('hide');
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;
+				},
+				success:function(ret){
+					unlockScreen();
+
+					if(ret.code==200){
+						$("#delModal").modal('hide');
+						alert("删除成功！");
+						location.reload();
+						return true;
+					}else if(ret.code==1){
+						$("#delModal").modal('hide');
+						showModalTips("删除失败！！！");
+						return false;
+					}else if(ret.code==403001){
+						$("#delModal").modal('hide');
+						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
+						return false;
+					}else if(ret.code==0){
+						showModalTips("参数缺失！请联系技术支持！");
+						return false;
+					}else{
+						$("#delModal").modal('hide');
+						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
+						return false;
+					}
+				}
+			});
 		}
-	});
-}
+	},
+	mounted:function(){
+		this.getList();
+	}
+});
 </script>
 
 <div class="modal fade" id="delModal">
@@ -138,7 +161,6 @@ function del_sure(){
 				<h3 class="modal-title" id="ModalTitle">温馨提示</h3>
 			</div>
 			<div class="modal-body">
-				<input type="hidden" id="delId">
 				<center>
 				<font color="red" style="font-weight:bolder;font-size:23px;">确定要删除下列通知吗？</font>
 				<br><br>
