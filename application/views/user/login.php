@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-登录
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-20
- * @version 2019-05-18
+ * @version 2019-05-29
  */
 ?>
 
@@ -43,9 +43,12 @@
 						<input type="checkbox" id="Remember">记住用户名
 					</label>
 				</div>
+
 				<center>
-					<button class="btn btn-success" style="width:98%" onclick='toLogin();'>登录 / Login &gt;</button><br><br>
-					<a href="<?=base_url('SSO/login');?>" class="btn" style="color:white;background-color:#FF60AF;width:98%;font-size:17px;font-weight:bold;"><i class="fa fa-star" aria-hidden="true"></i> 统一身份认证平台 快速登录 &gt;</a>
+					<a class="btn btn-primary" style="width:49%" href='register'>注册 / Register</a>
+					<button class="btn btn-success" style="width:49%" onclick='toLogin();'>登录 / Login &gt;</button>
+					<br><br>
+					<a href="<?=base_url('SSO/login');?>" class="btn" style="color:white;background-color:#FF60AF;width:99%;font-size:17px;font-weight:bold;"><i class="fa fa-star" aria-hidden="true"></i> 统一身份认证平台 快速登录 &gt;</a>
 				</center>
 			</div>
 			<div class="panel-footer" style="text-align: center;">
@@ -84,9 +87,7 @@ function launchQQ(){
 function showWXCode(){
 	$("#wxModal").modal('show');
 }
-</script>
 
-<script>
 var isAjaxing=0;
 
 // 监听模态框关闭事件
@@ -97,23 +98,23 @@ $(function (){
 });
 
 window.onload=function(){
-  
-  /********** ▼ 记住密码 ▼ **********/
-  Remember=getCookie("<?=$this->sessPrefix;?>RmUN");
-  if(Remember!=null){
-    $("#userName").val(Remember);
-    $("#pwd").focus();
-    $("#Remember").attr("checked",true);
-  }else{
-    $("#userName").focus();
-  }
-  /********** ▲ 记住密码 ▲ **********/
 
-  localStorage.removeItem("allRoleInfo");
+	/********** ▼ 记住密码 ▼ **********/
+	Remember=getCookie("<?=$this->sessPrefix;?>RmUN");
+	if(Remember!=null){
+		$("#userName").val(Remember);
+		$("#pwd").focus();
+		$("#Remember").attr("checked",true);
+	}else{
+		$("#userName").focus();
+	}
+	/********** ▲ 记住密码 ▲ **********/
+
+	localStorage.removeItem("allRoleInfo");
+	localStorage.removeItem("jwtToken");
 }
 
 function toLogin(){
-	
 	// 防止多次提交
 	if(isAjaxing==1){
 		return false;
@@ -164,7 +165,7 @@ function toLogin(){
 	}
 
 	$.ajax({
-		url:"<?=base_url('user/toLogin');?>",
+		url:"toLogin",
 		type:"post",
 		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"pwd":pwd},
 		dataType:"json",
@@ -184,7 +185,8 @@ function toLogin(){
 
 			if(ret.code==200){
 				localStorage.setItem('allRoleInfo',ret.data['allRoleInfo']);
-				window.location.href="<?=base_url('/');?>"
+				localStorage.setItem('jwtToken',ret.data['jwtToken']);
+				window.location.href="<?=base_url('/');?>";
 			}else if(ret.code==1){
 				showModalTips("当前用户被禁用！<br>请联系管理员！");
 				return false;

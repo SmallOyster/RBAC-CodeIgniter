@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-05-18
+ * @version 2019-05-29
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -126,8 +126,11 @@ class User extends CI_Controller {
 			$this->session->set_userdata($this->sessPrefix.'allRoleInfo',$allRoleInfo);
 
 			$this->db->query('UPDATE user SET last_login=? WHERE id=?',[date('Y-m-d H:i:s'),$userId]);
+
+			$this->load->helper('JWT');
+			$jwtToken=jwt_helper::create(['userId'=>$userId,'allRoleInfo'=>$allRoleInfo]);
 			
-			returnAjaxData(200,"success",['allRoleInfo'=>json_encode($allRoleInfo)]);
+			returnAjaxData(200,'success',['allRoleInfo'=>json_encode($allRoleInfo),'jwtToken'=>$jwtToken]);
 		}elseif($validate==-1){
 			returnAjaxData(1,"user Forbidden");
 		}else{
@@ -186,10 +189,10 @@ class User extends CI_Controller {
 		$roleList=$roleQuery->result_array();
 		$roleId=$roleList[0]['id'];
 	
-		$sql='INSERT INTO user(user_name,nick_name,password,salt,role_id,phone,email) VALUES (?,?,?,?,?,?,?)';
+		$sql='INSERT INTO user(user_name,nick_name,password,salt,role_id,phone,email,status) VALUES (?,?,?,?,?,?,?,1)';
 		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$roleId,$phone,$email]);
 		
-		$emailToken=md5(random_string('alnum',16).session_id());
+		/*$emailToken=md5(random_string('alnum',16).session_id());
 		$emailURL=base_url('user/reg/verify/').$emailToken;
 		$message='Email注册验证 / '.$this->setting->get("systemName").'<hr>';
 		$message.='尊敬的'.$userName.'用户，感谢您注册'.$this->setting->get("systemName").'！为验证您的身份，请点击下方链接以完成注册激活：<br>';
@@ -214,6 +217,8 @@ class User extends CI_Controller {
 			$expireTime=time()+900;
 			$sql2='INSERT INTO send_mail(email,token,param,expire_time,ip) VALUES (?,?,?,?,?)';
 			$query2=$this->db->query($sql2,[$email,$emailToken,$param,$expireTime,$ip]);
+			returnAjaxData(200,'success');*/
+		if($this->db->affected_rows()==1){
 			returnAjaxData(200,'success');
 		}else if($this->db->affected_rows()==1){
 			returnAjaxData(5001,'success to Register But Failed to Send Active Email');
@@ -223,7 +228,7 @@ class User extends CI_Controller {
 	}
 	
 	
-	public function verifyRegister($token)
+	/*public function verifyRegister($token)
 	{
 		$sql1='SELECT expire_time,param,status FROM send_mail WHERE token=?';
 		$query1=$this->db->query($sql1,[$token]);
@@ -262,7 +267,7 @@ class User extends CI_Controller {
 		}else{
 			die('<script>alert("用户激活失败！请联系管理员！");window.location.href="'.base_url().'";</script>');
 		}
-	}
+	}*/
 	
 	
 	public function forgetPassword()

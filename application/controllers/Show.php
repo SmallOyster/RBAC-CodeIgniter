@@ -56,7 +56,7 @@ class Show extends CI_Controller {
 	{
 		$this->load->helper('jwt_helper');
 		
-		echo $token=jwt_helper::create(['testUID'=>6]).PHP_EOL.PHP_EOL;
+		echo $token=jwt_helper::create(['testUID'=>6,'r'=>'8']).PHP_EOL.PHP_EOL;
 		echo var_dump(jwt_helper::decode($token)).PHP_EOL.PHP_EOL;
 		echo var_dump(jwt_helper::validate($token)).PHP_EOL.PHP_EOL;
 	}
