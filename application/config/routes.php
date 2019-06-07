@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-路由
  * @author CodeIgniter,Jerry Cheung
  * @since 2018-02-06
- * @version 2019-05-26
+ * @version 2019-06-07
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -19,9 +19,9 @@ $route['translate_uri_dashes'] = FALSE;
 $route['dashborad'] = 'Main/index';
 
 /************* RBAC-API **************/
-$route['api/role/get']='API/API_Role/getRoleInfo';
-$route['api/role/getUserMenu']='API/API_Role/getUserMenu';
-$route['api/role/getRoleMenuForZtree']='API/API_Role/getRoleMenuForZtree';
+$route['api/role/get']='RBAC/getRoleInfo';
+$route['api/role/getRoleMenuForZtree']='RBAC/getRoleMenuForZtree';
+$route['api/role/getUserMenu']='RBAC/getUserMenu';
 
 
 /******* API-用户 *******/

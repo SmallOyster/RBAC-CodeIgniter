@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-导航栏
  * @author Jerry Cheung <master@smhgzs.com>
  * @since 2018-12-31
- * @version 2019-05-26
+ * @version 2019-06-07
  */
 ?>
 
@@ -20,25 +20,6 @@
 
 		<div class="navbar-custom-menu">
 			<ul class="nav navbar-nav">
-				<!-- 导航栏通知列表 -->
-				<li class="dropdown notifications-menu">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-bell-o"></i>
-						<span v-if="navNoticeTotal>0" class="label label-warning">{{navNoticeTotal}}</span>
-					</a>
-					<ul class="dropdown-menu">
-						<li class="header">最近一个月的通知公告</li>
-						<li>
-							<ul class="menu">
-								<li v-if="navNoticeList!={}" v-for="navNoticeInfo in navNoticeList"><a v-bind:href="[rootUrl+'notice/detail?id='+navNoticeInfo['id']]"><i class="fa fa-bullhorn"></i> {{navNoticeInfo['title']}}</a></li>
-								<li v-else><a><font color='blue'><b>暂无公告！</b></font></a></li>
-							</ul>
-						</li>
-						<li class="footer"><a v-bind:href="[rootUrl+'notice/list']">查看所有通知 &gt;</a></li>
-					</ul>
-				</li>
-				<!-- ./导航栏通知列表 -->
-
 				<li class="dropdown user user-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<img v-bind:src="[rootUrl+'resource/images/user.png']" class="user-image">
@@ -251,8 +232,6 @@ var headerVm = new Vue({
 		token:"<?=$this->ajax->showAjaxToken(0);?>",
 		userInfo:{},
 		treeData:{},
-		navNoticeList:{},
-		navNoticeTotal:0,
 		allRoleInfo:{},
 		roleIdSelected:''
 	},
@@ -319,26 +298,6 @@ var headerVm = new Vue({
 				}
 			});
 		},
-		getNavbarNotice:function(){
-			$.ajax({
-				url:headerVm.apiPath+"notice/get",
-				data:{"type":"navbar"},
-				dataType:"json",
-				error:function(e){
-					showModalTips("服务器错误！"+e.status);
-					console.log(e);
-					return false;
-				},
-				success:function(ret){
-					if(ret.code==200){
-						list=ret.data['list'];
-						headerVm.navNoticeList=list;
-						headerVm.navNoticeTotal=list.length;
-						return false;
-					}
-				}
-			});
-		},
 		getAllRole:function(){
 			allRoleInfo=localStorage.getItem('allRoleInfo');
 			headerVm.allRoleInfo=JSON.parse(allRoleInfo);
@@ -366,6 +325,5 @@ var headerVm = new Vue({
 
 headerVm.getUserInfo();
 headerVm.getMenuTree();
-headerVm.getNavbarNotice();
 headerVm.getAllRole();
 </script>
