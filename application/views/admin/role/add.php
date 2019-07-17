@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-新增角色
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version 2019-03-17
+ * @version 2019-06-12
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>新增角色 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>新增角色 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -75,9 +75,9 @@ function add(){
 	}
 
 	$.ajax({
-		url:"<?=site_url('admin/role/toAdd'); ?>",
+		url:"./toAdd",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark},
+		data:{"name":name,"remark":remark},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -95,10 +95,6 @@ function add(){
 				return true;
 			}else if(ret.message=="insertFailed"){
 				$("#tips").html("新增失败！！！");
-				$("#tipsModal").modal('show');
-				return false;
-			}else if(ret.code=="403"){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code==0){

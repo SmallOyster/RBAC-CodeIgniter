@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-显示
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-06
-* @version 2019-05-15
+* @version 2019-06-12
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -26,16 +26,7 @@ class Show extends CI_Controller {
 
 	public function blank()
 	{
-		$this->load->view('show/blank',[]);
-	}
-	
-	
-	public function list()
-	{
-		$query=$this->db->query("SELECT * FROM notice");
-		$list=$query->result_array();
-		
-		$this->load->view('show/list',['list'=>$list]);
+		$this->load->view('show/blank');
 	}
 
 

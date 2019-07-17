@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改角色
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-03-17
+ * @version 2019-06-12
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>修改角色 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>修改角色 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -33,13 +33,13 @@
 			<div class="panel-body">
 				<div class="form-group">
 					<label for="name">角色名称</label>
-					<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' value="<?=$info['name']; ?>">
+					<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' value="<?=$info['name'];?>">
 					<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
 				</div>
 				<br>
 				<div class="form-group">
 					<label for="remark">备注</label>
-					<textarea class="form-control" id="remark"><?=$info['remark']; ?></textarea>
+					<textarea class="form-control" id="remark"><?=$info['remark'];?></textarea>
 					<p class="help-block">选填</p>
 				</div>
 
@@ -47,12 +47,12 @@
 
 				<div class="form-group">
 					<label>创建时间</label>
-					<input class="form-control" value="<?=$info['create_time']; ?>" disabled>
+					<input class="form-control" value="<?=$info['create_time'];?>" disabled>
 				</div>
 				<br>
 				<div class="form-group">
 					<label>最后修改时间</label>
-					<input class="form-control" value="<?=$info['update_time']; ?>" disabled>
+					<input class="form-control" value="<?=$info['update_time'];?>" disabled>
 				</div>
 
 				<hr>
@@ -93,9 +93,9 @@ function edit(){
 	}
 
 	$.ajax({
-		url:"<?=site_url('admin/role/toEdit'); ?>",
+		url:"./toEdit",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"remark":remark,'roleId':roleId},
+		data:{"name":name,"remark":remark,'roleId':roleId},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -113,10 +113,6 @@ function edit(){
 				return true;
 			}else if(ret.code==1){
 				$("#tips").html("修改失败！！！");
-				$("#tipsModal").modal('show');
-				return false;
-			}else if(ret.code==403001){
-				$("#tips").html("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				$("#tipsModal").modal('show');
 				return false;
 			}else if(ret.code==0){

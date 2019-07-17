@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-05-19
+ * @version 2019-07-17
  */
 ?>
 <!DOCTYPE html>
@@ -140,9 +140,6 @@ var vm = new Vue({
 						$("#maincontent").attr('style','width:'+$("#email").css('width'));
 						$("#maincontent").hide();
 						return true;
-					}else if(ret.code==403001){
-						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-						return false;
 					}else{
 						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 						return false;
@@ -203,7 +200,7 @@ function edit(){
 	$.ajax({
 		url:"<?=base_url('admin/user/toEdit'); ?>",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,'userId':userId,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleId":roleId},
+		data:{'userId':userId,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleId":roleId},
 		dataType:'json',
 		error:function(e){
 			console.log(JSON.stringify(e));
@@ -220,9 +217,6 @@ function edit(){
 				return true;
 			}else if(ret.code==1){
 				showModalTips("修改失败！！！");
-				return false;
-			}else if(ret.code==403001){
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else if(ret.code==0){
 				showModalTips("参数缺失！请联系技术支持！");

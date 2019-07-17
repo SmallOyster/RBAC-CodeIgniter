@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-05-26
+ * @version 2019-06-13
  */
 ?>
 <!DOCTYPE html>
@@ -128,7 +128,7 @@ var vm = new Vue({
 				url:headerVm.rootUrl+"admin/user/toUpdateStatus",
 				type:"post",
 				dataType:"json",
-				data:{<?=$this->ajax->showAjaxToken(); ?>,"id":vm.updateId,"status":vm.statusNum},
+				data:{"id":vm.updateId,"status":vm.statusNum},
 				error:function(e){
 					console.log(e);
 					unlockScreen();
@@ -153,9 +153,6 @@ var vm = new Vue({
 					}else if(ret.code==0){
 						showModalTips("参数缺失！<hr>请从正确途径访问本功能！");
 						return false;
-					}else if(ret.code==403001){
-						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-						return false;
 					}else if(ret.code==403002){
 						showModalTips("当前用户无操作权限！<br>请联系管理员！");
 						return false;
@@ -178,7 +175,7 @@ var vm = new Vue({
 				url:headerVm.rootUrl+"admin/user/toResetPwd",
 				type:"post",
 				dataType:"json",
-				data:{<?=$this->ajax->showAjaxToken();?>,"id":vm.resetId},
+				data:{"id":vm.resetId},
 				error:function(e){
 					console.log(e);
 					unlockScreen();
@@ -208,9 +205,6 @@ var vm = new Vue({
 					}else if(ret.code==0){
 						showModalTips("参数缺失！<hr>请从正确途径访问本功能！");
 						return false;
-					}else if(ret.code==403001){
-						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-						return false;
 					}else if(ret.code==403002){
 						showModalTips("当前用户无操作权限！<br>请联系管理员！");
 						return false;
@@ -233,7 +227,7 @@ var vm = new Vue({
 				url:headerVm.rootUrl+"admin/user/toDelete",
 				type:"post",
 				dataType:"json",
-				data:{<?=$this->ajax->showAjaxToken();?>,"id":vm.deleteId},
+				data:{"id":vm.deleteId},
 				error:function(e){
 					console.log(e);
 					unlockScreen();
@@ -257,9 +251,6 @@ var vm = new Vue({
 						return false;
 					}else if(ret.code==0){
 						showModalTips("参数缺失！<hr>请从正确途径访问本功能！");
-						return false;
-					}else if(ret.code==403001){
-						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 						return false;
 					}else if(ret.code==403002){
 						showModalTips("当前用户无操作权限！<br>请联系管理员！");
@@ -293,7 +284,7 @@ var vm = new Vue({
 				</center>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success" data-dismiss="modal">&lt; 返回</button> <button type="button" class="btn btn-danger" onclick="del_sure();">确定 &gt;</button>
+				<button type="button" class="btn btn-success" data-dismiss="modal">&lt; 返回</button> <button type="button" class="btn btn-danger" onclick="vm.del_sure();">确定 &gt;</button>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -315,7 +306,7 @@ var vm = new Vue({
 				</center>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success" data-dismiss="modal">&lt; 返回</button> <button type="button" class="btn btn-danger" onclick="resetPwd_sure();">确定 &gt;</button>
+				<button type="button" class="btn btn-success" data-dismiss="modal">&lt; 返回</button> <button type="button" class="btn btn-danger" onclick="vm.resetPwd_sure();">确定 &gt;</button>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -335,7 +326,7 @@ var vm = new Vue({
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" data-dismiss="modal">&lt; 返回</button>
-        <button type="button" class="btn btn-primary" onclick="updateStatus_sure();">确认 &gt;</button>
+        <button type="button" class="btn btn-primary" onclick="vm.updateStatus_sure();">确认 &gt;</button>
       </div>
     </div>
   </div>

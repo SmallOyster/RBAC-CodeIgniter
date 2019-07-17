@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-系统配置
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-03
- * @version 2019-03-16
+ * @version 2019-06-12
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -28,8 +28,7 @@ class Setting extends CI_Controller {
 
 	public function toList()
 	{
-		$this->ajax->makeAjaxToken();
-		$list=$this->Setting_model->list();
+		$list=$this->setting->list();
 		
 		$this->load->view('admin/sys/setting/list',['list'=>$list]);
 	}
@@ -37,12 +36,10 @@ class Setting extends CI_Controller {
 
 	public function toSave()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-		
 		$name=inputPost('name',0,1);
 		$value=inputPost('value',0,1);
 		
-		$saveStatus=$this->Setting_model->save($name,$value);
+		$saveStatus=$this->setting->save($name,$value);
 		
 		if($saveStatus==true){
 			returnAjaxData(200,"success");

@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-菜单
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-17
-* @version 2019-05-26
+* @version 2019-06-12
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -31,36 +31,7 @@ class RbacAdmin_menu extends CI_Controller {
 	public function toList()
 	{
 		$this->safe->checkPermission();
-		$this->ajax->makeAjaxToken();
-		
-		$list=$this->rbac->getAllMenu();
-		$this->load->view('admin/menu/list',['list'=>$list]);
-	}
-
-
-	public function add()
-	{
-		$this->ajax->makeAjaxToken();
-
-		$fatherId=inputGet('fatherId',0);
-		
-		if($fatherId==0){
-			$fatherName="主菜单";
-			$fatherIcon="home";
-		}else{
-			$this->db->select('name,icon');
-			$query=$this->db->get_where('menu',['id'=>$fatherId]);		
-			
-			if($query->num_rows()==1){
-				$info=$query->result_array();
-				$fatherName=$info[0]['name'];
-				$fatherIcon=$info[0]['icon'];
-			}else{
-				header('location:'.base_url());
-			}
-		}
-		
-		$this->load->view('admin/menu/add',['fatherId'=>$fatherId,'fatherName'=>$fatherName,'fatherIcon'=>$fatherIcon]);
+		$this->load->view('admin/menu/list',['list'=>$this->rbac->getAllMenu()]);
 	}
 
 
@@ -90,8 +61,6 @@ class RbacAdmin_menu extends CI_Controller {
 	
 	public function edit()
 	{
-		$this->ajax->makeAjaxToken();
-
 		$menuId=inputGet('menuId',0);
 
 		// 获取菜单信息
@@ -150,8 +119,6 @@ class RbacAdmin_menu extends CI_Controller {
 
 	public function toDelete()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$id=inputPost('id',0,1);
 		$this->db->delete('menu',['id'=>$id]);
 		
@@ -159,7 +126,7 @@ class RbacAdmin_menu extends CI_Controller {
 			$this->db->delete('role_permission',['menu_id'=>$id]);
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(1,"failed to Delete");
+			returnAjaxData(1,"Failed to delete");
 		}
 	}
 }

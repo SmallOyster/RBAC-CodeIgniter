@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-05-29
+ * @version 2019-06-11
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -21,8 +21,6 @@ class User extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('string');
 
-		// $this->safe->checkPermission();
-
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		
 		$this->API_PATH=$this->setting->get('apiPath');
@@ -33,8 +31,6 @@ class User extends CI_Controller {
 	
 	public function toChangeRole()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-	
 		$roleId=inputPost('roleId',0,1);
 		$_SESSION[$this->sessPrefix.'roleId']=$roleId;
 		
@@ -44,7 +40,6 @@ class User extends CI_Controller {
 
 	public function updateProfile()
 	{
-		$this->ajax->makeAjaxToken();
 
 		$query=$this->db->get_where('user',array('id'=>$this->nowUserId));
 		$info=$query->first_row('array');
@@ -54,8 +49,6 @@ class User extends CI_Controller {
 
 	public function toUpdateProfile()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$nickName=inputPost('nickName',0,1);
 		$phone=inputPost('phone',0,1);
 		$email=inputPost('email',0,1);
@@ -73,15 +66,12 @@ class User extends CI_Controller {
 
 	public function login()
 	{
-		$this->ajax->makeAjaxToken();
 		$this->load->view('user/login');
 	}
 
 
 	public function toLogin()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$userName=inputPost('userName',0,1);
 		$pwd=inputPost('pwd',0,1);
 
@@ -148,16 +138,12 @@ class User extends CI_Controller {
 
 	public function register()
 	{
-		$this->ajax->makeAjaxToken();
 		$this->load->view('user/register');
 	}
 	
 	
 	public function toRegister()
 	{
-		$token=$this->input->post('token');
-		$this->ajax->checkAjaxToken($token);
-		
 		$userName=$this->input->post('userName');
 		$nickName=$this->input->post('nickName');
 		$pwd=$this->input->post('pwd');
@@ -272,16 +258,12 @@ class User extends CI_Controller {
 	
 	public function forgetPassword()
 	{
-		$this->ajax->makeAjaxToken();
-
 		$this->load->view('user/forgetPassword');
 	}
 	
 	
 	public function forgetPasswordSendCode()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-		
 		$email=inputPost('email',0,1);
 		$sql="SELECT id,user_name,nick_name FROM user WHERE email=?";
 		$query=$this->db->query($sql,[$email]);
@@ -329,8 +311,6 @@ class User extends CI_Controller {
 	
 	public function forgetPasswordVerifyCode()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-		
 		$email=inputPost('email',0,1);
 		$verifyCode=inputPost('verifyCode',0,1);
 		$info=$this->session->userdata($this->sessPrefix.'forgetPwd_mailInfo');
@@ -350,8 +330,6 @@ class User extends CI_Controller {
 	
 	public function resetPassword()
 	{
-		$this->ajax->makeAjaxToken();
-
 		if($this->session->userdata($this->sessPrefix.'forgetPwd_userId')<1 || $this->session->userdata($this->sessPrefix.'forgetPwd_mailInfo')!=NULL){
 			die('<script>alert("非法访问！");window.location.href="'.base_url('user/forgetPassword').'";</script>');
 		}else{
@@ -362,8 +340,6 @@ class User extends CI_Controller {
 	
 	public function toResetPassword()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-		
 		$id=$this->session->userdata($this->sessPrefix.'forgetPwd_userId');
 		$userName=inputPost('userName',0,1);
 		$pwd=inputPost('pwd',0,1);

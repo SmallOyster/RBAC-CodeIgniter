@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-05-14
+ * @version 2019-07-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -54,15 +54,15 @@ class API_User extends CI_Controller {
 
 	public function getAllUser()
 	{
-		$query=$this->db->query("SELECT a.id,a.union_id AS unionId,a.user_name AS userName,a.nick_name AS nickName,b.name AS roleName FROM user a,role b WHERE a.role_id=b.id");
-		returnAjaxData(200,"success",['list'=>$query->result_array()]);
+		$query=$this->db->query('SELECT a.id,a.union_id AS unionId,a.user_name AS userName,a.nick_name AS nickName,b.name AS roleName FROM user a,role b WHERE a.role_id=b.id');
+		returnAjaxData(200,'success',['list'=>$query->result_array()]);
 	}
 
 
 	public function checkDuplicate($method='',$value='')
 	{
 		if($method=='' || $value==''){
-			returnAjaxData(0,"lack Param");
+			returnAjaxData(0,"lack Parameter");
 		}else if($method=="userName"){
 			$this->db->where('user_name', $value);
 		}else if($method=="phone"){
@@ -120,9 +120,9 @@ class API_User extends CI_Controller {
 		}
 
 		if($query4==true){
-			returnAjaxData(200,"success");
+			returnAjaxData(200,'success');
 		}else{
-			returnAjaxData(5,"changeError");
+			returnAjaxData(5,'Failed to change');
 		}
 	}
 
@@ -193,7 +193,7 @@ class API_User extends CI_Controller {
 				returnAjaxData(403,"failed To Auth");
 			}
 		}*/else{
-			returnAjaxData(2,"Invaild Method");
+			returnAjaxData(2,'Invaild Method');
 		}
 	}
 }

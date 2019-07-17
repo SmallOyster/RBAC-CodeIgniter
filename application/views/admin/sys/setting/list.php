@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-系统参数列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-03
- * @version 2019-03-17
+ * @version 2019-06-12
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>系统参数列表 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>系统参数列表 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -39,17 +39,17 @@
 					<tbody>
 						<?php foreach($list as $info){ ?>
 							<tr>
-								<td><?=$info['chinese_name']; ?></td>
+								<td><?=$info['chinese_name'];?></td>
 								<td>
 									<!-- 显示 -->
-									<p id="<?=$info['name']; ?>_show"><?=$info['value']; ?></p>
+									<p id="<?=$info['name'];?>_show"><?=$info['value'];?></p>
 
 									<!-- 输入框 -->
-									<input type="hidden" id="<?=$info['name']; ?>_input" class="form-control" value="<?=$info['value']; ?>">
+									<input type="hidden" id="<?=$info['name'];?>_input" class="form-control" value="<?=$info['value'];?>">
 								</td>
 								<td>
-									<button class="btn btn-primary" id="<?=$info['name']; ?>_btn1" onclick='edit("<?=$info['name']; ?>")'>修改</button>
-									<button class="btn btn-success" id="<?=$info['name']; ?>_btn2" onclick='save("<?=$info['name']; ?>")' style="display:none">保存</button>
+									<button class="btn btn-primary" id="<?=$info['name'];?>_btn1" onclick='edit("<?=$info['name'];?>")'>修改</button>
+									<button class="btn btn-success" id="<?=$info['name'];?>_btn2" onclick='save("<?=$info['name'];?>")' style="display:none">保存</button>
 								</td>
 							</tr>
 						<?php } ?>
@@ -82,10 +82,10 @@ function save(name){
 	value=$("#"+name+"_input").val();
 
 	$.ajax({
-		url:"<?=base_url('admin/sys/setting/toSave'); ?>",
+		url:"./toSave",
 		type:"post",
 		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,"name":name,"value":value},
+		data:{"name":name,"value":value},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
@@ -109,10 +109,6 @@ function save(name){
 				return false;
 			}else if(ret.code==1){
 				showModalTips("保存失败！");
-				return false;
-			}else if(ret.code==403001){
-				$("#truncateModal").modal('hide');
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
 				$("#truncateModal").modal('hide');

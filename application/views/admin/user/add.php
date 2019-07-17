@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-新增用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-05-19
+ * @version 2019-06-12
  */
 ?>
 <!DOCTYPE html>
@@ -125,9 +125,6 @@ var vm = new Vue({
 						$("#maincontent").attr('style','width:'+$("#email").css('width'));
 						$("#maincontent").hide();
 						return true;
-					}else if(ret.code==403001){
-						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-						return false;
 					}else{
 						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 						return false;
@@ -186,9 +183,9 @@ function add(){
 	}
 
 	$.ajax({
-		url:"<?=base_url('admin/user/toAdd');?>",
+		url:"./toAdd",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleId":roleId},
+		data:{"userName":userName,"nickName":nickName,"phone":phone,"email":email,"roleId":roleId},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
@@ -218,9 +215,6 @@ function add(){
 				return false;
 			}else if(ret.code==3){
 				showModalTips("此邮箱已存在！<br>请输入其他邮箱！");
-				return false;
-			}else if(ret.code==403001){
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else if(ret.code==0){
 				showModalTips("参数缺失！请联系技术支持！");

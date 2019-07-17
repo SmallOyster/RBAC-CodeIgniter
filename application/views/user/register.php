@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户注册
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-22
- * @version 2019-03-28
+ * @version 2019-06-12
  */
 ?>
 
@@ -166,9 +166,9 @@ function reg(){
 	}
 
 	$.ajax({
-		url:"<?=base_url('user/toRegister');?>",
+		url:"./toRegister",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email,"pwd":pwd},
+		data:{"userName":userName,"nickName":nickName,"phone":phone,"email":email,"pwd":pwd},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
@@ -200,9 +200,6 @@ function reg(){
 				return false;
 			}else if(ret.code==3){
 				showModalTips("此邮箱已存在！<br>请输入其他邮箱！");
-				return false;
-			}else if(ret.code==403001){
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
 				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");

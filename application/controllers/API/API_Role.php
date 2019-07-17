@@ -1,14 +1,14 @@
 <?php
 /**
- * @name 生蚝科技RBAC开发框架-C-API-RBAC
+ * @name 生蚝科技RBAC开发框架-C-API-角色
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-06-06
+ * @version 2019-07-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class RBAC extends CI_Controller {
+class API_Role extends CI_Controller {
 
 	public $sessPrefix;
 
@@ -66,6 +66,8 @@ class RBAC extends CI_Controller {
 		foreach($menuList as $key=>$info){
 			$rtn[$key]['id']=(int)$info['id'];
 			$rtn[$key]['pId']=(int)$info['father_id'];
+			$rtn[$key]['menuIcon']=$info['icon'];
+			$rtn[$key]['menuName']=$info['name'];
 			$rtn[$key]['name']=$info['type']==1?urlencode($info['name']):($info['type']==2?'(按钮)'.urlencode($info['name']):'(接口)'.urlencode($info['name']));
 			if(in_array($info['id'],$allPermission)) $rtn[$key]['checked']=true;
 		}

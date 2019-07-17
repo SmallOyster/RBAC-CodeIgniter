@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-M-RBAC
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-06
- * @version 2019-05-26
+ * @version 2019-07-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -58,12 +58,13 @@ class RBAC_model extends CI_Model {
 
 
 	/**
-	 * 获取所有角色
-	 * @return Array 所有角色信息
+	 * 获取角色信息
+	 * @return Array 角色信息
 	 */
-	public function getAllRole()
+	public function getRole($id='')
 	{
-		$query=$this->db->query("SELECT * FROM role");
+		if($id!='') $this->db->where('id', $id);
+		$query=$this->db->get('role');
 		$list=$query->result_array();
 		return $list;
 	}
@@ -109,13 +110,13 @@ class RBAC_model extends CI_Model {
 	{
 		$allMenu=array();
 		
-		$allMenu=$this->rbac->getFatherMenuByRole($roleId);
+		$allMenu=self::getFatherMenuByRole($roleId);
 		$allMenu_total=count($allMenu);
 		
 		// 搜寻二级菜单
 		for($i=0;$i<$allMenu_total;$i++){
 			$fatherId=$allMenu[$i]['id'];
-			$child_list=$this->rbac->getChildMenuByRole($roleId,$fatherId);
+			$child_list=self::getChildMenuByRole($roleId,$fatherId);
 			
 			if($child_list==null){
 				// 没有二级菜单
@@ -132,7 +133,7 @@ class RBAC_model extends CI_Model {
 				// 搜寻三级菜单
 				for($j=0;$j<$child_list_total;$j++){
 					$father2Id=$child_list[$j]['id'];
-					$child2_list=$this->rbac->getChildMenuByRole($roleId,$father2Id);
+					$child2_list=self::getChildMenuByRole($roleId,$father2Id);
 
 					if($child2_list==null){
 						// 没有三级菜单
@@ -191,7 +192,7 @@ class RBAC_model extends CI_Model {
 		// 搜寻二级菜单
 		for($i=0;$i<$allMenu_total;$i++){
 			$fatherId=$allMenu[$i]['id'];
-			$child_list=$this->rbac->getChildMenu($fatherId);
+			$child_list=self::getChildMenu($fatherId);
 			
 			if($child_list==null){
 				// 没有二级菜单
@@ -208,7 +209,7 @@ class RBAC_model extends CI_Model {
 				// 搜寻三级菜单
 				for($j=0;$j<$child_list_total;$j++){
 					$father2Id=$child_list[$j]['id'];
-					$child2_list=$this->rbac->getChildMenu($father2Id);
+					$child2_list=self::getChildMenu($father2Id);
 
 					if($child2_list==null){
 						// 没有三级菜单

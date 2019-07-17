@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-Log日志
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-26
- * @version 2019-03-22
+ * @version 2019-06-12
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -30,9 +30,7 @@ class Log extends CI_Controller {
 
 	public function toList()
 	{
-		$this->ajax->makeAjaxToken();
-		
-		$query=$this->db->query("SELECT * FROM log",[]);
+		$query=$this->db->get('log');
 		$list=$query->result_array();
 		
 		$this->load->view('admin/sys/log/list',['list'=>$list]);
@@ -41,13 +39,11 @@ class Log extends CI_Controller {
 	
 	public function toTruncate()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-		
 		$pwd=inputPost('pwd',0,1);
 		$userStatus=$this->user->validateUser($pwd,$this->nowUserId);
 		
 		if($userStatus!="200"){
-			returnAjaxData(403,"invaild Password");
+			returnAjaxData(403,"Invaild password");
 		}
 		
 		$this->db->truncate('log');
@@ -57,7 +53,7 @@ class Log extends CI_Controller {
 		if($logInsert==true){
 			returnAjaxData(200,"success");
 		}else{
-			returnAjaxData(500,"failed to Truncate");
+			returnAjaxData(500,"Failed to truncate");
 		}
 	}
 }

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-操作记录管理
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-27
- * @version 2019-03-22
+ * @version 2019-06-12
  */
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>操作记录管理 / <?=$this->Setting_model->get('systemName');?></title>
+	<title>操作记录管理 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -94,10 +94,10 @@ function truncate_sure(){
 	}
 
 	$.ajax({
-		url:"<?=base_url('admin/sys/log/toTruncate');?>",
+		url:"./toTruncate",
 		type:"post",
 		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken();?>,"pwd":pwd},
+		data:{"pwd":pwd},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
@@ -121,10 +121,6 @@ function truncate_sure(){
 				$("#truncateModal").modal('hide');
 				showModalTips("密码错误！");
 				return false;
-			}else if(ret.code==403001){
-				$("#truncateModal").modal('hide');
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-				return false;
 			}else{
 				$("#truncateModal").modal('hide');
 				showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
@@ -146,7 +142,7 @@ function truncate_sure(){
 				<center>
 				<font color="red" style="font-weight:bolder;font-size:23px;">确定要清空系统日志吗？</font>
 				<br>
-				<font color="blue" style="font-weight:bolder;font-size:20px;">若已确定，请输入您的账户密码</font>
+				<font color="blue" style="font-weight:bolder;font-size:20px;">若确定，请输入您的登录密码以确认身份</font>
 				<hr>
 				<input type="password" class="form-control" id="truncatePwd" onkeyup='if(event.keyCode==13)truncate_sure();'>
 				</center>

@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-用户
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-05-26
+* @version 2019-06-12
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -31,7 +31,6 @@ class RbacAdmin_user extends CI_Controller {
 
 	public function toList()
 	{
-		$this->ajax->makeAjaxToken();
 		$this->load->view('admin/user/list');
 	}
 
@@ -50,8 +49,6 @@ class RbacAdmin_user extends CI_Controller {
 
 	public function add()
 	{
-		$this->ajax->makeAjaxToken();
-
 		$this->load->view('admin/user/add');
 	}
 
@@ -102,7 +99,6 @@ class RbacAdmin_user extends CI_Controller {
 	public function edit()
 	{
 		$userId=inputGet('id',0);
-		$this->ajax->makeAjaxToken();
 
 		$query=$this->db->get_where('user',['id'=>$userId]);
 
@@ -118,8 +114,6 @@ class RbacAdmin_user extends CI_Controller {
 
 	public function toEdit()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$userId=inputPost('userId',0,1);
 		$userName=inputPost('userName',0,1);
 		$nickName=inputPost('nickName',0,1);
@@ -141,9 +135,6 @@ class RbacAdmin_user extends CI_Controller {
 
 	public function toDelete()
 	{
-		$token=inputPost('token');
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$id=inputPost('id',0,1);
 		
 		if($id==$this->nowUserId){

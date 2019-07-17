@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-角色
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-05-26
+* @version 2019-07-17
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -26,35 +26,20 @@ class RbacAdmin_role extends CI_Controller {
 	}
 
 
-	public function get()
-	{
-		$auth=$this->safe->checkAuth('api','admin/role/list');
-		if($auth!=true) returnAjaxData(403002,"no Permission");
-
-		$query=$this->db->get('role');
-		$list=$query->result_array();
-		returnAjaxData(200,'success',['list'=>$list]);
-	}
-
-
 	public function toList()
 	{
-		$this->ajax->makeAjaxToken();
 		$this->load->view('admin/role/list');
 	}
 
 
 	public function add()
 	{
-		$this->ajax->makeAjaxToken();
 		$this->load->view('admin/role/add');
 	}
 
 
 	public function toAdd()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$name=inputPost('name',0,1);
 		$remark=inputPost('remark',1,1);
 		
@@ -71,8 +56,6 @@ class RbacAdmin_role extends CI_Controller {
 
 	public function edit()
 	{
-		$this->ajax->makeAjaxToken();
-
 		$roleId=inputGet('id',0);
 		$query=$this->db->get_where('role',['id'=>$roleId]);
 		
@@ -83,8 +66,6 @@ class RbacAdmin_role extends CI_Controller {
 
 	public function toEdit()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$name=inputPost('name',0,1);
 		$remark=inputPost('remark',1,1);
 		$roleId=inputPost('roleId',0,1);
@@ -103,8 +84,6 @@ class RbacAdmin_role extends CI_Controller {
 	
 	public function toDelete()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$this->db->delete('role',['id'=>inputPost('id',0,1)]);
 
 		if($this->db->affected_rows()==1){
@@ -119,8 +98,6 @@ class RbacAdmin_role extends CI_Controller {
 	
 	public function setPermission()
 	{
-		$this->ajax->makeAjaxToken();
-
 		$roleId=inputGet('id',0);
 		$roleName=inputGet('name',0);
 
@@ -135,8 +112,6 @@ class RbacAdmin_role extends CI_Controller {
 
 	public function toSetPermission()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$roleId=inputPost('roleId',0,1);
 		$menuIds=inputPost('menuIds',0,1);
 		$menuIds=explode(",",$menuIds);
@@ -170,8 +145,6 @@ class RbacAdmin_role extends CI_Controller {
 
 	public function toSetDefaultRole()
 	{
-		$this->ajax->checkAjaxToken(inputPost('token',0,1));
-
 		$id=inputPost('id',0,1);
 		
 		$this->db->where('id',$id);

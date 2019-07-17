@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-SSO
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-02-17
- * @version 2019-05-13
+ * @version 2019-07-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -34,12 +34,12 @@ class SSO extends CI_Controller {
 		if($data['code']!=200){die(header("location:".$ssoLoginUrl));}
 		else{$unionId=$data['data']['userInfo']['unionId'];}
 
-		$userInfoQuery=$this->db->query('SELECT * FROM user WHERE sso_union_id=?',[$unionId]);
+		$userInfoQuery=$this->db->get_where('user',['sso_union_id'=>$unionId]);
+		
 		if($userInfoQuery->num_rows()!=1){
 			die('<script>alert("此通行证未绑定用户！");window.location.href="'.base_url('/').'";</script>');
 		}else{
-			$userInfo=$userInfoQuery->result_array();
-			$userInfo=$userInfo[0];
+			$userInfo=$userInfoQuery->first_row('array');
 		}
 		
 		$userId=$userInfo['id'];
@@ -71,7 +71,7 @@ class SSO extends CI_Controller {
 			}
 		}
 
-		$query=$this->db->query("UPDATE user SET last_login=? WHERE id=?",[date("Y-m-d H:i:s"),$userId]);
+		$query=$this->db->query('UPDATE user SET last_login=? WHERE id=?',[date('Y-m-d H:i:s'),$userId]);
 
 		$roleList=$roleQuery->result_array();
 		$roleName=$roleList[0]['name'];
@@ -84,6 +84,6 @@ class SSO extends CI_Controller {
 		$this->session->set_userdata($this->sessPrefix.'roleName',reset($allRoleInfo));
 		$this->session->set_userdata($this->sessPrefix.'allRoleInfo',$allRoleInfo);
 
-		die(header('location:'.base_url('/')));
+		die('<script>localStorage.setItem("allRoleInfo",'."'".json_encode($allRoleInfo)."'".');window.location.href="'.base_url('/').'";</script>');
 	}
 }

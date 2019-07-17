@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改个人资料
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-03-23
+ * @version 2019-06-12
  */
 ?>
 <!DOCTYPE html>
@@ -108,9 +108,9 @@ function updateProfile(){
 	}
 
 	$.ajax({
-		url:"<?=base_url('user/toUpdateProfile');?>",
+		url:"./toUpdateProfile",
 		type:"post",
-		data:{<?=$this->ajax->showAjaxToken();?>,"userName":userName,"nickName":nickName,"phone":phone,"email":email},
+		data:{"userName":userName,"nickName":nickName,"phone":phone,"email":email},
 		dataType:'json',
 		error:function(e){
 			console.log(e);
@@ -127,9 +127,6 @@ function updateProfile(){
 				return true;
 			}else if(ret.code==1){
 				showModalTips("修改失败！！！");
-				return false;
-			}else if(ret.code==403001){
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else{
 				console.log(ret);

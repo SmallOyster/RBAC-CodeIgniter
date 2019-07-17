@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-设置角色权限
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-05-18
+ * @version 2019-06-12
  */
 ?>
 <!DOCTYPE html>
@@ -115,7 +115,7 @@ function toSetPermission(){
 		url:"<?=base_url('admin/role/toSetPermission'); ?>",
 		type:"post",
 		dataType:"json",
-		data:{<?=$this->ajax->showAjaxToken(); ?>,'roleId':roleId,'menuIds':menuIds},
+		data:{'roleId':roleId,'menuIds':menuIds},
 		error:function(e){
 			console.log(e);
 			unlockScreen();
@@ -134,9 +134,6 @@ function toSetPermission(){
 				return false;
 			}else if(ret.code==1){
 				showModalTips("权限清空失败！！<br>请联系管理员！");
-				return false;
-			}else if(ret.code==403001){
-				showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 				return false;
 			}else if(ret.code==0){
 				showModalTips("参数缺失！请联系技术支持！");

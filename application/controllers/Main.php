@@ -35,9 +35,7 @@ class Main extends CI_Controller {
 			
 			header('location:'.$url);
 		}
-		
-		$latestNotice=$this->notice->get(0,'index');
-		
-		$this->load->view('index',['allNotice'=>$latestNotice]);
+
+		$this->load->view('index');
 	}
 }

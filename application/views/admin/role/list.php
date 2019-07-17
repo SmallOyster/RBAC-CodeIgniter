@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-角色列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version 2019-05-26
+ * @version 2019-07-17
  */
 ?>
 <!DOCTYPE html>
@@ -65,7 +65,7 @@ var vm = new Vue({
 	methods:{
 		getList:()=>{
 			$.ajax({
-				url:"./get",
+				url:headerVm.apiPath+"role/get",
 				dataType:'json',
 				success:ret=>{
 					if(ret.code==200){
@@ -85,7 +85,7 @@ var vm = new Vue({
 							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['name']+'"'+")' class='btn btn-danger'>删除</a> "
 							               +'<a href="'+headerVm.rootUrl+'admin/role/setPermission?id='+list[i]['id']+'&name='+list[i]['name']+'" class="btn btn-success">分配权限</a> ';
 
-							operateHtml=list[i]['is_default']!=0?operateHtml:operateHtml+"<a onclick='setDefaultRole("+'"'+list[i]['id']+'"'+")' class='btn btn-primary'>设为默认角色</a> ";
+							operateHtml=list[i]['is_default']!=0?operateHtml:operateHtml+"<a onclick='vm.setDefaultRole("+'"'+list[i]['id']+'"'+")' class='btn btn-primary'>设为默认角色</a> ";
 
 							table.row.add({
 								0: list[i]['name'],
@@ -107,7 +107,7 @@ var vm = new Vue({
 				url:"./toDelete",
 				type:"post",
 				dataType:"json",
-				data:{<?=$this->ajax->showAjaxToken(); ?>,"id":vm.deleteId},
+				data:{"id":vm.deleteId},
 				error:function(e){
 					console.log(e);
 					unlockScreen();
@@ -127,10 +127,6 @@ var vm = new Vue({
 						$("#delModal").modal('hide');
 						showModalTips("删除失败！！！");
 						return false;
-					}else if(ret.code==403001){
-						$("#delModal").modal('hide');
-						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
-						return false;
 					}else{
 						$("#delModal").modal('hide');
 						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
@@ -143,10 +139,10 @@ var vm = new Vue({
 			lockScreen();
 
 			$.ajax({
-				url:"<?=base_url('admin/role/toSetDefaultRole'); ?>",
+				url:"./toSetDefaultRole",
 				type:"post",
 				dataType:"json",
-				data:{<?=$this->ajax->showAjaxToken(); ?>,"id":id},
+				data:{"id":id},
 				error:function(e){
 					console.log(e);
 					unlockScreen();
@@ -163,9 +159,6 @@ var vm = new Vue({
 						return true;
 					}else if(ret.code==1){
 						showModalTips("设置失败！！！");
-						return false;
-					}else if(ret.code==403001){
-						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 						return false;
 					}else if(ret.code==0){
 						showModalTips("参数缺失！请联系技术支持！");
@@ -199,7 +192,7 @@ var vm = new Vue({
 				</center>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success" data-dismiss="modal">&lt; 返回</button> <button type="button" class="btn btn-danger" onclick="del_sure();">确定 &gt;</button>
+				<button type="button" class="btn btn-success" data-dismiss="modal">&lt; 返回</button> <button type="button" class="btn btn-danger" onclick="vm.del_sure();">确定 &gt;</button>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->

@@ -3,11 +3,11 @@
  * @name 生蚝科技RBAC开发框架-导航栏
  * @author Jerry Cheung <master@smhgzs.com>
  * @since 2018-12-31
- * @version 2019-06-07
+ * @version 2019-06-11
  */
 ?>
 
-<input type="hidden" id="<?=$this->sessPrefix;?>userId" name="<?=$this->sessPrefix;?>userId" value="<?=$this->session->userdata($this->sessPrefix.'userId');?>">
+<!--input type="hidden" id="<?=$this->sessPrefix;?>userId" name="<?=$this->sessPrefix;?>userId" value="<?=$this->session->userdata($this->sessPrefix.'userId');?>"-->
 
 <div id="header">
 <header class="main-header">
@@ -229,7 +229,6 @@ var headerVm = new Vue({
 		rootUrl:"<?=base_url();?>",
 		apiPath:"<?=$this->API_PATH;?>",
 		userId:$("#<?=$this->sessPrefix;?>userId").val(),
-		token:"<?=$this->ajax->showAjaxToken(0);?>",
 		userInfo:{},
 		treeData:{},
 		allRoleInfo:{},
@@ -310,7 +309,7 @@ var headerVm = new Vue({
 			$.ajax({
 				url:headerVm.rootUrl+"user/toChangeRole",
 				type:"post",
-				data:{"token":headerVm.token,"roleId":roleId},
+				data:{"roleId":roleId},
 				dataType:"json",
 				error:function(e){
 					console.log(JSON.stringify(e));
