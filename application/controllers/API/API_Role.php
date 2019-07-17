@@ -68,6 +68,8 @@ class API_Role extends CI_Controller {
 			$rtn[$key]['pId']=(int)$info['father_id'];
 			$rtn[$key]['menuIcon']=$info['icon'];
 			$rtn[$key]['menuName']=$info['name'];
+			$rtn[$key]['uri']=$info['uri'];
+			$rtn[$key]['type']=$info['type'];
 			$rtn[$key]['name']=$info['type']==1?urlencode($info['name']):($info['type']==2?'(按钮)'.urlencode($info['name']):'(接口)'.urlencode($info['name']));
 			if(in_array($info['id'],$allPermission)) $rtn[$key]['checked']=true;
 		}

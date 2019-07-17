@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-菜单管理
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-06-12
+ * @version 2019-07-17
  */
 ?>
 <!DOCTYPE html>
@@ -43,7 +43,7 @@
 					<h3 class="modal-title" id="operateTitle"></h3>
 				</div>
 				<div class="modal-body">
-					<div class="alert" style="font-size:16px;background-color:#caffdf;color:#e029ff;border-color:white;">父菜单：<i id='menuIcon' aria-hidden="true" style="font-weight:bold;"></i></div>
+					<div id="fatherMenuDiv" class="alert" style="font-size:16px;background-color:#caffdf;color:#e029ff;border-color:white;">父菜单：<i id='menuIcon' aria-hidden="true" style="font-weight:bold;"></i></div>
 					<div class="panel-body">
 						<div class="form-group">
 							<label for="name">菜单类型</label>
@@ -62,7 +62,7 @@
 						</div>
 						<br>
 						<div class="form-group">
-							<label for="icon">菜单图标 ( 预览: <i id="icon_preview" class="" aria-hidden="true"></i> ) &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="$('#icon').val('circle-o');vm.icon='circle-o';vm.iconPreview();">使用默认图标</button></label>
+							<label for="icon">菜单图标 ( 预览: <i id="iconPreviewEle" aria-hidden="true"></i> ) &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary" onclick="$('#icon').val('circle-o');vm.icon='circle-o';vm.iconPreview();">使用默认图标</button></label>
 							<input class="form-control" id="icon" v-model="icon" onkeyup='if(event.keyCode==13)$("#uri").focus()' @input='iconPreview'>
 							<p class="help-block">请输入Font-Awesome图标名称，无需输入前缀“fa-”，输入后可在上方预览</p>
 						</div>
@@ -78,7 +78,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-warning" data-dismiss="modal">&lt; 返回</button> <button class="btn btn-success" @click='operateSure' id="operateBtn"></button>
+					<button class="btn btn-warning" onclick="vm.icon='';vm.uri='';vm.name='';vm.operateType=-1;vm.operateMenuId=0;$('#operateModal').modal('hide');">&lt; 返回</button> <button class="btn btn-success" @click='operateSure' id="operateBtn"></button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
@@ -123,6 +123,9 @@ var vm = new Vue({
 	},
 	methods:{
 		getAllMenu:()=>{
+			lockScreen();
+			$.fn.zTree.destroy();
+			
 			$.ajax({
 				url:headerVm.apiPath+"role/getRoleMenuForZtree",
 				dataType:"json",
@@ -131,18 +134,17 @@ var vm = new Vue({
 					console.log(e);
 					unlockScreen();
 					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-
-					$("#tipsModal").modal('show');
 					return false;
 				},
 				success:function(ret){
 					vm.zNodes=ret;
 					$.fn.zTree.init($("#treeDemo"),vm.setting,vm.zNodes);
+					setTimeout(function(){unlockScreen()},300);
 				}
 			});
 		},
 		iconPreview:()=>{
-			$("#icon_preview").attr("class","fa fa-"+vm.icon);
+			$("#iconPreviewEle").attr("class","fa fa-"+vm.icon);
 		},
 		inputJumpOutURI:()=>{
 			uri=prompt("请输入需要跳转到的网站的完整URL（包括HTTP/HTTPS头）","http://");
@@ -157,21 +159,29 @@ var vm = new Vue({
 				$("#uri").val("show/jumpout/"+uri);
 			}
 		},
-		operateReady:(type=0,menuId=0,icon='',name='')=>{
-			vm.operateMenuId=menuId;
-			vm.operateType=type;
-
-			$('#menuIcon').attr('class','fa fa-'+icon);
-			$('#menuIcon').html(' '+name);
-
+		operateReady:(type=0,menuId=0,icon='',name='',uri='')=>{
 			if(type==0){
 				$('#operateTitle').html('新 增 主 菜 单');
 				$('#operateBtn').html('确 认 新 增 菜 单 &gt;');
 			}else if(type==1){
 				$('#operateTitle').html('新 增 菜 单');
 				$('#operateBtn').html('确 认 新 增 菜 单 &gt;');
+			}else if(type==2){
+				$('#operateTitle').html('编 辑 菜 单');
+				$('#operateBtn').html('确 认 编 辑 菜 单 &gt;');
+				vm.name=name;
+				vm.uri=uri;
+				vm.icon=icon;
+				vm.iconPreview();
+				$("#fatherMenuDiv").hide();
+			}else{
+				return false;
 			}
 
+			vm.operateMenuId=menuId;
+			vm.operateType=type;
+			$('#menuIcon').attr('class','fa fa-'+icon);
+			$('#menuIcon').html(' '+name);
 			$('#operateModal').modal('show');
 		},
 		operateSure:()=>{
@@ -194,9 +204,9 @@ var vm = new Vue({
 			}
 
 			$.ajax({
-				url:"./toAdd",
+				url:"./toOperate",
 				type:"post",
-				data:{"fatherId":vm.operateMenuId,"type":vm.menuType,"name":vm.name,"icon":vm.icon,"uri":vm.uri},
+				data:{"operateType":vm.operateType,"id":vm.operateMenuId,"menuType":vm.menuType,"name":vm.name,"icon":vm.icon,"uri":vm.uri},
 				dataType:"json",
 				error:function(e){
 					console.log(e);
@@ -208,17 +218,15 @@ var vm = new Vue({
 					unlockScreen();
 
 					if(ret.code==200){
-						alert("新增成功！");
-						history.go(-1);
+						$("#operateModal").modal('hide');
+						alert("操作成功！");
+						vm.getAllMenu();
 						return true;
-					}else if(ret.code==1){
-						showModalTips("新增失败！！！");
+					}else if(ret.code==500){
+						showModalTips("操作失败！！！");
 						return false;
 					}else if(ret.code==0){
 						showModalTips("参数缺失！请联系技术支持！");
-						return false;
-					}else if(ret.code==403001){
-						showModalTips("Token无效！<hr>Tips:请勿在提交前打开另一页面哦~");
 						return false;
 					}else{
 						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
@@ -282,7 +290,7 @@ vm.getAllMenu();
 function addHoverDom(treeId, treeNode) {
 	var aObj=$("#"+treeNode.tId+"_a");
 	var editStr=""
-		+"<button class='btn btn-info' id='treeBtn_edit_"+treeNode.id+"' onclick='window.location.href="+'"edit?menuId='+treeNode.id+'"'+"'>编辑</button> "
+		+"<button class='btn btn-info' id='treeBtn_edit_"+treeNode.id+"' onclick="+'"'+"vm.operateReady(2,"+treeNode.id+",'"+treeNode.menuIcon+"','"+treeNode.menuName+"','"+treeNode.uri+"')"+'"'+"'>编辑</button> "
 		+"<button class='btn btn-danger' id='treeBtn_delete_"+treeNode.id+"' onclick="+'"'+"vm.deleteReady("+treeNode.id+",'"+treeNode.name+"')"+'"'+"'>删除</button> "
 		+"<button class='btn btn-success' id='treeBtn_add_"+treeNode.id+"' onclick="+'"'+"vm.operateReady(1,'"+treeNode.id+"','"+treeNode.menuIcon+"','"+treeNode.menuName+"')"+'"'+"'>新增子菜单</button>";
 	

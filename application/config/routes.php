@@ -3,11 +3,10 @@
  * @name 生蚝科技RBAC开发框架-路由
  * @author CodeIgniter,Jerry Cheung
  * @since 2018-02-06
- * @version 2019-06-07
+ * @version 2019-07-17
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 
 // System Default Routes
 $route['default_controller'] = 'Main/index';
@@ -18,23 +17,19 @@ $route['translate_uri_dashes'] = FALSE;
 // Custom Routes
 $route['dashborad'] = 'Main/index';
 
-/************* RBAC-API **************/
-$route['api/role/get']='RBAC/getRoleInfo';
-$route['api/role/getRoleMenuForZtree']='RBAC/getRoleMenuForZtree';
-$route['api/role/getUserMenu']='RBAC/getUserMenu';
+/*********** API-Role ************/
+$route['api/role/get']='API/API_Role/getRoleInfo';
+$route['api/role/getRoleMenuForZtree']='API/API_Role/getRoleMenuForZtree';
+$route['api/role/getUserMenu']='API/API_Role/getUserMenu';
 
 
-/******* API-用户 *******/
+/*********** API-User ************/
 $route['api/user/resetPassword']['POST']='API/API_User/resetPassword';
 $route['api/user/delete']['POST']='API/API_User/delete';
 $route['api/user/getAllUser']='API/API_User/getAllUser';
 $route['api/user/checkDuplicate/(:any)/(:any)']='API/API_User/checkDuplicate/$1/$2';
 $route['api/user/getUserInfo']['POST']='API/API_User/getUserInfo';
 $route['api/user/updateUserInfo']['POST']='API/API_User/updateUserInfo';
-
-
-/******* API-通知 *******/
-$route['api/notice/get']='API/API_Notice/get';
 
 
 /*********** RBAC-Admin-Role ************/
@@ -65,10 +60,7 @@ $route['admin/user/toUpdateStatus']['POST']='RbacAdmin/RbacAdmin_user/toUpdateSt
 /*********** RBAC-Admin-Menu ************/
 $route['admin/menu/list']='RbacAdmin/RbacAdmin_menu/toList';
 $route['admin/menu/toDelete']['POST']='RbacAdmin/RbacAdmin_menu/toDelete';
-$route['admin/menu/add']='RbacAdmin/RbacAdmin_menu/add';
-$route['admin/menu/toAdd']['POST']='RbacAdmin/RbacAdmin_menu/toAdd';
-$route['admin/menu/edit']='RbacAdmin/RbacAdmin_menu/edit';
-$route['admin/menu/toEdit']['POST']='RbacAdmin/RbacAdmin_menu/toEdit';
+$route['admin/menu/toOperate']['POST']='RbacAdmin/RbacAdmin_menu/toOperate';
 
 
 /************ Admin-Setting *************/
@@ -79,19 +71,6 @@ $route['admin/sys/setting/toSave']['POST']='Setting/toSave';
 /************* Admin-Log **************/
 $route['admin/sys/log/list']='Log/toList';
 $route['admin/sys/log/toTruncate']['POST']='Log/toTruncate';
-
-
-/************* Admin-Notice **************/
-$route['admin/notice/list']='Notice/adminList';
-$route['admin/notice/pub']='Notice/Publish';
-$route['admin/notice/toPublish']['POST']='Notice/toPublish';
-$route['admin/notice/edit']='Notice/edit';
-$route['admin/notice/toEdit']['POST']='Notice/toEdit';
-$route['admin/notice/toDelete']['POST']='Notice/toDelete';
-
-
-/************* Notice **************/
-$route['notice/detail']='Notice/showDetail';
 
 
 /************* RBAC-User **************/
