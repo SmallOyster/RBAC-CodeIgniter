@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('database','session','Safe','Ajax');
+$autoload['libraries'] = array('database','session','Safe');
 
 /*
 | -------------------------------------------------------------------
@@ -132,4 +132,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('RBAC_model'=>'rbac','Log_model','User_model'=>'user','Setting_model'=>'setting','Notice_model'=>'notice');
+$autoload['model'] = array('RBAC_model'=>'rbac','Log_model','User_model'=>'user','Setting_model'=>'setting');

@@ -161,19 +161,21 @@ var vm = new Vue({
 		},
 		operateReady:(type=0,menuId=0,icon='',name='',uri='')=>{
 			if(type==0){
+				$("#fatherMenuDiv").show();
 				$('#operateTitle').html('新 增 主 菜 单');
 				$('#operateBtn').html('确 认 新 增 菜 单 &gt;');
 			}else if(type==1){
+				$("#fatherMenuDiv").show();
 				$('#operateTitle').html('新 增 菜 单');
 				$('#operateBtn').html('确 认 新 增 菜 单 &gt;');
 			}else if(type==2){
+				$("#fatherMenuDiv").hide();
 				$('#operateTitle').html('编 辑 菜 单');
 				$('#operateBtn').html('确 认 编 辑 菜 单 &gt;');
 				vm.name=name;
 				vm.uri=uri;
 				vm.icon=icon;
 				vm.iconPreview();
-				$("#fatherMenuDiv").hide();
 			}else{
 				return false;
 			}
@@ -261,7 +263,7 @@ var vm = new Vue({
 					if(ret.code==200){
 						$("#delModal").modal('hide');
 						alert("删除成功！");
-						location.reload();
+						vm.getAllMenu();
 						return true;
 					}else if(ret.code==1){
 						$("#delModal").modal('hide');

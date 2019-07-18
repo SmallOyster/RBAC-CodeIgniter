@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-系统配置
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-03
- * @version 2019-06-12
+ * @version 2019-07-18
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -18,7 +18,7 @@ class Setting extends CI_Controller {
 	{
 		parent::__construct();
 
-		$this->safe->checkPermission();
+		$this->safe->checkAuth();
 		
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$this->API_PATH=$this->setting->get('apiPath');
