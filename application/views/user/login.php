@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-登录
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-20
- * @version 2019-06-11
+ * @version 2019-07-24
  */
 ?>
 
@@ -70,7 +70,7 @@
 		<br>
 		
 		All Rights Reserved.<br>
-		<a href="http://www.miitbeian.gov.cn/" target="_blank" style="color:black;">粤ICP备19018320号-1</a><br><br>
+		<a href="http://miit.beian.gov.cn/" target="_blank" style="color:black;">粤ICP备19018320号-1</a><br><br>
 	</p>
 	<!-- ./页脚版权 -->
 </center>
@@ -110,8 +110,8 @@ window.onload=function(){
 	}
 	/********** ▲ 记住密码 ▲ **********/
 
-	localStorage.removeItem("allRoleInfo");
-	localStorage.removeItem("jwtToken");
+	sessionStorage.removeItem("allRoleInfo");
+	sessionStorage.removeItem("jwtToken");
 }
 
 function toLogin(){
@@ -184,9 +184,9 @@ function toLogin(){
 			$("#pwd").removeAttr("disabled");
 
 			if(ret.code==200){
-				localStorage.setItem('allRoleInfo',ret.data['allRoleInfo']);
-				localStorage.setItem('jwtToken',ret.data['jwtToken']);
-				//window.location.href="<?=base_url('/');?>";
+				sessionStorage.setItem('allRoleInfo',ret.data['allRoleInfo']);
+				sessionStorage.setItem('jwtToken',ret.data['jwtToken']);
+				window.location.href="<?=base_url('/');?>";
 			}else if(ret.code==1){
 				showModalTips("当前用户被禁用！<br>请联系管理员！");
 				return false;

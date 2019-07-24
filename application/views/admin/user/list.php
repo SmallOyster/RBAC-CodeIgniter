@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-06-13
+ * @version 2019-07-24
  */
 ?>
 <!DOCTYPE html>
@@ -12,6 +12,8 @@
 <head>
 	<?php $this->load->view('include/header'); ?>
 	<title>用户列表 / <?=$this->setting->get('systemName');?></title>
+	<script src="<?=base_url('resource/js/select.js');?>"></script>
+	<link rel="stylesheet" href="<?=base_url('resource/css/select.css');?>">
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -25,7 +27,7 @@
 
 	<!-- 页面主要内容 -->
 	<section class="content">
-		<a href="<?=base_url('admin/user/add');?>" class="btn btn-primary btn-block">新 增 用 户</a>
+		<a onclick='vm.operateReady(1)' class="btn btn-primary btn-block">新 增 用 户</a>
 		<hr>
 
 		<div class="panel panel-default">
@@ -45,6 +47,50 @@
 		</div>
 	</section>
 	<!-- ./页面主要内容 -->
+	
+	<div class="modal fade" id="operateModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+					<h3 class="modal-title">{{operateModalTitle}}</h3>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="userName">用户名</label>
+						<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();' v-model="userName">
+						<p class="help-block">请输入<font color="green">4</font>-<font color="green">20</font>字的用户名</p>
+					</div>
+					<br>
+					<div class="form-group">
+						<label for="nickName">昵称</label>
+						<input class="form-control" id="nickName" v-model="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
+					</div>
+					<br>
+					<div class="form-group">
+						<label for="phone">手机号</label>
+						<input type="number" class="form-control" id="phone" v-model="phone" onkeyup='if(event.keyCode==13)$("#email").focus();'>
+						<p class="help-block">目前仅支持中国大陆的手机号码</p>
+					</div>
+					<br>
+					<div class="form-group">
+						<label for="email">邮箱</label>
+						<input type="email" class="form-control" id="email" v-model="email">
+					</div>
+					<br>
+					<div class="form-group">
+						<label>角色</label>
+						<div class="mainSelect" style="display: grid;">
+							<div id="roleSelect"></div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-warning" onclick="vm.userName='';vm.nickName='';vm.phone='';vm.email='';vm.operateType=-1;vm.operateuUserId=0;$('#operateModal').modal('hide');">&lt; 返回</button> <button class="btn btn-success" @click='operateSure'>{{operateModalBtn}}</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </div>
 <!-- ./页面内容 -->
 
@@ -64,10 +110,37 @@ var vm = new Vue({
 		updateId:0,
 		statusNum:1,
 		resetId:0,
-		deleteId:0
+		deleteId:0,
+		userName:'',
+		nickName:'',
+		phone:'',
+		email:'',
+		roleIds:'',
+		operateType:0,
+		operateUserId:0,
+		operateUserRoleIds:'',
+		operateOriginData:[],
+		operateModalTitle:'',
+		operateModalBtn:'',
+		roleList:[{
+			"name": "全选",
+			"list": []
+		}],
+		option:{
+			el: 'roleSelect',//容器名称
+			type: 'more',//插件类型
+			width: $("#email").css('width'),//内容显示宽度
+			height: '40px',//内容显示高度
+			background: '#FFFFFF',//默认背景色
+			color: '#000000',//默认字体颜色
+			selectBackground: '#337AB7',//选中背景色
+			selectColor: '#FFFFFF',//选中字体颜色
+			show: 'false',//是否展开
+			content: '请选择用户角色',//要显示的内容
+		}
 	},
 	methods:{
-		getList:()=>{
+		getList(){
 			$.ajax({
 				url:"./get",
 				dataType:'json',
@@ -88,7 +161,7 @@ var vm = new Vue({
 								list[i]['status']==0 ? "<a onclick='vm.updateStatus_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+",1);'><font color='red'>已禁用</font></a>" : 
 								(list[i]['status']==1 ? "<a onclick='vm.updateStatus_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+",0);'><font color='green'>正常</font></a>" : "<font color='blue'>未激活</font>")
 							let operateHtml=''
-							               +'<a href="'+headerVm.rootUrl+'admin/user/edit?id='+list[i]['id']+'" class="btn btn-info">编辑</a> '
+							               +'<a onclick="vm.operateReady(2,'+list[i]['id']+",'"+list[i]['user_name']+"','"+list[i]['nick_name']+"','"+list[i]['phone']+"','"+list[i]['email']+"','"+list[i]['role_id']+"'"+');" class="btn btn-info">编辑</a> '
 							               +"<a onclick='vm.resetPwd_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+")' class='btn btn-warning'>重置密码</a> "
 							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+")' class='btn btn-danger'>删除</a>";
 
@@ -101,6 +174,37 @@ var vm = new Vue({
 						}
 					}
 				}
+			})
+		},
+		operateReady:(type=1,userId=0,userName='',nickName='',phone='',email='',roleIds='')=>{
+			vm.operateType=type;
+			vm.operateUserId=userId;
+			vm.userName=userName;
+			vm.nickName=nickName;
+			vm.phone=phone;
+			vm.email=email;
+			vm.operateUserRoleIds=roleIds.split(",");
+			vm.operateOriginData=[userName,nickName,phone,email];
+			
+			if(type==1){
+				vm.operateModalTitle="新 增 用 户";
+				vm.operateModalBtn="确 认 新 增 用 户 >";
+			}else if(type==2){
+				vm.operateModalTitle="编 辑 用 户";
+				vm.operateModalBtn="确 认 编 辑 用 户 >";
+			}
+			
+			vm.getAllRole();
+			$("#operateModal").modal("show");
+		},
+		operateSure:function(){
+			lockScreen();
+			
+			$.ajax({
+				url:"./toOperate",
+				type:'post',
+				data:{"userId":this.operateUserId},
+				dataType:"json"
 			})
 		},
 		updateStatus_ready:(id,nickName,status)=>{
@@ -261,6 +365,54 @@ var vm = new Vue({
 					}
 				}
 			});
+		},
+		getAllRole:function(){
+			lockScreen();
+			selectTool.remove(vm.option);
+
+			if(vm.roleList[0].list.length==0){
+				$.ajax({
+					url:headerVm.apiPath+"role/get",
+					dataType:'json',
+					error:function(e){
+						console.log(JSON.stringify(e));
+						unlockScreen();
+						showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+						return false;
+					},
+					success:function(ret){
+						unlockScreen();
+
+						if(ret.code==200){
+							for(i in ret.data['list']){
+								pushData={"optionName":ret.data['list'][i]['name'],"optionId":ret.data['list'][i]['id']};
+								$.inArray(ret.data['list'][i]['id'],vm.operateUserRoleIds)>=0 ? pushData.selected=true : '';
+								vm.roleList[0].list.push(pushData);
+							}
+
+							vm.option.data=vm.roleList;
+							selectTool.initialize(vm.option);
+							$("#maincontent").hide();
+							return true;
+						}else{
+							showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
+							return false;
+						}
+					}
+				});
+			}else{
+				let roleList=vm.roleList[0].list;
+				
+				for(i in roleList){
+					$.inArray(roleList[i].optionId,vm.operateUserRoleIds)>=0 ? roleList[i].selected=true : roleList[i].selected=false;
+				}
+				
+				vm.roleList[0].list=roleList;
+				vm.option.data=vm.roleList;
+				selectTool.initialize(vm.option);
+				$("#maincontent").hide();
+				unlockScreen();
+			}
 		}
 	},
 	mounted:function(){

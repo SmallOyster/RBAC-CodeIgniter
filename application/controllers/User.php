@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-06-11
+ * @version 2019-07-24
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -40,7 +40,6 @@ class User extends CI_Controller {
 
 	public function updateProfile()
 	{
-
 		$query=$this->db->get_where('user',array('id'=>$this->nowUserId));
 		$info=$query->first_row('array');
 		$this->load->view('user/updateProfile',['info'=>$info]);
@@ -53,13 +52,16 @@ class User extends CI_Controller {
 		$phone=inputPost('phone',0,1);
 		$email=inputPost('email',0,1);
 
-		$sql='UPDATE user SET nick_name=?,phone=?,email=? WHERE id=?';
-		$query=$this->db->query($sql,[$nickName,$phone,$email,$this->nowUserId]);
+		$this->db->set('nick_name',$nickName)
+		         ->set('phone',$phone)
+		         ->set('email',$email)
+		         ->where('id',$this->nowUserId)
+		         ->update('user');
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,'success');
 		}else{
-			returnAjaxData(1,'failed to Update');
+			returnAjaxData(1,'Failed to update');
 		}
 	}
 
@@ -85,9 +87,9 @@ class User extends CI_Controller {
 			$status=$userInfo['status'];
 			
 			if($status==0){
-				returnAjaxData(1,'user Forbidden');
+				returnAjaxData(1,'User forbidden');
 			}elseif($status==2){
-				returnAjaxData(3,'user Not Active');
+				returnAjaxData(3,'User not active');
 			}
 			
 			// 获取角色名称
@@ -98,7 +100,7 @@ class User extends CI_Controller {
 			$roleQuery=$this->db->get('role');
 
 			if($roleQuery->num_rows()<1){
-				returnAjaxData(2,'no Role Info');
+				returnAjaxData(2,'Role info not found');
 			}else{
 				$roleList=$roleQuery->result_array();
 				
@@ -115,16 +117,18 @@ class User extends CI_Controller {
 			$this->session->set_userdata($this->sessPrefix.'roleName',reset($allRoleInfo));
 			$this->session->set_userdata($this->sessPrefix.'allRoleInfo',$allRoleInfo);
 
-			$this->db->query('UPDATE user SET last_login=? WHERE id=?',[date('Y-m-d H:i:s'),$userId]);
+			$this->db->set('last_login',date('Y-m-d H:i:s'))
+			         ->where('id',$userId)
+			         ->update('user');
 
 			$this->load->helper('JWT');
 			$jwtToken=jwt_helper::create(['userId'=>$userId,'allRoleInfo'=>$allRoleInfo]);
 			
 			returnAjaxData(200,'success',['allRoleInfo'=>json_encode($allRoleInfo),'jwtToken'=>$jwtToken]);
 		}elseif($validate==-1){
-			returnAjaxData(1,"user Forbidden");
+			returnAjaxData(1,"User forbidden");
 		}else{
-			returnAjaxData(403,"invaild Password");
+			returnAjaxData(403,"Invaild password");
 		}
 	}
 	
@@ -132,7 +136,7 @@ class User extends CI_Controller {
 	public function logout()
 	{
 		session_destroy();
-		header("Location:".base_url('user/login'));
+		die(header('location:'.base_url('user/login')));
 	}
 
 
@@ -207,9 +211,9 @@ class User extends CI_Controller {
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,'success');
 		}else if($this->db->affected_rows()==1){
-			returnAjaxData(5001,'success to Register But Failed to Send Active Email');
+			returnAjaxData(5001,'Success to register but failed to send active email');
 		}else{
-			returnAjaxData(5002,'failed to Register');
+			returnAjaxData(5002,'Failed to register');
 		}
 	}
 	
@@ -265,7 +269,7 @@ class User extends CI_Controller {
 	public function forgetPasswordSendCode()
 	{
 		$email=inputPost('email',0,1);
-		$sql="SELECT id,user_name,nick_name FROM user WHERE email=?";
+		$sql='SELECT id,user_name,nick_name FROM user WHERE email=?';
 		$query=$this->db->query($sql,[$email]);
 		
 		if($query->num_rows()!=1){
@@ -340,21 +344,21 @@ class User extends CI_Controller {
 	
 	public function toResetPassword()
 	{
-		$id=$this->session->userdata($this->sessPrefix.'forgetPwd_userId');
+		$userId=$this->session->userdata($this->sessPrefix.'forgetPwd_userId');
 		$userName=inputPost('userName',0,1);
-		$pwd=inputPost('pwd',0,1);
+		$password=inputPost('pwd',0,1);
 		
 		$salt=random_string('alnum');
-		$hashPwd=sha1(md5($pwd).$salt);
+		$hashPassword=sha1(md5($password).$salt);
 		
 		$nowTime=date('Y-m-d H:i:s');
 		$sql='UPDATE user SET password=?,salt=?,update_time=? WHERE id=?';
-		$query=$this->db->query($sql,[$hashPwd,$salt,$nowTime,$id]);
+		$query=$this->db->query($sql,[$hashPassword,$salt,$nowTime,$userId]);
 		
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,'success');
 		}else{
-			returnAjaxData(1,'failed to Reset Password');
+			returnAjaxData(1,'Failed to reset password');
 		}
 	}
 }

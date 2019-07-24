@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-角色
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-07-18
+* @version 2019-07-24
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -118,9 +118,6 @@ class RbacAdmin_role extends CI_Controller {
 
 		// 清空旧权限
 		$this->db->delete('role_permission',['role_id'=>$roleId]);
-		if($this->db->affected_rows()<1){
-			returnAjaxData(1,"Failed to truncate role permission");
-		}
 
 		$totalMenu=count($menuIds);
 		$sql2="INSERT INTO role_permission(role_id,menu_id) VALUES ";

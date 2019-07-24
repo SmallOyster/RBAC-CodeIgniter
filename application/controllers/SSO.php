@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-SSO
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-02-17
- * @version 2019-07-17
+ * @version 2019-07-19
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -23,11 +23,11 @@ class SSO extends CI_Controller {
 	public function login()
 	{
 		$appId=$this->setting->get('ssoAppId');
-		$returnUrl=$this->setting->get('ssoReturnUrl');
-		$ssoLoginUrl=$this->setting->get('ssoServerHost')."login/".$appId."/".urlencode($returnUrl);
+		$redirectUrl=$this->setting->get('ssoRedirectUrl');
+		$ssoLoginUrl=$this->setting->get('ssoServerHost')."login?appId=".$appId."&redirectUrl=".urlencode($redirectUrl);
 		$token=isset($_GET['token'])&&$_GET['token']!=""?$_GET['token']:die(header("location:".$ssoLoginUrl));
 
-		$postData=array('method'=>'api','token'=>$token,'appId'=>$appId,'returnUrl'=>$returnUrl);
+		$postData=array('method'=>'api','token'=>$token,'appId'=>$appId,'redirectUrl'=>$redirectUrl);
 		$output=curl($this->setting->get('ssoApiPath').'user/getUserInfo','post',$postData);
 		$data=json_decode($output,TRUE);
 		
