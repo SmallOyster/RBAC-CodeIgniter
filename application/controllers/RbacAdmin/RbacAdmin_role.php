@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-角色
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-07-24
+* @version 2019-07-26
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -23,6 +23,7 @@ class RbacAdmin_role extends CI_Controller {
 		$this->API_PATH=$this->setting->get('apiPath');
 		$this->sessPrefix=$this->safe->getSessionPrefix();
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
+		$this->load->helper('string');
 	}
 
 
@@ -42,9 +43,10 @@ class RbacAdmin_role extends CI_Controller {
 	{
 		$name=inputPost('name',0,1);
 		$remark=inputPost('remark',1,1);
+		$roleId=strtoupper(random_string('alnum',6));
 		
-		$sql="INSERT INTO role(name,remark) VALUES (?,?)";
-		$query=$this->db->query($sql,[$name,$remark]);
+		$sql="INSERT INTO role(id,name,remark) VALUES (?,?,?)";
+		$query=$this->db->query($sql,[$roleId,$name,$remark]);
 
 		if($this->db->affected_rows()==1){
 			returnAjaxData(200,"success");

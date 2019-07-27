@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-07-24
+ * @version 2019-07-26
  */
 ?>
 <!DOCTYPE html>
@@ -11,9 +11,9 @@
 
 <head>
 	<?php $this->load->view('include/header'); ?>
-	<title>用户列表 / <?=$this->setting->get('systemName');?></title>
 	<script src="<?=base_url('resource/js/select.js');?>"></script>
 	<link rel="stylesheet" href="<?=base_url('resource/css/select.css');?>">
+	<title>用户列表 / <?=$this->setting->get('systemName');?></title>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -75,9 +75,24 @@
 					<br>
 					<div class="form-group">
 						<label for="email">邮箱</label>
-						<input type="email" class="form-control" id="email" v-model="email">
+						<input type="email" class="form-control" id="email" v-model="email" onkeyup='if(event.keyCode==13)$("#ssoUnionId").focus();'>
 					</div>
 					<br>
+
+					<label for="email">生蚝科技网站生态群通行证UnionID</label>
+					<div class="input-group">
+						<input class="form-control" id="ssoUnionId" v-model="ssoUnionId">
+						<div class="input-group-btn">
+							<button id="nullSsoUnionIdBtn" class="btn btn-warning" @click='nullSsoUnionId(1)'>设置为空</button>
+							<button id="notNullSsoUnionIdBtn" class="btn btn-success" @click='nullSsoUnionId(0)' style="display: none;">设置非空</button>
+						</div>
+					</div>
+					<p class="help-block">
+						请确保此UnionID已在 <b>“生蚝科技统一身份认证平台”</b> 注册<br>
+						您可<a href="<?=$this->setting->get('ssoServerHost');?>" style="font-weight: bold">点此访问</a>管理平台以核实
+					</p>
+
+					<br><br>
 					<div class="form-group">
 						<label>角色</label>
 						<div class="mainSelect" style="display: grid;">
@@ -102,8 +117,6 @@
 </div>
 
 <script>
-let table;
-
 var vm = new Vue({
 	el:'#app',
 	data:{
@@ -115,7 +128,7 @@ var vm = new Vue({
 		nickName:'',
 		phone:'',
 		email:'',
-		roleIds:'',
+		ssoUnionId:'',
 		operateType:0,
 		operateUserId:0,
 		operateUserRoleIds:'',
@@ -147,44 +160,41 @@ var vm = new Vue({
 				success:ret=>{
 					if(ret.code==200){
 						let list=ret.data['list'];
-
-						table=$('#table').DataTable({
-							responsive: true,
-							"columnDefs":[{
-								"targets":[3],
-								"orderable": false
-							}]
-						});
-
+						
+						// 先清空表格
+						$.fn.dataTable.tables({api: true}).clear().draw();
+						
 						for(i in list){
 							let statusHtml=
 								list[i]['status']==0 ? "<a onclick='vm.updateStatus_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+",1);'><font color='red'>已禁用</font></a>" : 
 								(list[i]['status']==1 ? "<a onclick='vm.updateStatus_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+",0);'><font color='green'>正常</font></a>" : "<font color='blue'>未激活</font>")
 							let operateHtml=''
-							               +'<a onclick="vm.operateReady(2,'+list[i]['id']+",'"+list[i]['user_name']+"','"+list[i]['nick_name']+"','"+list[i]['phone']+"','"+list[i]['email']+"','"+list[i]['role_id']+"'"+');" class="btn btn-info">编辑</a> '
+							               +'<a onclick="vm.operateReady(2,'+list[i]['id']+",'"+list[i]['user_name']+"','"+list[i]['nick_name']+"','"+list[i]['phone']+"','"+list[i]['email']+"','"+list[i]['sso_union_id']+"','"+list[i]['role_id']+"'"+');" class="btn btn-info">编辑</a> '
 							               +"<a onclick='vm.resetPwd_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+")' class='btn btn-warning'>重置密码</a> "
 							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['nick_name']+'"'+")' class='btn btn-danger'>删除</a>";
 
-							table.row.add({
+							let em=$.fn.dataTable.tables({api: true}).row.add({
 								0: list[i]['user_name'],
 								1: list[i]['nick_name'],
 								2: statusHtml,
 								3: operateHtml
 							}).draw();
+							console.log(em);
 						}
 					}
 				}
 			})
 		},
-		operateReady:(type=1,userId=0,userName='',nickName='',phone='',email='',roleIds='')=>{
+		operateReady:(type=1,userId=0,userName='',nickName='',phone='',email='',ssoUnionId='',roleIds='')=>{
 			vm.operateType=type;
 			vm.operateUserId=userId;
 			vm.userName=userName;
 			vm.nickName=nickName;
 			vm.phone=phone;
 			vm.email=email;
+			vm.ssoUnionId=ssoUnionId;
 			vm.operateUserRoleIds=roleIds.split(",");
-			vm.operateOriginData=[userName,nickName,phone,email];
+			vm.operateOriginData=[userName,nickName,phone,email,ssoUnionId,roleIds];
 			
 			if(type==1){
 				vm.operateModalTitle="新 增 用 户";
@@ -193,19 +203,85 @@ var vm = new Vue({
 				vm.operateModalTitle="编 辑 用 户";
 				vm.operateModalBtn="确 认 编 辑 用 户 >";
 			}
+
+			if(ssoUnionId=='null') vm.nullSsoUnionId(1);
 			
-			vm.getAllRole();
+			vm.getAllRole(roleIds);
 			$("#operateModal").modal("show");
 		},
 		operateSure:function(){
 			lockScreen();
+
+			let userData={};
+			let roleIds=$("#" + vm.option.el + " #selectValue").val();
+
+			// 检查是否有修改数据
+			if(vm.userName!==vm.operateOriginData[0]) userData.user_name=vm.userName;
+			if(vm.nickName!==vm.operateOriginData[1]) userData.nick_name=vm.nickName;
+			if(vm.phone!==vm.operateOriginData[2]) userData.phone=vm.phone;
+			if(vm.email!==vm.operateOriginData[3]) userData.email=vm.email;
+			if(vm.ssoUnionId!==vm.operateOriginData[3]) userData.sso_union_id=vm.ssoUnionId;
+			if(roleIds!==vm.operateOriginData[5]) userData.role_id=roleIds;
+			
+			if(userData=={}){
+				showModalTips('请填写需要操作的数据！');
+				return;
+			}
 			
 			$.ajax({
 				url:"./toOperate",
 				type:'post',
-				data:{"userId":this.operateUserId},
-				dataType:"json"
+				data:{'type':this.operateType,'userId':this.operateUserId,userData},
+				dataType:"json",
+				error:function(e){
+					console.log(e);
+					unlockScreen();
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;				
+				},
+				success:ret=>{
+					if(ret.code==200){
+						alert("操作成功！");
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						vm.getList();
+						return;
+					}else if(ret.code==4001){
+						showModalTips("数据包含非法字段！<hr>请联系技术支持<br>并提交以下错误码：AU4001-"+ret.data);
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						return;
+					}else if(ret.code==4002){
+						showModalTips("数据包含空值！<hr>请联系技术支持<br>并提交以下错误码：AU4002-"+ret.data);
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						return;
+					}else if(ret.code==500){
+						showModalTips("数据库错误！<br>请联系技术支持！");
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						return;
+					}else{
+						showModalTips("系统错误！<br>请联系技术支持！");
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						return;
+					}
+				}
 			})
+		},
+		nullSsoUnionId:(type=1)=>{
+			if(type==1){
+				$("#nullSsoUnionIdBtn").hide();
+				$("#notNullSsoUnionIdBtn").show();
+				$("#ssoUnionId").attr('disabled',true);
+				vm.ssoUnionId='null';
+			}else{
+				$("#nullSsoUnionIdBtn").show();
+				$("#notNullSsoUnionIdBtn").hide();
+				$("#ssoUnionId").removeAttr('disabled');
+				vm.ssoUnionId='';
+			}
 		},
 		updateStatus_ready:(id,nickName,status)=>{
 			vm.updateId=id;
@@ -213,9 +289,9 @@ var vm = new Vue({
 			statusTips="确定要";
 
 			if(status==0){
-				statusTips+="<font color=red>禁用</font>";
+				statusTips+='<font color="red">禁用</font>';
 			}else if(status==1){
-				statusTips+="<font color=green>启用</font>";
+				statusTips+='<font color="green">启用</font>';
 			}else{
 				showModalTips("错误的状态码！");
 				return false;
@@ -232,7 +308,7 @@ var vm = new Vue({
 				url:headerVm.rootUrl+"admin/user/toUpdateStatus",
 				type:"post",
 				dataType:"json",
-				data:{"id":vm.updateId,"status":vm.statusNum},
+				data:{"userId":vm.updateId,"status":vm.statusNum},
 				error:function(e){
 					console.log(e);
 					unlockScreen();
@@ -251,7 +327,7 @@ var vm = new Vue({
 					}else if(ret.code==400){
 						showModalTips("禁止操作当前用户！");
 						return false;
-					}else if(ret.code==1){
+					}else if(ret.code==500){
 						showModalTips("更新失败！！！");
 						return false;
 					}else if(ret.code==0){
@@ -279,7 +355,7 @@ var vm = new Vue({
 				url:headerVm.rootUrl+"admin/user/toResetPwd",
 				type:"post",
 				dataType:"json",
-				data:{"id":vm.resetId},
+				data:{"userId":vm.resetId},
 				error:function(e){
 					console.log(e);
 					unlockScreen();
@@ -303,7 +379,7 @@ var vm = new Vue({
 					}else if(ret.code==1){
 						showModalTips("无此用户！！！");
 						return false;
-					}else if(ret.code==2){
+					}else if(ret.code==500){
 						showModalTips("重置失败！！！");
 						return false;
 					}else if(ret.code==0){
@@ -331,7 +407,7 @@ var vm = new Vue({
 				url:headerVm.rootUrl+"admin/user/toDelete",
 				type:"post",
 				dataType:"json",
-				data:{"id":vm.deleteId},
+				data:{"userId":vm.deleteId},
 				error:function(e){
 					console.log(e);
 					unlockScreen();
@@ -350,7 +426,7 @@ var vm = new Vue({
 					}else if(ret.code==400){
 						showModalTips("禁止操作当前用户！");
 						return false;
-					}else if(ret.code==1){
+					}else if(ret.code==500){
 						showModalTips("删除失败！！！");
 						return false;
 					}else if(ret.code==0){
@@ -366,7 +442,7 @@ var vm = new Vue({
 				}
 			});
 		},
-		getAllRole:function(){
+		getAllRole:function(roleIds=''){
 			lockScreen();
 			selectTool.remove(vm.option);
 
@@ -393,6 +469,7 @@ var vm = new Vue({
 							vm.option.data=vm.roleList;
 							selectTool.initialize(vm.option);
 							$("#maincontent").hide();
+							$("#" + vm.option.el + " #selectValue").val(roleIds);
 							return true;
 						}else{
 							showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
@@ -411,12 +488,21 @@ var vm = new Vue({
 				vm.option.data=vm.roleList;
 				selectTool.initialize(vm.option);
 				$("#maincontent").hide();
+				$("#" + vm.option.el + " #selectValue").val(roleIds);
 				unlockScreen();
 			}
 		}
 	},
 	mounted:function(){
+		$('#table').DataTable({
+			responsive: true,
+			"columnDefs":[{
+				"targets":[3],
+				"orderable": false
+			}]
+		});
 		this.getList();
+
 	}
 });
 </script>

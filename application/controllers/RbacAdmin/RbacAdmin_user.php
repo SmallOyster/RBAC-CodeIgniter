@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-用户
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-07-18
+* @version 2019-07-26
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -31,124 +31,83 @@ class RbacAdmin_user extends CI_Controller {
 
 	public function toList()
 	{
-		$this->load->view('admin/user/list');
+		$this->load->view('admin/user');
 	}
 
 
 	public function get()
 	{
 		$auth=$this->safe->checkAuth('api','admin/user/list');
-		if($auth!=true) returnAjaxData(403002,"no Permission");
+		if($auth!=true) returnAjaxData(403002,'No permission');
 
-		$this->db->select('id,user_name,nick_name,email,phone,status,role_id,sso_union_id,create_time,update_time,last_login');
-		$query=$this->db->get('user');
+		$query=$this->db->select('id,sso_union_id,user_name,nick_name,email,phone,status,role_id,sso_union_id,create_time,update_time,last_login')
+		                ->get('user');
 		$list=$query->result_array();
 		returnAjaxData(200,'success',['list'=>$list]);
 	}
 
 
-	public function add()
+	public function toOperate()
 	{
-		$this->load->view('admin/user/add');
-	}
+		$auth=$this->safe->checkAuth('api','admin/user/list');
+		if($auth!=true) returnAjaxData(403002,'No permission');
 
-
-	public function toAdd()
-	{
-		$auth=$this->safe->checkAuth('api',substr($this->input->server('HTTP_REFERER'),strpos($this->input->server('HTTP_REFERER'),base_url())+strlen(base_url())));
-		if($auth!=true) returnAjaxData(403002,"no Permission");
-
-		$userName=inputPost('userName',0,1);
-		$nickName=inputPost('nickName',0,1);
-		$phone=inputPost('phone',0,1);
-		$email=inputPost('email',0,1);
-		$roleId=inputPost('roleId',0,1);
-		$status=1;
-		
-		// 检查用户名手机邮箱是否已存在
-		$query1=$this->db->get_where('user',['user_name'=>$userName]);
-		if($query1->num_rows()!=0){
-			returnAjaxData(1,"have UserName");
-		}
-		$query2=$this->db->get_where('user',['phone'=>$phone]);
-		if($query2->num_rows()!=0){
-			returnAjaxData(2,"have Phone");
-		}
-		$query3=$this->db->get_where('user',['email'=>$email]);
-		if($query3->num_rows()!=0){
-			returnAjaxData(3,"have Email");
-		}
-
-		$originPwd=random_string('nozero');
-		$salt=random_string('alnum');
-		$hashSalt=md5($salt);
-		$hashPwd=sha1($originPwd.$hashSalt);
-
-		$sql="INSERT INTO user(user_name,nick_name,password,salt,phone,email,role_id,status) VALUES (?,?,?,?,?,?,?,?)";
-		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$phone,$email,$roleId,$status]);
-
-		if($this->db->affected_rows()==1){
-			$data['originPwd']=$originPwd;
-			returnAjaxData(200,"success",$data);
-		}else{
-			returnAjaxData(500,"failed to Insert");
-		}
-	}
-
-	
-	public function edit()
-	{
-		$userId=inputGet('id',0);
-
-		$query=$this->db->get_where('user',['id'=>$userId]);
-
-		if($query->num_rows()!=1){
-			header("location:".base_url());
-		}
-
-		$list=$query->result_array();
-
-		$this->load->view('admin/user/edit',['userId'=>$userId,'info'=>$list[0]]);
-	}
-
-
-	public function toEdit()
-	{
+		$vaildFields=['sso_union_id','user_name','nick_name','phone','email','role_id','status','password','salt'];
+		$type=inputPost('type',0,1);
 		$userId=inputPost('userId',0,1);
-		$userName=inputPost('userName',0,1);
-		$nickName=inputPost('nickName',0,1);
-		$phone=inputPost('phone',0,1);
-		$email=inputPost('email',0,1);
-		$roleId=inputPost('roleId',0,1);
-		$nowTime=date("Y-m-d H:i:s");
+		$userData=inputPost('userData',0,1);
 		
-		$sql="UPDATE user SET user_name=?,nick_name=?,phone=?,email=?,role_id=?,update_time=? WHERE id=?";
-		$query=$this->db->query($sql,[$userName,$nickName,$phone,$email,$roleId,$nowTime,$userId]);
+		foreach($userData as $field=>$value){
+			// 检查 此字段是否可修改
+			if(!in_array($field,$vaildFields)){
+				returnAjaxData(4001,'Invaild Field',[$field]);
+			}
+			
+			// 检查 值是否为空
+			if($value==0 || $value==null || $value==''){
+				returnAjaxData(4002,'Data cannot be null',[$field]);
+			}
 
-		if($this->db->affected_rows()==1){
-			returnAjaxData(200,"success");
-		}else{
-			returnAjaxData(0,"failed to Update");
+			if($field=='sso_union_id' && $value=='null') $value=null;
+			
+			$this->db->set($field,$value);
 		}
+		
+		$originPassword='';
+		if($type==1){
+			$originPassword=random_string('nozero');
+			$salt=random_string('alnum');
+			$hashPassword=sha1(md5($originPassword).$salt);
+			
+			$this->db->set('password',$hashPassword)
+			         ->set('salt',$salt)
+			         ->insert('user');
+		}elseif($type==2){
+			$this->db->where('id',$userId)
+			         ->update('user');
+		}
+		
+		if($this->db->affected_rows()==1) returnAjaxData(200,'success',['originPassword'=>$originPassword]);
+		else returnAjaxData(500,'Database error');
 	}
 
 
 	public function toDelete()
 	{
-		$id=inputPost('id',0,1);
+		$userId=inputPost('userId',0,1);
 		
-		if($id==$this->nowUserId){
-			returnAjaxData(400,"now User");
+		if($userId==$this->nowUserId){
+			returnAjaxData(400,'Now user');
 		}
 
-		$this->db->delete('user',['id'=>$id]);
+		$this->db->delete('user',['id'=>$userId]);
 
 		if($this->db->affected_rows()==1){
 			//$logContent='删除用户|'.$id;
 			//$this->Log_model->create('用户',$logContent);
-			returnAjaxData(200,"success");
+			returnAjaxData(200,'success');
 		}else{
-			returnAjaxData(1,"failed to Delete");
+			returnAjaxData(500,'Database error');
 		}
 	}
 
@@ -156,17 +115,17 @@ class RbacAdmin_user extends CI_Controller {
 	public function toResetPwd()
 	{
 		$auth=$this->safe->checkAuth('api',substr($this->input->server('HTTP_REFERER'),strpos($this->input->server('HTTP_REFERER'),base_url())+strlen(base_url())));
-		if($auth!=true) returnAjaxData(403002,"no Permission");
+		if($auth!=true) returnAjaxData(403002,'No permission');
 
-		$id=inputPost('id',0,1);
+		$userId=inputPost('userId',0,1);
 		
-		if($id==$this->nowUserId){			
-			returnAjaxData(400,'now User');
+		if($userId==$this->nowUserId){			
+			returnAjaxData(400,'Now user');
 		}
 		
 		// 获取用户名
-		$this->db->select('user_name,nick_name');
-		$query1=$this->db->get_where('user',['id'=>$id]);
+		$query1=$this->db->select('user_name,nick_name')
+		                 ->get_where('user',['id'=>$userId]);
 		if($query1->num_rows()!=1){
 			returnAjaxData(1,"no User");
 		}else{
@@ -180,16 +139,16 @@ class RbacAdmin_user extends CI_Controller {
 		$salt=random_string('alnum');
 		$hashPwd=sha1(md5($originPwd).$salt);
 
-		$this->db->where('id',$id);
-		$this->db->where('user_name',$userName);
-		$this->db->update('user',['password'=>$hashPwd,'salt'=>$salt]);
+		$this->db->where('id',$userId)
+		         ->where('user_name',$userName)
+		         ->update('user',['password'=>$hashPwd,'salt'=>$salt]);
 
 		if($this->db->affected_rows()==1){
-			$logContent='重置密码|'.$id.'|'.$userName;
+			$logContent='重置密码|'.$userId.'|'.$userName;
 			$this->Log_model->create('用户',$logContent,$this->nowUserName);
 			returnAjaxData(200,"success",['originPwd'=>$originPwd,'userName'=>$userName,'nickName'=>$nickName]);
 		}else{
-			returnAjaxData(2,"failed to Reset");
+			returnAjaxData(500,'Database error');
 		}
 	}
 	
@@ -197,22 +156,22 @@ class RbacAdmin_user extends CI_Controller {
 	public function toUpdateStatus()
 	{
 		$auth=$this->safe->checkAuth('api',substr($this->input->server('HTTP_REFERER'),strpos($this->input->server('HTTP_REFERER'),base_url())+strlen(base_url())));
-		if($auth!=true) returnAjaxData(403002,"no Permission");
+		if($auth!=true) returnAjaxData(403002,'No permission');
 
-		$id=inputPost('id',0,1);
+		$userId=inputPost('userId',0,1);
 		$status=inputPost('status',0,1);
 		
-		if($id==$this->nowUserId){			
-			returnAjaxData(400,'now User');
+		if($userId==$this->nowUserId){			
+			returnAjaxData(400,'Now user');
 		}
 
-		$this->db->where('id',$id);
-		$this->db->update('user',['status'=>$status]);
+		$this->db->where('id',$userId)
+		         ->update('user',['status'=>$status]);
 
 		if($this->db->affected_rows()==1){
-			returnAjaxData(200,"success");
+			returnAjaxData(200,'success');
 		}else{
-			returnAjaxData(1,"failed to Update Status");
+			returnAjaxData(500,'Failed to update status');
 		}
 	}
 }
