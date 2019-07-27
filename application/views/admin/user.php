@@ -89,7 +89,7 @@
 					</div>
 					<p class="help-block">
 						请确保此UnionID已在 <b>“生蚝科技统一身份认证平台”</b> 注册<br>
-						您可<a href="<?=$this->setting->get('ssoServerHost');?>" style="font-weight: bold">点此访问</a>管理平台以核实
+						您可<a href="<?=$this->setting->get('ssoServerHost');?>" style="font-weight: bold" target="_blank">点此访问</a>管理平台以核实
 					</p>
 
 					<br><br>

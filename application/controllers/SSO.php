@@ -11,12 +11,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class SSO extends CI_Controller {
 
 	public $sessPrefix;
+	public $nowUserId;
+	public $nowUserName;
+	public $forgetPwdUserId;
+	public $API_PATH;
 
 	function __construct()
 	{
 		parent::__construct();
 		
 		$this->sessPrefix=$this->safe->getSessionPrefix();
+		$this->API_PATH=$this->setting->get('apiPath');
 	}
 
 
@@ -85,5 +90,29 @@ class SSO extends CI_Controller {
 		$this->session->set_userdata($this->sessPrefix.'allRoleInfo',$allRoleInfo);
 
 		die('<script>localStorage.setItem("allRoleInfo",'."'".json_encode($allRoleInfo)."'".');window.location.href="'.base_url('/').'";</script>');
+	}
+
+
+	public function bind()
+	{
+		$this->nowUserId=$this->session->userdata($this->sessPrefix.'userId');
+		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
+
+		$this->load->view('user/ssoBind');
+	}
+
+
+	public function bindLogin()
+	{
+		$userName=inputPost('userName');
+		$password=inputPost('password');
+
+		$query=curl($this->setting->get('ssoServerHost').'user/toLogin','post',['userName'=>$userName,'password'=>$password,'appId'=>$this->setting->get('ssoAppId'),'type'=>'appApi']);
+		$query=json_decode($query,true);
+
+		if($query['code']==200) returnAjaxData(200,'success',$query['data']['userData']);
+		elseif($query['code']==4031) returnAjaxData(4031,'Failed to authorize');
+		elseif($query['code']==4032) returnAjaxData(4032,$query['message']);
+		else returnAjaxData(500,'Failed to request SSO server');
 	}
 }
