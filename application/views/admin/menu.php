@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-菜单管理
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-17
- * @version 2019-07-17
+ * @version 2019-07-28
  */
 ?>
 <!DOCTYPE html>
@@ -35,7 +35,7 @@
 	</section>
 	<!-- ./页面主要内容 -->
 
-	<div class="modal fade" id="operateModal">
+	<div class="modal fade" id="operateModal" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-Log日志
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-26
- * @version 2019-06-12
+ * @version 2019-07-28
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -19,7 +19,7 @@ class Log extends CI_Controller {
 	{
 		parent::__construct();
 
-		$this->safe->checkPermission();
+		$this->safe->checkAuth();
 
 		$this->API_PATH=$this->setting->get('apiPath');
 		$this->sessPrefix=$this->safe->getSessionPrefix();

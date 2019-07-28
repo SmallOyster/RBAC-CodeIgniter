@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-07-26
+ * @version 2019-07-28
  */
 ?>
 <!DOCTYPE html>
@@ -28,6 +28,7 @@
 	<!-- 页面主要内容 -->
 	<section class="content">
 		<a onclick='vm.operateReady(1)' class="btn btn-primary btn-block">新 增 用 户</a>
+		
 		<hr>
 
 		<div class="panel panel-default">
@@ -48,7 +49,7 @@
 	</section>
 	<!-- ./页面主要内容 -->
 	
-	<div class="modal fade" id="operateModal">
+	<div class="modal fade" id="operateModal" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -101,7 +102,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-warning" onclick="vm.userName='';vm.nickName='';vm.phone='';vm.email='';vm.operateType=-1;vm.operateuUserId=0;$('#operateModal').modal('hide');">&lt; 返回</button> <button class="btn btn-success" @click='operateSure'>{{operateModalBtn}}</button>
+					<button class="btn btn-warning" onclick="vm.userName='';vm.nickName='';vm.phone='';vm.email='';vm.operateType=-1;vm.operateUserId=0;$('#operateModal').modal('hide');">&lt; 返回</button> <button class="btn btn-success" @click='operateSure'>{{operateModalBtn}}</button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
@@ -223,7 +224,8 @@ var vm = new Vue({
 			if(vm.ssoUnionId!==vm.operateOriginData[3]) userData.sso_union_id=vm.ssoUnionId;
 			if(roleIds!==vm.operateOriginData[5]) userData.role_id=roleIds;
 			
-			if(userData=={}){
+			if($.isEmptyObject(userData)==true){
+				unlockScreen();
 				showModalTips('请填写需要操作的数据！');
 				return;
 			}

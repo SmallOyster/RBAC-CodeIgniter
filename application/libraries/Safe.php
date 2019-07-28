@@ -35,7 +35,7 @@ class Safe {
 	{
 		if(strlen($this->_CI->session->userdata($this->sessPrefix.'userId'))>=1) return true;
 		else{
-			if($isAjax==0) logout();
+			if($isAjax==0) logout(true);
 			else returnAjaxData(403001,'User not login');
 		}
 	}
@@ -46,9 +46,10 @@ class Safe {
  	 */
 	public function checkAuth($method="",$uri="")
 	{
+		// 先校验是否已经登录
 		if($this->_CI->session->userdata($this->sessPrefix.'userId')<1){
 			if($method!='api'){
-				logout();
+				logout(true);
 			}else{
 				return false;
 			}
@@ -80,7 +81,7 @@ class Safe {
 				return true;
 			}else{
 				if($method!='api'){
-					logout();
+					die('<script>alert("抱歉！您暂无权限访问此页面！\n请从正常途径访问系统！");window.location.href="'.base_url('/').'";</script>');
 				}else{
 					return false;
 				}

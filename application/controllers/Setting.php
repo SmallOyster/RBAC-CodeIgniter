@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-系统配置
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-03-03
- * @version 2019-07-18
+ * @version 2019-07-28
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -42,9 +42,9 @@ class Setting extends CI_Controller {
 		$saveStatus=$this->setting->save($name,$value);
 		
 		if($saveStatus==true){
-			returnAjaxData(200,"success");
+			returnAjaxData(200,'success');
 		}else{
-			returnAjaxData(1,"failed to save");
+			returnAjaxData(1,'Failed to save');
 		}
 	}
 }

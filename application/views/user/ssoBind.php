@@ -93,9 +93,9 @@
 					<hr>
 				</div>
 
-				<button id="loginButton" class="btn btn-primary btn-block" @click='login' style="font-size: 18px;font-weight: bold;"><i class="fa fa-sign-in" aria-hidden="true"></i> 通 行 证 登 录</button>
 				<button id="bindButton" class="btn btn-success btn-block" @click='bind' style="font-size: 18px;font-weight: bold;display: none;"><i class="fa fa-link" aria-hidden="true"></i> 确 认 绑 定 通 行 证</button>
 				<button id="unbindButton" class="btn btn-danger btn-block" onclick='$("#passwordModal").modal("show");' style="font-size: 18px;font-weight: bold;display: none;"><i class="fa fa-chain-broken" aria-hidden="true"></i> 解 绑 通 行 证</button>
+				<button id="loginButton" class="btn btn-primary btn-block" @click='login' style="font-size: 18px;font-weight: bold;"><i class="fa fa-sign-in" aria-hidden="true"></i> 通 行 证 登 录</button>
 			</div>
 		</div>
 	</section>

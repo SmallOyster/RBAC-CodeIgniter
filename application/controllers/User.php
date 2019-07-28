@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-07-24
+ * @version 2019-07-28
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -75,9 +75,9 @@ class User extends CI_Controller {
 	public function toLogin()
 	{
 		$userName=inputPost('userName',0,1);
-		$pwd=inputPost('pwd',0,1);
+		$password=inputPost('password',0,1);
 
-		$validate=$this->user->validateUser($pwd,0,$userName);
+		$validate=$this->user->validateUser($password,0,$userName);
 
 		if($validate==200){
 			$userInfo=$this->user->getUserInfoByUserName($userName);
@@ -136,7 +136,10 @@ class User extends CI_Controller {
 	public function logout()
 	{
 		session_destroy();
-		die(header('location:'.base_url('user/login')));
+
+		$redirect=inputGet('redirect',1);
+		$url=strlen($redirect)>=1?base_url('user/login?redirect=').$redirect:base_url('user/login');
+		die(header('location:'.$url));
 	}
 
 
@@ -148,36 +151,36 @@ class User extends CI_Controller {
 	
 	public function toRegister()
 	{
-		$userName=$this->input->post('userName');
-		$nickName=$this->input->post('nickName');
-		$pwd=$this->input->post('pwd');
-		$phone=$this->input->post('phone');
-		$email=$this->input->post('email');
+		$userName=inputPost('userName',0,1);
+		$nickName=inputPost('nickName',0,1);
+		$pwd=inputPost('pwd',0,1);
+		$phone=inputPost('phone',0,1);
+		$email=inputPost('email',0,1);
 		
 		// 检查用户名手机邮箱是否已存在
-		$sql1='SELECT id FROM user WHERE user_name=?';
-		$query1=$this->db->query($sql1,[$userName]);
+		$query1=$this->db->get_where('user',['user_name'=>$userName]);
 		if($query1->num_rows()!=0){
 			returnAjaxData(1,'have UserName');
 		}
-		$sql2='SELECT id FROM user WHERE phone=?';
-		$query2=$this->db->query($sql2,[$phone]);
+		$query2=$this->db->get_where('user',['phone'=>$phone]);
 		if($query2->num_rows()!=0){
 			returnAjaxData(2,'have Phone');
 		}
-		$sql3='SELECT id FROM user WHERE email=?';
-		$query3=$this->db->query($sql3,[$email]);
+		$query3=$this->db->get_where('user',['email'=>$email]);
 		if($query3->num_rows()!=0){
 			returnAjaxData(3,'have Email');
 		}
+
 		$salt=random_string('alnum');
 		$hashPwd=sha1(md5($pwd).$salt);
-		$roleQuery=$this->db->query('SELECT id FROM role WHERE is_default=1');
+		$roleQuery=$this->db->get_where('role',['is_default'=>1]);
+
 		if($roleQuery->num_rows()!=1){
-			returnAjaxData(4,'no Original Role Info');
+			returnAjaxData(4,'No original role info');
 		}
-		$roleList=$roleQuery->result_array();
-		$roleId=$roleList[0]['id'];
+
+		$roleList=$roleQuery->first_row('array');
+		$roleId=$roleList['id'];
 	
 		$sql='INSERT INTO user(user_name,nick_name,password,salt,role_id,phone,email,status) VALUES (?,?,?,?,?,?,?,1)';
 		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$roleId,$phone,$email]);

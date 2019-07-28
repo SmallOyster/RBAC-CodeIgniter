@@ -34,10 +34,14 @@ function getIP()
 
 /**
  * logout 强行自动登出
+ * @param boolean $redirect true为登录后跳回原页
  */
-function logout()
+function logout($redirect=false)
 {
-	die(header("location:/logout/".urlencode($_SERVER['REQUEST_URI'])));
+	$url=base_url('user/logout');
+	$url.=$redirect==true?'?redirect='.base64_encode('https://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]):'';
+	
+	die(header('location:'.$url));
 }
 
 

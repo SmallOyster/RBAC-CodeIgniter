@@ -11,7 +11,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class RbacAdmin_user extends CI_Controller {
 	
 	public $sessPrefix;
-	public $nowUserId;
 	public $nowUserName;
 	public $API_PATH;
 	
@@ -64,7 +63,7 @@ class RbacAdmin_user extends CI_Controller {
 			}
 			
 			// 检查 值是否为空
-			if($value==0 || $value==null || $value==''){
+			if($value==null || $value==''){
 				returnAjaxData(4002,'Data cannot be null',[$field]);
 			}
 

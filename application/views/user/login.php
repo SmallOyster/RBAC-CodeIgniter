@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-登录
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-20
- * @version 2019-07-24
+ * @version 2019-07-28
  */
 ?>
 
@@ -31,12 +31,12 @@
 			<div class="panel-body">
 				<div class="form-group">
 					<label for="userName">用户名</label>
-					<input class="form-control" placeholder="用户名 / UserName" id="userName" onkeyup='if(event.keyCode==13)$("#pwd").focus();'>
+					<input class="form-control" placeholder="用户名 / UserName" id="userName" onkeyup='if(event.keyCode==13)$("#password").focus();'>
 				</div>
 				<br>
 				<div class="form-group">
-					<label for="pwd">密码</label> <!--a href="<?=base_url('user/forgetPassword');?>" target="_blank">（忘记密码 Forget Password）</a-->
-					<input class="form-control" placeholder="密码 / Password" id="pwd" type="password" onkeyup='if(event.keyCode==13)toLogin();'>
+					<label for="password">密码</label> <!--a href="<?=base_url('user/forgetPassword');?>" target="_blank">（忘记密码 Forget Password）</a-->
+					<input class="form-control" placeholder="密码 / Password" id="password" type="password" onkeyup='if(event.keyCode==13)toLogin();'>
 				</div>
 				<div class="checkbox">
 					<label for="Remember">
@@ -103,7 +103,7 @@ window.onload=function(){
 	Remember=getCookie("<?=$this->sessPrefix;?>RmUN");
 	if(Remember!=null){
 		$("#userName").val(Remember);
-		$("#pwd").focus();
+		$("#password").focus();
 		$("#Remember").attr("checked",true);
 	}else{
 		$("#userName").focus();
@@ -123,9 +123,9 @@ function toLogin(){
 	isAjaxing=1;
 	lockScreen();
 	$("#userName").attr("disabled",true);
-	$("#pwd").attr("disabled",true);
+	$("#password").attr("disabled",true);
 	userName=$("#userName").val();
-	pwd=$("#pwd").val();
+	password=$("#password").val();
 
 	/********** ▼ 记住密码 ▼ **********/
 	Remember=$("input[type='checkbox']").is(':checked');
@@ -140,40 +140,40 @@ function toLogin(){
 		$("#tips").html("请输入用户名！");
 		unlockScreen();
 		$("#userName").removeAttr("disabled");
-		$("#pwd").removeAttr("disabled");
+		$("#password").removeAttr("disabled");
 		return false;
 	}
 	if(userName.length<4){
 		unlockScreen();
 		showModalTips("用户名长度有误！");
 		$("#userName").removeAttr("disabled");
-		$("#pwd").removeAttr("disabled");
+		$("#password").removeAttr("disabled");
 		return false;
 	}
-	if(pwd==""){
+	if(password==""){
 		unlockScreen();
 		showModalTips("请输入密码！");
-		$("#pwd").removeAttr("disabled");
+		$("#password").removeAttr("disabled");
 		return false;
 	}
-	if(pwd.length<6){
+	if(password.length<6){
 		unlockScreen();
 		showModalTips("密码长度有误！");
 		$("#userName").removeAttr("disabled");
-		$("#pwd").removeAttr("disabled");
+		$("#password").removeAttr("disabled");
 		return false;  
 	}
 
 	$.ajax({
 		url:"toLogin",
 		type:"post",
-		data:{"userName":userName,"pwd":pwd},
+		data:{"userName":userName,"password":password},
 		dataType:"json",
 		error:function(e){
 			console.log(JSON.stringify(e));
 			unlockScreen();
 			$("#userName").removeAttr("disabled");
-			$("#pwd").removeAttr("disabled");
+			$("#password").removeAttr("disabled");
 			
 			showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
 			return false;
@@ -181,12 +181,14 @@ function toLogin(){
 		success:function(ret){
 			unlockScreen();
 			$("#userName").removeAttr("disabled");
-			$("#pwd").removeAttr("disabled");
+			$("#password").removeAttr("disabled");
 
 			if(ret.code==200){
 				sessionStorage.setItem('allRoleInfo',ret.data['allRoleInfo']);
 				sessionStorage.setItem('jwtToken',ret.data['jwtToken']);
-				window.location.href="<?=base_url('/');?>";
+
+				if(getURLParam("redirect")!=null) window.location.href=window.atob(getURLParam("redirect"));
+				else window.location.href="<?=base_url('/');?>";
 			}else if(ret.code==1){
 				showModalTips("当前用户被禁用！<br>请联系管理员！");
 				return false;

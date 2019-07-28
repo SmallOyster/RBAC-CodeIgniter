@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-角色列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version 2019-07-17
+ * @version 2019-07-28
  */
 ?>
 <!DOCTYPE html>
@@ -25,7 +25,7 @@
 
 	<!-- 页面主要内容 -->
 	<section class="content">
-		<a href="<?=base_url('admin/role/add');?>" class="btn btn-primary btn-block">新 增 角 色</a>
+		<a onclick='vm.operateReady(1)' class="btn btn-primary btn-block">新 增 角 色</a>
 
 		<hr>
 
@@ -44,6 +44,32 @@
 		</div>
 	</section>
 	<!-- ./页面主要内容 -->
+
+	<div class="modal fade" id="operateModal" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+					<h3 class="modal-title">{{operateModalTitle}}</h3>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="name">角色名称</label>
+						<input class="form-control" id="name" onkeyup='if(event.keyCode==13)$("#remark").focus();' v-model="name">
+						<p class="help-block">请输入<font color="green">1</font>-<font color="green">20</font>字的角色名称</p>
+					</div>
+					<br>
+					<div class="form-group">
+						<label for="remark">角色简述</label>
+						<textarea class="form-control" id="remark" v-model="remark"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-warning" onclick="vm.name='';vm.remark='';vm.operateType=-1;vm.operateRoleId=0;$('#operateModal').modal('hide');">&lt; 返回</button> <button class="btn btn-success" @click='operateSure'>{{operateModalBtn}}</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </div>
 <!-- ./页面内容 -->
 
@@ -60,7 +86,14 @@ let table;
 var vm = new Vue({
 	el:'#app',
 	data:{
-		deleteId:0
+		deleteId:0,
+		name:"",
+		remark:"",
+		operateType:-1,
+		operateRoleId:0,
+		operateModalTitle:'',
+		operateModalBtn:'',
+		operateOriginData:[]
 	},
 	methods:{
 		getList:()=>{
@@ -71,27 +104,96 @@ var vm = new Vue({
 					if(ret.code==200){
 						let list=ret.data['list'];
 
-						table=$('#table').DataTable({
-							responsive: true,
-							"columnDefs":[{
-								"targets":[1],
-								"orderable": false
-							}]
-						});
+						// 先清空表格
+						$.fn.dataTable.tables({api: true}).clear().draw();
 
 						for(i in list){
 							let operateHtml=''
-							               +'<a href="'+headerVm.rootUrl+'admin/role/edit?id='+list[i]['id']+'&name='+list[i]['name']+'" class="btn btn-info">编辑</a> '
+							               +"<a onclick='vm.operateReady(2,"+'"'+list[i]['id']+'","'+list[i]['name']+'","'+list[i]['remark']+'"'+")' class='btn btn-info'>编辑</a> "
 							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['name']+'"'+")' class='btn btn-danger'>删除</a> "
 							               +'<a href="'+headerVm.rootUrl+'admin/role/setPermission?id='+list[i]['id']+'&name='+list[i]['name']+'" class="btn btn-success">分配权限</a> ';
 
 							operateHtml=list[i]['is_default']!=0?operateHtml:operateHtml+"<a onclick='vm.setDefaultRole("+'"'+list[i]['id']+'"'+")' class='btn btn-primary'>设为默认角色</a> ";
 
-							table.row.add({
+							$.fn.dataTable.tables({api: true}).row.add({
 								0: list[i]['name'],
 								1: operateHtml
 							}).draw();
 						}
+					}
+				}
+			})
+		},
+		operateReady:(type=1,roleId=0,name='',remark='')=>{
+			vm.operateType=type;
+			vm.operateRoleId=roleId;
+			vm.name=name;
+			vm.remark=remark;
+			vm.operateOriginData=[name,remark];
+
+			if(type==1){
+				vm.operateModalTitle="新 增 角 色";
+				vm.operateModalBtn="确 认 新 增 角 色 >";
+			}else if(type==2){
+				vm.operateModalTitle="编 辑 角 色";
+				vm.operateModalBtn="确 认 编 辑 角 色 >";
+			}
+
+			$("#operateModal").modal("show");
+		},
+		operateSure:function(){
+			lockScreen();
+
+			let data={};
+
+			// 检查是否有修改数据
+			if(vm.name!==vm.operateOriginData[0]) data.name=vm.name;
+			if(vm.remark!==vm.operateOriginData[1]) data.remark=vm.remark;
+			
+			if($.isEmptyObject(data)==true){
+				unlockScreen();
+				showModalTips('请填写需要操作的数据！');
+				return;
+			}
+			
+			$.ajax({
+				url:"./toOperate",
+				type:'post',
+				data:{'type':this.operateType,'roleId':this.operateRoleId,data},
+				dataType:"json",
+				error:function(e){
+					console.log(e);
+					unlockScreen();
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;				
+				},
+				success:ret=>{
+					if(ret.code==200){
+						alert("操作成功！");
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						vm.getList();
+						return;
+					}else if(ret.code==4001){
+						showModalTips("数据包含非法字段！<hr>请联系技术支持<br>并提交以下错误码：AU4001-"+ret.data);
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						return;
+					}else if(ret.code==4002){
+						showModalTips("数据包含空值！<hr>请联系技术支持<br>并提交以下错误码：AU4002-"+ret.data);
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						return;
+					}else if(ret.code==500){
+						showModalTips("数据库错误！<br>请联系技术支持！");
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						return;
+					}else{
+						showModalTips("系统错误！<br>请联系技术支持！");
+						$("#operateModal").modal('hide');
+						unlockScreen();
+						return;
 					}
 				}
 			})
@@ -172,6 +274,8 @@ var vm = new Vue({
 		}
 	},
 	mounted:function(){
+		$('#table').DataTable({
+		});
 		this.getList();
 	}
 });

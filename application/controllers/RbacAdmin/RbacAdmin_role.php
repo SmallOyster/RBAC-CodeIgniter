@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-C-RBAC-角色
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-02-08
-* @version 2019-07-26
+* @version 2019-07-28
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -30,6 +30,46 @@ class RbacAdmin_role extends CI_Controller {
 	public function toList()
 	{
 		$this->load->view('admin/role/list');
+	}
+
+
+	public function toOperate()
+	{
+		$auth=$this->safe->checkAuth('api','admin/role/list');
+		if($auth!=true) returnAjaxData(403002,'No permission');
+
+		$vaildFields=['name','remark'];
+		$type=inputPost('type',0,1);
+		$roleId=inputPost('roleId',0,1);
+		$data=inputPost('data',0,1);
+		
+		foreach($data as $field=>$value){
+			// 检查 此字段是否可修改
+			if(!in_array($field,$vaildFields)){
+				returnAjaxData(4001,'Invaild Field',[$field]);
+			}
+			
+			// 检查 值是否为空
+			if($value==null || $value==''){
+				returnAjaxData(4002,'Data cannot be null',[$field]);
+			}
+			
+			$this->db->set($field,$value);
+		}
+		
+		$originPassword='';
+		if($type==1){
+			$roleId=strtoupper(random_string('alnum',6));
+
+			$this->db->set('id',$roleId)
+			         ->insert('role');
+		}elseif($type==2){
+			$this->db->where('id',$roleId)
+			         ->update('role');
+		}
+		
+		if($this->db->affected_rows()==1) returnAjaxData(200,'success');
+		else returnAjaxData(500,'Database error');
 	}
 
 
