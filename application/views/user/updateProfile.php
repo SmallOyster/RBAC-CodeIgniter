@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-修改个人资料
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-06-12
+ * @version 2019-07-28
  */
 ?>
 <!DOCTYPE html>
@@ -24,6 +24,8 @@
 
 	<!-- 页面主要内容 -->
 	<section class="content">
+		<a class="btn btn-primary btn-block" href="../SSO/bind"><i class="fa fa-id-card-o"></i> 去 绑 定 [生蚝科技网站生态群通行证] &gt;</a>
+		<hr>
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<div class="form-group">

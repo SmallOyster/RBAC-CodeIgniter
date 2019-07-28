@@ -3,7 +3,7 @@
 * @name 生蚝科技RBAC开发框架-L-安全类
 * @author Jerry Cheung <master@xshgzs.com>
 * @since 2018-01-18
-* @version 2019-07-18
+* @version 2019-07-28
 */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -28,6 +28,16 @@ class Safe {
 	public function getSessionPrefix()
 	{
 		return $this->sessPrefix;
+	}
+
+
+	public function checkLogin($isAjax=0)
+	{
+		if(strlen($this->_CI->session->userdata($this->sessPrefix.'userId'))>=1) return true;
+		else{
+			if($isAjax==0) logout();
+			else returnAjaxData(403001,'User not login');
+		}
 	}
 
 

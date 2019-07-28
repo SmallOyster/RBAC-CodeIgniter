@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-SSO
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-02-17
- * @version 2019-07-19
+ * @version 2019-07-28
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -89,12 +89,14 @@ class SSO extends CI_Controller {
 		$this->session->set_userdata($this->sessPrefix.'roleName',reset($allRoleInfo));
 		$this->session->set_userdata($this->sessPrefix.'allRoleInfo',$allRoleInfo);
 
-		die('<script>localStorage.setItem("allRoleInfo",'."'".json_encode($allRoleInfo)."'".');window.location.href="'.base_url('/').'";</script>');
+		die('<script>sessionStorage.setItem("allRoleInfo",'."'".json_encode($allRoleInfo)."'".');window.location.href="'.base_url('/').'";</script>');
 	}
 
 
 	public function bind()
 	{
+		$this->safe->checkLogin(0);
+
 		$this->nowUserId=$this->session->userdata($this->sessPrefix.'userId');
 		$this->nowUserName=$this->session->userdata($this->sessPrefix.'userName');
 
@@ -102,17 +104,89 @@ class SSO extends CI_Controller {
 	}
 
 
+	public function checkBind()
+	{
+		$userId=$this->session->userdata($this->sessPrefix.'userId');
+
+		$list=$this->db->get_where('user',['id'=>$userId]);
+		$info=$list->first_row('array');
+
+		if($info==[]) returnAjaxData(4001,'No user');
+		elseif(strlen($info['sso_union_id'])!=8) returnAjaxData(4002,'Invaild SSO unionID');
+
+		$query=curl($this->setting->get('ssoServerHost').'api/user/getUserInfo','post',['method'=>'unionId','unionId'=>$info['sso_union_id']]);
+		$query=json_decode($query,true);
+
+		if($query['code']==200){
+			returnAjaxData(200,'success',['userInfo'=>$query['data']['userInfo']]);
+		}else{
+			returnAjaxData(4003,'SSO user not found',$query);
+		}
+	}
+
+
 	public function bindLogin()
 	{
-		$userName=inputPost('userName');
-		$password=inputPost('password');
+		$this->safe->checkLogin(1);
+
+		$userName=inputPost('userName',0,1);
+		$password=inputPost('password',0,1);
 
 		$query=curl($this->setting->get('ssoServerHost').'user/toLogin','post',['userName'=>$userName,'password'=>$password,'appId'=>$this->setting->get('ssoAppId'),'type'=>'appApi']);
 		$query=json_decode($query,true);
 
-		if($query['code']==200) returnAjaxData(200,'success',$query['data']['userData']);
+		if($query['code']==200){
+			$bindToken=sha1(time().md5($query['data']['userInfo']['ssoUnionId']));
+			
+			$_SESSION[$this->sessPrefix.'ssoBindUserId']=$this->session->userdata($this->sessPrefix.'userId');
+			$_SESSION[$this->sessPrefix.'ssoBindUnionId']=$query['data']['userInfo']['ssoUnionId'];
+			$_SESSION[$this->sessPrefix.'ssoBindToken']=$bindToken;
+			$_SESSION[$this->sessPrefix.'ssoBindTokenExpireTime']=time()+120;
+
+			returnAjaxData(200,'success',['userInfo'=>$query['data']['userInfo'],'token'=>$bindToken,'expireTime'=>$_SESSION[$this->sessPrefix.'ssoBindTokenExpireTime']]);
+		}
 		elseif($query['code']==4031) returnAjaxData(4031,'Failed to authorize');
 		elseif($query['code']==4032) returnAjaxData(4032,$query['message']);
 		else returnAjaxData(500,'Failed to request SSO server');
+	}
+	
+	
+	public function toBind()
+	{
+		$this->safe->checkLogin(1);
+
+		$token=inputPost('token',0,1);
+		$unionId=inputPost('unionId',0,1);
+
+		if($token!=$this->session->userdata($this->sessPrefix.'ssoBindToken')) returnAjaxData(4031,'Invaild token');
+		if($unionId!=$this->session->userdata($this->sessPrefix.'ssoBindUnionId')) returnAjaxData(4032,'Invaild unionID');
+		if(time()>$this->session->userdata($this->sessPrefix.'ssoBindTokenExpireTime')) returnAjaxData(4033,'Token expired');
+
+		$this->db->set('sso_union_id',$unionId)
+		         ->where('id',$_SESSION[$this->sessPrefix.'ssoBindUserId'])
+		         ->update('user');
+
+		if($this->db->affected_rows()==1) returnAjaxData(200,'success');
+		else returnAjaxData(500,'Database error');
+	}
+
+
+	public function unbind()
+	{
+		$this->safe->checkLogin(1);
+
+		$password=inputPost('password',0,1);
+		$validate=$this->user->validateUser($password,0,$this->session->userdata($this->sessPrefix.'userName'));
+
+		if($validate==200){
+			$this->db->set('sso_union_id',null)
+			         ->where('id',$this->session->userdata($this->sessPrefix.'userId'))
+			         ->update('user');
+
+			if($this->db->affected_rows()==1) returnAjaxData(200,'success');
+			else returnAjaxData(500,'Database error');
+		}else{
+			returnAjaxData(403,'Failed to authorize');
+		}
 	}
 }

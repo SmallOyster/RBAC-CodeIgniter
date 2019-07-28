@@ -3,11 +3,9 @@
  * @name 生蚝科技RBAC开发框架-导航栏
  * @author Jerry Cheung <master@smhgzs.com>
  * @since 2018-12-31
- * @version 2019-06-11
+ * @version 2019-07-28
  */
 ?>
-
-<!--input type="hidden" id="<?=$this->sessPrefix;?>userId" name="<?=$this->sessPrefix;?>userId" value="<?=$this->session->userdata($this->sessPrefix.'userId');?>"-->
 
 <div id="header">
 <header class="main-header">
@@ -33,7 +31,7 @@
 						<!-- Menu Footer-->
 						<li class="user-footer">
 							<div class="pull-left">
-								<a v-bind:href="[rootUrl+'user/updateProfile']" class="btn btn-default btn-flat">修改资料</a>
+								<a v-bind:href="[rootUrl+'user/updateProfile']" class="btn btn-default btn-flat">用户中心</a>
 								<a data-toggle="modal" data-target="#changePasswordModal" class="btn btn-default btn-flat">修改密码</a>
 							</div>
 							<div class="pull-right">
@@ -298,7 +296,7 @@ var headerVm = new Vue({
 			});
 		},
 		getAllRole:function(){
-			allRoleInfo=localStorage.getItem('allRoleInfo');
+			allRoleInfo=sessionStorage.getItem('allRoleInfo');
 			headerVm.allRoleInfo=JSON.parse(allRoleInfo);
 		},
 		changeRole:function(){
