@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-角色列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-09
- * @version 2019-07-28
+ * @version 2019-07-30
  */
 ?>
 <!DOCTYPE html>
@@ -12,6 +12,10 @@
 <head>
 	<?php $this->load->view('include/header'); ?>
 	<title>角色列表 / <?=$this->setting->get('systemName');?></title>
+	<style>
+		.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
+		ul.ztree {margin-top: 10px;border: 1px solid #617775;height:360px;overflow-y:scroll;overflow-x:auto;}
+	</style>
 </head>
 
 <body class="hold-transition skin-cyan sidebar-mini">
@@ -70,6 +74,23 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+	
+	<div class="modal fade" id="treeModal" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+					<h3 class="modal-title">分配 [{{setPermissionRoleName}}] 的权限</h3>
+				</div>
+				<div class="modal-body">
+					<ul id="treeDemo" class="ztree"></ul>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-warning" onclick="vm.setPermissionRoleId=0;vm.setPermissionRoleName='';$('#treeModal').modal('hide');">&lt; 返回</button> <button class="btn btn-success" @click='setPermission_sure'>确认分配权限 &gt;</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </div>
 <!-- ./页面内容 -->
 
@@ -93,7 +114,24 @@ var vm = new Vue({
 		operateRoleId:0,
 		operateModalTitle:'',
 		operateModalBtn:'',
-		operateOriginData:[]
+		operateOriginData:[],
+		setPermissionRoleId:0,
+		setPermissionRoleName:"",
+		treeNodes:[],
+		treeCheckNodeId:"",
+		treeSetting:{
+			view: {
+				selectedMulti: false
+			},
+			check: {
+				enable: true
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			}
+		}
 	},
 	methods:{
 		getList:()=>{
@@ -111,7 +149,8 @@ var vm = new Vue({
 							let operateHtml=''
 							               +"<a onclick='vm.operateReady(2,"+'"'+list[i]['id']+'","'+list[i]['name']+'","'+list[i]['remark']+'"'+")' class='btn btn-info'>编辑</a> "
 							               +"<a onclick='vm.del_ready("+'"'+list[i]['id']+'","'+list[i]['name']+'"'+")' class='btn btn-danger'>删除</a> "
-							               +'<a href="'+headerVm.rootUrl+'admin/role/setPermission?id='+list[i]['id']+'&name='+list[i]['name']+'" class="btn btn-success">分配权限</a> ';
+							               +"<a onclick='vm.setPermission_ready("+'"'+list[i]['id']+'","'+list[i]['name']+'"'+")' class='btn btn-success'>分配权限</a> "
+							               +'<a href="'+headerVm.rootUrl+'admin/role/setPermission?id='+list[i]['id']+'&name='+list[i]['name']+'" class="btn btn-success">分配权限(旧)</a> ';
 
 							operateHtml=list[i]['is_default']!=0?operateHtml:operateHtml+"<a onclick='vm.setDefaultRole("+'"'+list[i]['id']+'"'+")' class='btn btn-primary'>设为默认角色</a> ";
 
@@ -142,8 +181,6 @@ var vm = new Vue({
 			$("#operateModal").modal("show");
 		},
 		operateSure:function(){
-			lockScreen();
-
 			let data={};
 
 			// 检查是否有修改数据
@@ -151,10 +188,11 @@ var vm = new Vue({
 			if(vm.remark!==vm.operateOriginData[1]) data.remark=vm.remark;
 			
 			if($.isEmptyObject(data)==true){
-				unlockScreen();
 				showModalTips('请填写需要操作的数据！');
 				return;
 			}
+
+			lockScreen();
 			
 			$.ajax({
 				url:"./toOperate",
@@ -168,35 +206,33 @@ var vm = new Vue({
 					return false;				
 				},
 				success:ret=>{
+					$("#operateModal").modal('hide');
+					unlockScreen();
+
 					if(ret.code==200){
 						alert("操作成功！");
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						vm.getList();
 						return;
 					}else if(ret.code==4001){
 						showModalTips("数据包含非法字段！<hr>请联系技术支持<br>并提交以下错误码：AU4001-"+ret.data);
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						return;
 					}else if(ret.code==4002){
 						showModalTips("数据包含空值！<hr>请联系技术支持<br>并提交以下错误码：AU4002-"+ret.data);
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						return;
 					}else if(ret.code==500){
 						showModalTips("数据库错误！<br>请联系技术支持！");
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						return;
 					}else{
 						showModalTips("系统错误！<br>请联系技术支持！");
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						return;
 					}
 				}
 			})
+		},
+		setPermission_ready:(id,name)=>{
+			vm.setPermissionRoleId=id;
+			vm.setPermissionRoleName=name;
+			$("#treeModal").modal("show");
 		},
 		del_ready:(id,name)=>{
 			vm.deleteId=id;
@@ -205,6 +241,7 @@ var vm = new Vue({
 		},
 		del_sure:()=>{
 			lockScreen();
+
 			$.ajax({
 				url:"./toDelete",
 				type:"post",
@@ -219,18 +256,16 @@ var vm = new Vue({
 				},
 				success:function(ret){
 					unlockScreen();
+					$("#delModal").modal('hide');
 
 					if(ret.code==200){
-						$("#delModal").modal('hide');
 						alert("删除成功！");
-						location.reload();
+						vm.getList();
 						return true;
 					}else if(ret.code==1){
-						$("#delModal").modal('hide');
 						showModalTips("删除失败！！！");
 						return false;
 					}else{
-						$("#delModal").modal('hide');
 						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
 						return false;
 					}
@@ -257,7 +292,7 @@ var vm = new Vue({
 
 					if(ret.code==200){
 						alert("设置成功！");
-						location.reload();
+						vm.getList();
 						return true;
 					}else if(ret.code==1){
 						showModalTips("设置失败！！！");
@@ -271,12 +306,83 @@ var vm = new Vue({
 					}
 				}
 			});
+		},
+		getCheckedNodes:function(){
+			let ids="";
+		 var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+			nodes = zTree.getCheckedNodes();
+			
+			for (i=0,l=nodes.length;i<l;i++){
+				ids+=nodes[i].id+",";
+			}
+			
+			ids=ids.substr(0,ids.length-1);
+			console.log(ids);
+			this.treeCheckNodeId=ids;
+		},
+		getAllMenu:function(){
+			$.ajax({
+				url:headerVm.apiPath+"role/getRoleMenuForZtree",
+				data:{'roleId':this.setPermissionRoleId},
+				dataType:"json",
+				async:false,
+				error:function(e){
+					console.log(e);
+					unlockScreen();
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;
+				},
+				success:function(ret){
+					return ret;
+				}
+			});
+		},
+		setPermission_sure:function(){
+			lockScreen();
+			roleId=this.setPermissionRoleId;
+			menuIds=this.treeCheckNodeId;
+
+			$.ajax({
+				url:"./toSetPermission",
+				type:"post",
+				dataType:"json",
+				data:{'roleId':roleId,'menuIds':menuIds},
+				error:function(e){
+					console.log(e);
+					unlockScreen();
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;
+				},
+				success:function(ret){
+					unlockScreen();
+					$("#treeModal").modal("hide");
+
+					if(ret.code==200){
+						alert("权限分配成功！");
+						return true;
+					}else if(ret.code==500){
+						showModalTips("权限分配数量不匹配！！<br>请联系管理员！");
+						return false;
+					}else if(ret.code==1){
+						showModalTips("权限清空失败！！<br>请联系管理员！");
+						return false;
+					}else if(ret.code==0){
+						showModalTips("参数缺失！请联系技术支持！");
+						return false;
+					}else{
+						showModalTips("系统错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+ret.code+"</font>");
+						return false;
+					}
+				}
+			});
 		}
 	},
 	mounted:function(){
-		$('#table').DataTable({
-		});
+		$('#table').DataTable({});
 		this.getList();
+		this.treeNodes=this.getAllMenu();
+		
+		$.fn.zTree.init($("#treeDemo"),this.treeSetting,this.treeNodes);
 	}
 });
 </script>

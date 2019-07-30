@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-19
- * @version 2019-07-28
+ * @version 2019-07-29
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -131,6 +131,30 @@ class User extends CI_Controller {
 			returnAjaxData(403,"Invaild password");
 		}
 	}
+
+
+	public function send()
+	{
+		$emailToken=md5(random_string('alnum',16).session_id());
+		$emailURL=base_url('user/reg/verify/').$emailToken;
+		$message='Email注册验证 / '.$this->setting->get("systemName").'<hr>';
+		$message.='尊敬的小生蚝用户，感谢您注册'.$this->setting->get("systemName").'！为验证您的身份，请点击下方链接以完成注册激活：<br>';
+		$message.='<a href="'.$emailURL.'">'.$emailURL.'</a><br><br>';
+		$message.='此链接15分钟内有效，请尽快激活哦！若无法点击，请复制至浏览器访问。<br><br>';
+		$message.='如您本人没有申请过注册本系统，请忽略本邮件。此邮件由系统自动发送，请勿回复！谢谢！<br><br>';
+		$message.='如有任何问题，请<a href="mailto:service@xshgzs.com">联系我们</a>';
+		$message.='<hr>';
+		$message.='<center>&copy; 生蚝科技 2014-'.date('Y').'</center>';
+		
+		$this->load->library('email');
+		$this->email->from($this->config->item('smtp_user'),'生蚝科技');
+		$this->email->to('571339406@qq.com');
+		$this->email->subject('['.$this->setting->get("systemName").'] 注册邮箱认证');
+		$this->email->message($message);
+		$mailSend=$this->email->send();
+
+		die(var_dump($this->email->print_debugger()));
+	}
 	
 
 	public function logout()
@@ -153,26 +177,26 @@ class User extends CI_Controller {
 	{
 		$userName=inputPost('userName',0,1);
 		$nickName=inputPost('nickName',0,1);
-		$pwd=inputPost('pwd',0,1);
+		$password=inputPost('password',0,1);
 		$phone=inputPost('phone',0,1);
 		$email=inputPost('email',0,1);
 		
 		// 检查用户名手机邮箱是否已存在
 		$query1=$this->db->get_where('user',['user_name'=>$userName]);
 		if($query1->num_rows()!=0){
-			returnAjaxData(1,'have UserName');
+			returnAjaxData(1,'Have userName');
 		}
 		$query2=$this->db->get_where('user',['phone'=>$phone]);
 		if($query2->num_rows()!=0){
-			returnAjaxData(2,'have Phone');
+			returnAjaxData(2,'Have phone');
 		}
 		$query3=$this->db->get_where('user',['email'=>$email]);
 		if($query3->num_rows()!=0){
-			returnAjaxData(3,'have Email');
+			returnAjaxData(3,'Have email');
 		}
 
 		$salt=random_string('alnum');
-		$hashPwd=sha1(md5($pwd).$salt);
+		$hashPassword=sha1(md5($password).$salt);
 		$roleQuery=$this->db->get_where('role',['is_default'=>1]);
 
 		if($roleQuery->num_rows()!=1){
@@ -183,7 +207,7 @@ class User extends CI_Controller {
 		$roleId=$roleList['id'];
 	
 		$sql='INSERT INTO user(user_name,nick_name,password,salt,role_id,phone,email,status) VALUES (?,?,?,?,?,?,?,1)';
-		$query=$this->db->query($sql,[$userName,$nickName,$hashPwd,$salt,$roleId,$phone,$email]);
+		$query=$this->db->query($sql,[$userName,$nickName,$hashPassword,$salt,$roleId,$phone,$email]);
 		
 		/*$emailToken=md5(random_string('alnum',16).session_id());
 		$emailURL=base_url('user/reg/verify/').$emailToken;

@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-C-API-用户
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2019-01-19
- * @version 2019-07-17
+ * @version 2019-07-29
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -59,24 +59,24 @@ class API_User extends CI_Controller {
 	}
 
 
-	public function checkDuplicate($method='',$value='')
+	public function checkDuplicate()
 	{
-		if($method=='' || $value==''){
-			returnAjaxData(0,"lack Parameter");
-		}else if($method=="userName"){
-			$this->db->where('user_name', $value);
-		}else if($method=="phone"){
-			$this->db->where('phone', $value);
+		$field=inputGet('field',0,1);
+		$value=inputGet('value',0,1);
+		$vaildFields=['sso_union_id','user_name','nick_name','phone','email'];
+
+		if(in_array($field,$vaildFields)){
+			$this->db->where($field,$value);
 		}else{
-			returnAjaxData(1,"Invaild Method");
+			returnAjaxData(1,"Invaild Field",$field);
 		}
 
 		$query=$this->db->get('user');
 
 		if($query->num_rows()!=1){
-			returnAjaxData(200,"no User");
+			returnAjaxData(200,"No user");
 		}else{
-			returnAjaxData(403,"have User");
+			returnAjaxData(400,"Have user");
 		}
 	}
 

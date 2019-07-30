@@ -3,7 +3,7 @@
  * @name 生蚝科技RBAC开发框架-V-用户列表
  * @author Jerry Cheung <master@xshgzs.com>
  * @since 2018-02-14
- * @version 2019-07-28
+ * @version 2019-07-29
  */
 ?>
 <!DOCTYPE html>
@@ -59,30 +59,33 @@
 				<div class="modal-body">
 					<div class="form-group">
 						<label for="userName">用户名</label>
-						<input class="form-control" id="userName" onkeyup='if(event.keyCode==13)$("#nickName").focus();' v-model="userName">
+						<input class="form-control" id="userName" v-model="userName" onkeyup='vm.checkDuplicate("user_name",this.value);if(event.keyCode==13){$("#nickName").focus();}'>
 						<p class="help-block">请输入<font color="green">4</font>-<font color="green">20</font>字的用户名</p>
+						<p class="help-block" id="user_name_duplicateTips" style="display:none;color:red;font-weight: bold;font-size:16px">当前已存在此用户名，请修改！</p>
 					</div>
 					<br>
 					<div class="form-group">
 						<label for="nickName">昵称</label>
-						<input class="form-control" id="nickName" v-model="nickName" onkeyup='if(event.keyCode==13)$("#phone").focus();'>
+						<input class="form-control" id="nickName" v-model="nickName" onkeyup='if(event.keyCode==13){$("#phone").focus();}'>
 					</div>
 					<br>
 					<div class="form-group">
 						<label for="phone">手机号</label>
-						<input type="number" class="form-control" id="phone" v-model="phone" onkeyup='if(event.keyCode==13)$("#email").focus();'>
+						<input type="number" class="form-control" id="phone" v-model="phone" onkeyup='if(this.value.length==11){vm.checkDuplicate("phone",this.value);}if(event.keyCode==13){$("#email").focus();}'>
 						<p class="help-block">目前仅支持中国大陆的手机号码</p>
+						<p class="help-block" id="phone_duplicateTips" style="display:none;color:red;font-weight: bold;font-size:16px">当前已存在此手机号，请修改！</p>
 					</div>
 					<br>
 					<div class="form-group">
 						<label for="email">邮箱</label>
-						<input type="email" class="form-control" id="email" v-model="email" onkeyup='if(event.keyCode==13)$("#ssoUnionId").focus();'>
+						<input type="email" class="form-control" id="email" v-model="email" onkeyup='if(this.value.indexOf("@")!=-1){vm.checkDuplicate("email",this.value);}if(event.keyCode==13){$("#ssoUnionId").focus();}'>
+						<p class="help-block" id="email_duplicateTips" style="display:none;color:red;font-weight: bold;font-size:16px">当前已存在此邮箱，请修改！</p>
 					</div>
 					<br>
 
 					<label for="email">生蚝科技网站生态群通行证UnionID</label>
 					<div class="input-group">
-						<input class="form-control" id="ssoUnionId" v-model="ssoUnionId">
+						<input class="form-control" id="ssoUnionId" v-model="ssoUnionId" onkeyup='if(this.value.length==8){vm.checkDuplicate("sso_union_id",this.value);}'>
 						<div class="input-group-btn">
 							<button id="nullSsoUnionIdBtn" class="btn btn-warning" @click='nullSsoUnionId(1)'>设置为空</button>
 							<button id="notNullSsoUnionIdBtn" class="btn btn-success" @click='nullSsoUnionId(0)' style="display: none;">设置非空</button>
@@ -92,6 +95,7 @@
 						请确保此UnionID已在 <b>“生蚝科技统一身份认证平台”</b> 注册<br>
 						您可<a href="<?=$this->setting->get('ssoServerHost');?>" style="font-weight: bold" target="_blank">点此访问</a>管理平台以核实
 					</p>
+					<p class="help-block" id="sso_union_id_duplicateTips" style="display:none;color:red;font-weight: bold;font-size:16px">当前已存在此通行证UnionID，请修改！</p>
 
 					<br><br>
 					<div class="form-group">
@@ -102,7 +106,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-warning" onclick="vm.userName='';vm.nickName='';vm.phone='';vm.email='';vm.operateType=-1;vm.operateUserId=0;$('#operateModal').modal('hide');">&lt; 返回</button> <button class="btn btn-success" @click='operateSure'>{{operateModalBtn}}</button>
+					<button class="btn btn-warning" onclick="vm.userName='';vm.nickName='';vm.phone='';vm.email='';vm.operateType=-1;vm.operateUserId=0;$('#operateModal').modal('hide');">&lt; 返回</button> <button id="submitBtn" class="btn btn-success" @click='operateSure'>{{operateModalBtn}}</button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
@@ -215,6 +219,7 @@ var vm = new Vue({
 
 			let userData={};
 			let roleIds=$("#" + vm.option.el + " #selectValue").val();
+			let type=this.operateType;
 
 			// 检查是否有修改数据
 			if(vm.userName!==vm.operateOriginData[0]) userData.user_name=vm.userName;
@@ -233,40 +238,41 @@ var vm = new Vue({
 			$.ajax({
 				url:"./toOperate",
 				type:'post',
-				data:{'type':this.operateType,'userId':this.operateUserId,userData},
+				data:{'type':type,'userId':this.operateUserId,userData},
 				dataType:"json",
 				error:function(e){
 					console.log(e);
 					unlockScreen();
 					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
-					return false;				
+					return false;
 				},
 				success:ret=>{
+					$("#operateModal").modal('hide');
+					unlockScreen();
+
 					if(ret.code==200){
 						alert("操作成功！");
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						vm.getList();
+
+						if(type==1){
+							$("#info_userName_show").html(vm.userName);
+							$("#info_nickName_show").html(vm.nickName);
+							$("#info_originPwd_show").html(ret.data['originPassword']);
+							$("#infoModal").modal('show');
+						}
+						
 						return;
 					}else if(ret.code==4001){
 						showModalTips("数据包含非法字段！<hr>请联系技术支持<br>并提交以下错误码：AU4001-"+ret.data);
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						return;
 					}else if(ret.code==4002){
 						showModalTips("数据包含空值！<hr>请联系技术支持<br>并提交以下错误码：AU4002-"+ret.data);
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						return;
 					}else if(ret.code==500){
 						showModalTips("数据库错误！<br>请联系技术支持！");
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						return;
 					}else{
 						showModalTips("系统错误！<br>请联系技术支持！");
-						$("#operateModal").modal('hide');
-						unlockScreen();
 						return;
 					}
 				}
@@ -324,7 +330,7 @@ var vm = new Vue({
 
 					if(ret.code==200){
 						alert("更新成功！");
-						location.reload();
+						vm.getList();
 						return true;
 					}else if(ret.code==400){
 						showModalTips("禁止操作当前用户！");
@@ -423,7 +429,7 @@ var vm = new Vue({
 
 					if(ret.code==200){
 						alert("删除成功！");
-						location.reload();
+						vm.getList();
 						return true;
 					}else if(ret.code==400){
 						showModalTips("禁止操作当前用户！");
@@ -493,6 +499,29 @@ var vm = new Vue({
 				$("#" + vm.option.el + " #selectValue").val(roleIds);
 				unlockScreen();
 			}
+		},
+		checkDuplicate:function(field='',value=''){
+			$.ajax({
+				url:headerVm.apiPath+'user/checkDuplicate',
+				data:{'field':field,'value':value},
+				dataType:'json',
+				error:function(e){
+					console.log(e);
+					unlockScreen();
+					showModalTips("服务器错误！<hr>请联系技术支持并提交以下错误码：<br><font color='blue'>"+e.status+"</font>");
+					return false;
+				},
+				success:ret=>{
+					if(ret.code==200){
+						$("#"+field+"_duplicateTips").hide(500);
+						$("#submitBtn").removeAttr("disabled");
+						return true;
+					}else{
+						$("#"+field+"_duplicateTips").show(500);
+						$("#submitBtn").attr("disabled",true);
+					}
+				}
+			})
 		}
 	},
 	mounted:function(){

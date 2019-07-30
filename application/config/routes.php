@@ -27,7 +27,7 @@ $route['api/role/getUserMenu']='API/API_Role/getUserMenu';
 $route['api/user/resetPassword']['POST']='API/API_User/resetPassword';
 $route['api/user/delete']['POST']='API/API_User/delete';
 $route['api/user/getAllUser']='API/API_User/getAllUser';
-$route['api/user/checkDuplicate/(:any)/(:any)']='API/API_User/checkDuplicate/$1/$2';
+$route['api/user/checkDuplicate']='API/API_User/checkDuplicate';
 $route['api/user/getUserInfo']['POST']='API/API_User/getUserInfo';
 $route['api/user/updateUserInfo']['POST']='API/API_User/updateUserInfo';
 
@@ -46,6 +46,7 @@ $route['admin/role/toSetDefaultRole']['POST']='RbacAdmin/RbacAdmin_role/toSetDef
 $route['admin/user/list']='RbacAdmin/RbacAdmin_user/toList';
 $route['admin/user/get']='RbacAdmin/RbacAdmin_user/get';
 $route['admin/user/toOperate']['POST']='RbacAdmin/RbacAdmin_user/toOperate';
+$route['admin/user/toDelete']['POST']='RbacAdmin/RbacAdmin_user/toDelete';
 $route['admin/user/toResetPwd']['POST']='RbacAdmin/RbacAdmin_user/toResetPwd';
 $route['admin/user/toUpdateStatus']['POST']='RbacAdmin/RbacAdmin_user/toUpdateStatus';
 
